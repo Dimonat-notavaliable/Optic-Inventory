@@ -1,0 +1,9 @@
+{% extends 'base.html'%}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+  <h1>Оборудование</h1>
+  <p>На этой странице отображается таблица с оборудованием</p>
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-primary">На главную</button></a>
+{% endblock %}
