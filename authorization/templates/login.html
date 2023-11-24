@@ -1,0 +1,13 @@
+{% extends 'base_auth.html'%}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <h2>Вход</h2>
+        {{ form.as_p }}
+        <input type="submit" value="Войти" />
+        <a href="{% url 'register' %}">Зарегистрироваться</a>
+    </form>
+{% endblock %}
