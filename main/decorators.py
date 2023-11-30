@@ -1,0 +1,12 @@
+from django.contrib.auth.decorators import user_passes_test
+
+
+def superuser_only(function=None):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated and u.is_superuser,
+        login_url='/',  # not actually login, main page
+        redirect_field_name=None,
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
