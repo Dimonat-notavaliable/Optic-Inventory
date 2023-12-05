@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .decorators import superuser_only
 from .forms import SearchForm, SortForm
+from .models import Hardware, Facility
 
 
 @login_required
@@ -14,7 +15,9 @@ def index(request):
 
 @login_required
 def facilities(request):
-    return render(request, 'facilities.html', {'title': 'Сооружения связи'})
+    model = Facility
+    queryset = model.objects.all().order_by('-id')
+    return render(request, 'facilities.html', {'title': 'Сооружения связи', 'objects': queryset})
 
 
 @login_required
@@ -24,7 +27,10 @@ def focls(request):
 
 @login_required
 def hardware(request):
-    return render(request, 'hardware.html', {'title': 'Оборудование'})
+    model = Hardware
+    queryset = model.objects.all().order_by('-id')
+
+    return render(request, 'hardware.html', {'title': 'Оборудование', 'objects': queryset})
 
 
 @superuser_only

@@ -3,6 +3,35 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-  <h1>Оборудование</h1>
-  <p>На этой странице отображается таблица с оборудованием</p>
+  <h1 class="my-3">Оборудование</h1>
+  <hr class="mb-1 mt-0">
+  {% if objects %}
+    <table class="table border">
+      <caption>Оборудование</caption>
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th scope="col">№</th>
+          <th scope="col">Наименование</th>
+          <th scope="col">Расположение</th>
+          <th scope="col">IP/MAC</th>
+          <th scope="col">Кол-во портов</th>
+          <th scope="col">Портов свободно</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in objects %}
+        <tr>
+          <th class="text-center" scope="row">{{ forloop.counter }}</th>
+          <td>{{ object.marking }}</td>
+          <td>{{ object.facility.name }}</td>
+          <td>{{ object.IP }}</td>
+          <td>{{ object.port_count }}</td>
+          <td>{{ object.port_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {%else%}
+    <p>Ничего не найдено</p>
+  {% endif %}
 {% endblock %}

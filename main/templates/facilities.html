@@ -3,6 +3,31 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-  <h1>Сооружения связи</h1>
-  <p>На этой странице отображается таблица с сооружениями связи</p>
+  <h1 class="my-3">Сооружения связи</h1>
+  <hr class="mb-1 mt-0">
+  {% if objects %}
+    <table class="table border">
+      <caption>Оборудование</caption>
+      <thead class="table-dark">
+        <tr class="text-center">
+          <th scope="col">№</th>
+          <th scope="col">Наименование</th>
+          <th scope="col">Координаты</th>
+          <th scope="col">Кол-во этажей</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in objects %}
+        <tr>
+          <th class="text-center" scope="row">{{ forloop.counter }}</th>
+          <td>{{ object.name }}</td>
+          <td>{{ object.latitude }}, {{ object.longitude }}</td>
+          <td>{{ object.floor_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {%else%}
+    <p>Ничего не найдено</p>
+  {% endif %}
 {% endblock %}
