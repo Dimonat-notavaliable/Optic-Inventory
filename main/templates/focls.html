@@ -1,8 +1,28 @@
-{% extends 'base.html'%}
-{% block title %}
-    {{ title }}
-{% endblock %}
-{% block content %}
-  <h1>Кабельная инфраструктура</h1>
-  <p>На этой странице отображается таблица с проведенными линиями связи</p>
+{% extends 'many_objects.html'%}
+{% block objects_type %}Кабельная инфраструктура{% endblock %}
+{% block search_action %}"{% url 'facilities' %}"{% endblock %}
+{% block sorting_action %}"{% url 'facilities' %}"{% endblock %}
+{% block table %}
+  <caption>ВОЛС</caption>
+  <thead class="table-dark">
+    <tr class="text-center">
+      <th scope="col" title="Номер по порядку">№</th>
+      <th scope="col" title="Начальная точка">Начальная точка</th>
+      <th scope="col" title="Конечная точка">Конечная точка</th>
+      <th scope="col" title="Количество оптических волокон">Кол-во ОВ</th>
+      <th scope="col" title="Длина по кабелю (м.)">Длина по кабелю (м.)</th>
+      <th scope="col" title="Длина по волокну (м.)">Длина по волокну (м.)</th>
+      <th scope="col" title="Марка кабеля">Марка кабеля</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in objects %}
+    <tr>
+      <th class="text-center" scope="row">{{ forloop.counter }}</th>
+      <td>{{ object.name }}</td>
+      <td class="text-center">{{ object.latitude }}, {{ object.longitude }}</td>
+      <td class="text-center">{{ object.floor_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 {% endblock %}

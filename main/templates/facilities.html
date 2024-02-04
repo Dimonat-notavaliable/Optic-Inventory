@@ -1,84 +1,25 @@
-{% extends 'base.html'%}
-{% block title %}
-    {{ title }}
-{% endblock %}
-{% block content %}
-  <h1 class="my-3">Сооружения связи</h1>
-  <hr class="mb-1 mt-0">
-  <div class="input-group">
-    <form action="{% url 'facilities' %}" class="form-inline d-flex w-100 my-3" method="get">
-      <input type="hidden" name="sorting" value="{{params.sorting}}"/>
-      <div class="form-control mr-2 p-0 d-flex">
-      {{ search_form }}
-      <button type="button" class="btn btn-outline-danger border-0"
-              onClick="document.getElementById('id_search').value = ''">X</button>
-      </div>
-      <button class="btn btn-outline-success" type="submit">Найти</button>
-    </form>
-  </div>
-  <nav class="d-flex justify-content-between" aria-label="filter">
-    <form action="{% url 'facilities' %}" class="mb-3 d-flex align-items-center" method="get">
-      <input type="hidden" name="search" value="{{params.search}}"/>
-      <div class="me-2 w-100">Сортировать по:</div>
-      {{ sort_form }}
-    </form>
-    <ul class="pagination mb-3">
-      {% if objects.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ objects.previous_page_number }}" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      {% else %}
-        <li class="page-item disabled">
-          <a class="page-link">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      {% endif %}
-      {% for page in objects.paginator.page_range %}
-        <li class="page-item {% if page == objects.number %}active{% endif %}">
-          <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-        </li>
-      {% endfor %}
-      {% if objects.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ objects.next_page_number }}" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      {% else %}
-        <li class="page-item disabled">
-          <a class="page-link" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-  {% if objects %}
-    <table class="table border">
-      <caption>Сооружения связи</caption>
-      <thead class="table-dark">
-        <tr class="text-center">
-          <th scope="col">№</th>
-          <th scope="col">Наименование</th>
-          <th scope="col">Координаты</th>
-          <th scope="col">Кол-во этажей</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for object in objects %}
-        <tr>
-          <th class="text-center" scope="row">{{ forloop.counter }}</th>
-          <td>{{ object.name }}</td>
-          <td class="text-center">{{ object.latitude }}, {{ object.longitude }}</td>
-          <td class="text-center">{{ object.floor_count }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {%else%}
-    <p>Ничего не найдено</p>
-  {% endif %}
+{% extends 'many_objects.html'%}
+{% block objects_type %}Сооружения связи{% endblock %}
+{% block search_action %}"{% url 'facilities' %}"{% endblock %}
+{% block sorting_action %}"{% url 'facilities' %}"{% endblock %}
+{% block table %}
+  <caption>Сооружения связи</caption>
+  <thead class="table-dark">
+    <tr class="text-center">
+      <th scope="col">№</th>
+      <th scope="col">Наименование</th>
+      <th scope="col">Координаты</th>
+      <th scope="col">Кол-во этажей</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for object in objects %}
+    <tr>
+      <th class="text-center" scope="row">{{ forloop.counter }}</th>
+      <td>{{ object.name }}</td>
+      <td class="text-center">{{ object.latitude }}, {{ object.longitude }}</td>
+      <td class="text-center">{{ object.floor_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 {% endblock %}
