@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "CoHeadline-Corp";
+    src: url("/static/fonts/Co Headline Corp.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/static/fonts/Inter-VariableFont_slnt,wght.ttf") format("truetype");
+}
+
+.navbar, h1, h2 {
+    font-family: "CoHeadline-Corp", sans-serif;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+}
+
+.text-success {
+    color: #5D6B2C!important;
+}
