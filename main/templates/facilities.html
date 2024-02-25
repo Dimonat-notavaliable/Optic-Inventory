@@ -3,12 +3,13 @@
 {% block search_action %}"{% url 'facilities' %}"{% endblock %}
 {% block sorting_action %}"{% url 'facilities' %}"{% endblock %}
 {% block table %}
-  <caption>Сооружения связи</caption>
+  <caption>Сооружения связи <a href="{% url 'facilities_map' %}" class="text-success">Карта</a></caption>
   <thead class="table-dark">
     <tr class="text-center">
       <th scope="col">№</th>
       <th scope="col">Наименование</th>
-      <th scope="col">Координаты</th>
+      <th scope="col">Широта</th>
+      <th scope="col">Долгота</th>
       <th scope="col">Кол-во этажей</th>
     </tr>
   </thead>
@@ -16,8 +17,9 @@
     {% for object in objects %}
     <tr>
       <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td>{{ object.name }}</td>
-      <td class="text-center">{{ object.latitude }}, {{ object.longitude }}</td>
+      <td><a href="{% url 'facility' object.id%}" class="text-success">{{ object.name }}</a></td>
+      <td class="text-center">{{ object.latitude }}</td>
+      <td class="text-center">{{ object.longitude }}</td>
       <td class="text-center">{{ object.floor_count }}</td>
     </tr>
     {% endfor %}

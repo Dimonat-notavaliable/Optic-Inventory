@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
+from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DeleteView
 
 from .decorators import superuser_only
 from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm
@@ -38,6 +40,23 @@ def facilities(request):
     page_objects = paginator.get_page(page_number)
     return render(request, 'facilities.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
                                                'search_form': search_form, 'sort_form': sort_form})
+
+
+@login_required
+def facility(request, pk):
+    object = Facility.objects.get(id=pk)
+    return render(request, 'facility.html', {'title': object.name, 'object': object})
+
+
+class FacilityDelete(DeleteView):
+    model = Facility
+    success_url = "/facilities/"
+
+
+@login_required
+def facility_map(request, pk):
+    object = model_to_dict(Facility.objects.get(id=pk))
+    return render(request, 'facility_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
 
 
 @login_required
@@ -94,7 +113,14 @@ def users(request):
 
     paginator = Paginator(queryset, 20)
     page_number = request.GET.get('page')
-    page_users = paginator.get_page(page_number)
+    page_objects = paginator.get_page(page_number)
 
-    return render(request, 'users.html', {'title': 'Пользователи', 'users': page_users, 'params': params,
+    return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
+
+
+@login_required
+def facilities_map(request):
+    model = Facility
+    facilities = list(model.objects.values('latitude', 'longitude', 'name'))
+    return render(request, 'map.html', {'title': 'Карта', 'objects': facilities})

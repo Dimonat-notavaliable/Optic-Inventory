@@ -1,0 +1,78 @@
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2 class="my-3"><a href="{% url 'facilities' %}" class="text-success link-underline link-underline-opacity-0">Сооружения связи</a>/{{ object.name }}</h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="text-success me-3">< Вернуться к списку</a>
+        <a href="" class="text-success me-3">Экспорт/Импорт</a>
+        <a href="" class="text-success me-3">Схема</a>
+        <a href="{% url 'facility_map' object.id %}" class="text-success me-3"
+           target="_blank" rel="noopener noreferrer">На карте</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'facility_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container d-inline-flex">
+        <div class="align-content-end me-3 ps-3 pe-1 bg-light">
+            <p class="text-end">Широта:</p>
+            <p class="text-end">Долгота:</p>
+            <p class="text-end">Кол-во этажей:</p>
+        </div>
+        <div>
+            <p>{{ object.latitude }}</p>
+            <p>{{ object.longitude }}</p>
+            <p>{{ object.floor_count }}</p>
+        </div>
+    </div>
+    <div class="container my-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Оборудование</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">ВОЛС</a>
+            </li>
+        </ul>
+        <table class="table border">
+          <caption>Оборудование</caption>
+          <thead class="table-dark">
+            <tr class="text-center">
+              <th scope="col">Наименование</th>
+              <th scope="col">Описание</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="" class="text-success">Название как ссылка</a></td>
+              <td class="text-center">Информация о коммутации</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+{% endblock %}
