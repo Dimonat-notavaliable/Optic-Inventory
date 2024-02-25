@@ -3,11 +3,13 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-    <form method="POST" novalidate>
-        {% csrf_token %}
-        <h2>Вход</h2>
-        {{ form.as_p }}
-        <input type="submit" value="Войти" />
-        <a href="{% url 'register' %}">Зарегистрироваться</a>
-    </form>
+    <div class="bg-dark bg-opacity-50 rounded p-3" style="min-width: 30%;">
+        <form class="bg-light rounded p-4 text-center text-dark d-flex flex-column" method="POST" novalidate>
+            {% csrf_token %}
+            <h2>Вход</h2>
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-outline-dark btn-lg mx-5" value="Войти" />
+            <a class="link-dark fs-5" href="{% url 'register' %}">Зарегистрироваться</a>
+        </form>
+    </div>
 {% endblock %}

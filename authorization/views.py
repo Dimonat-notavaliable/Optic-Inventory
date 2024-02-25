@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, BootstrapErrorList
 
 
 def sign_up(request):
@@ -13,7 +13,7 @@ def sign_up(request):
         return render(request, 'register.html', {'title': 'Регистрация', 'form': form})
 
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, error_class=BootstrapErrorList)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
@@ -32,7 +32,7 @@ def sign_in(request):
         return render(request, 'login.html', {'title': 'Вход', 'form': form})
 
     elif request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = LoginForm(request.POST, error_class=BootstrapErrorList)
 
         if form.is_valid():
             email = form.cleaned_data['email']

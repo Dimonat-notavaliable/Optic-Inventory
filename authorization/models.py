@@ -15,7 +15,7 @@ class User(AbstractUser):
 
     email = models.CharField(
         _("Email"),
-        max_length=150,
+        max_length=255,
         unique=True,
         help_text=_(
             "Обязательное поле. 150 символов или меньше."
