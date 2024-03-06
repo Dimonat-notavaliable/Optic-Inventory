@@ -3,21 +3,23 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-  <h1 class="my-3">{% block objects_type %}{% endblock %}</h1>
-  <hr class="mb-1 mt-0">
+  <h2 class="my-3">{% block objects_type %}{% endblock %}</h2>
+  <hr class="m-0">
+  {% block buttons %}
+  {% endblock %}
   <div class="input-group">
-    <form action={% block search_action %}{% endblock %} class="d-flex w-100 my-3" method="get">
+    <form action="{% block search_action %}{% endblock %}" class="d-flex w-100 my-3" method="get">
       <input type="hidden" name="sorting" value="{{params.sorting}}"/>
       <div class="form-control mr-2 p-0 d-flex">
       {{ search_form.search }}
       <button type="button" class="btn btn-outline-danger border-0"
               onClick="document.getElementById('id_search').value = ''">X</button>
       </div>
-      <button class="btn btn-outline-success" type="submit">Найти</button>
+      <button class="btn btn-outline btn-green" type="submit">Найти</button>
     </form>
   </div>
   <nav class="d-flex justify-content-between" aria-label="filter">
-    <form action={% block sorting_action %}{% endblock %} class="mb-3 d-flex align-items-center" method="get">
+    <form action="{% block sorting_action %}{% endblock %}" class="mb-3 d-flex align-items-center" method="get">
       <input type="hidden" name="search" value="{{params.search}}"/>
       <div class="me-2 w-100">Сортировать по:</div>
       {{ sort_form }}
