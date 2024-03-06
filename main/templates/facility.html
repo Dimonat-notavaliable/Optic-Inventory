@@ -5,16 +5,18 @@
     <hr>
     <div class="container my-3">
         <a href="javascript:history.go(-1)" class="text-success me-3">< Вернуться к списку</a>
-        <a href="" class="text-success me-3">Экспорт/Импорт</a>
         <a href="" class="text-success me-3">Схема</a>
+        {% if request.user.is_writer %}
         <a href="{% url 'facility_map' object.id %}" class="text-success me-3"
            target="_blank" rel="noopener noreferrer">На карте</a>
+        <a href="" class="text-success me-3">Экспорт/Импорт</a>
         <!-- Button that opens a modal -->
         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete_item">
             Удалить
         </button>
+        {% endif %}
     </div>
-
+    {% if request.user.is_writer %}
     <!-- Modal -->
     <div class="modal fade" id="delete_item" data-bs-backdrop="static"
          data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
@@ -37,6 +39,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     <div class="container d-inline-flex">
         <div class="align-content-end me-3 ps-3 pe-1 bg-light">

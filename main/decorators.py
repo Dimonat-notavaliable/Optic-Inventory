@@ -10,3 +10,14 @@ def superuser_only(function=None):
     if function:
         return actual_decorator(function)
     return actual_decorator
+
+
+def writer_only(function=None):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated and u.is_writer,
+        login_url='/',  # not actually login, main page
+        redirect_field_name=None,
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
