@@ -1,6 +1,8 @@
+from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
 from .forms import RegisterForm, LoginForm, BootstrapErrorList
 
 
@@ -17,7 +19,23 @@ def sign_up(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            messages.success(request, 'Вы успешно зарегистрировались.')
+
+            current_context = {
+                'name': user.get_full_name,
+                'email': user.email,
+                'search': user.last_name
+            }
+            html_content = get_template('email_template.html').render(current_context)
+
+            mail_subject = f'Новая регистрация: {user.email} - Optic Inventory'
+            from_email = 'Optic Inventory <optic-inventory@yandex.ru>'
+            to_email = 'ds.shushin@gmail.com'
+
+            msg = EmailMultiAlternatives(mail_subject, '', from_email, [to_email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            messages.success(request, '''Вы успешно зарегистрировались. Для возможности входа
+             в систему вашу учетную запись должен активировать администратор.''')
             return redirect('home')
         else:
             return render(request, 'register.html', {'form': form})
