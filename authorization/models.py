@@ -18,7 +18,7 @@ class User(AbstractUser):
         max_length=255,
         unique=True,
         help_text=_(
-            "Обязательное поле. 150 символов или меньше."
+            "Обязательное поле. 255 символов или меньше."
         ),
         validators=[validate_email],
         error_messages={
@@ -44,6 +44,12 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password']
 
+    @property
+    def get_full_name(self):
+        if self.patronymic:
+            return f'{self.last_name} {self.first_name[0]}. {self.patronymic[0]}.'
+        else:
+            return f'{self.last_name} {self.first_name[0]}.'
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
