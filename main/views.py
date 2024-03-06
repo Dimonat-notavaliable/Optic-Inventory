@@ -45,6 +45,13 @@ def facilities(request):
 
 
 @login_required
+def facilities_map(request):
+    model = Facility
+    facilities = list(model.objects.values('latitude', 'longitude', 'name'))
+    return render(request, 'facilities_map.html', {'title': 'Карта', 'objects': facilities})
+
+
+@login_required
 def facility(request, pk):
     object = Facility.objects.get(id=pk)
     return render(request, 'facility.html', {'title': object.name, 'object': object})
@@ -137,10 +144,3 @@ def users(request):
 
     return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
-
-
-@login_required
-def facilities_map(request):
-    model = Facility
-    facilities = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'map.html', {'title': 'Карта', 'objects': facilities})
