@@ -1,18 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, CreateView
 
 from .decorators import superuser_only
-from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm
+from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm, FacilityForm
 from .models import Hardware, Facility
 
 
 @login_required
 def index(request):
-    return render(request, 'index.html', {'title': 'Главная страница'})
+    last_hardware = Hardware.objects.all().order_by('-id')[:5]
+    return render(request, 'index.html', {'title': 'Главная страница',
+                                          'last_hardware': last_hardware})
 
 
 @login_required
@@ -46,6 +48,24 @@ def facilities(request):
 def facility(request, pk):
     object = Facility.objects.get(id=pk)
     return render(request, 'facility.html', {'title': object.name, 'object': object})
+
+
+@login_required
+def facility_create(request):
+    if request.method == 'GET':
+        form = FacilityForm()
+        return render(request, 'create.html', {'title': 'Добавление сооружения связи', 'type': "сооружения связи",
+                                               'form': form})
+
+    if request.method == 'POST':
+        form = FacilityForm(request.POST)
+        if form.is_valid():
+            facility = form.save(commit=False)
+            facility.save()
+            return redirect('facilities')
+        else:
+            return render(request, 'create.html', {'title': 'Добавление сооружения связи', 'type': "сооружения связи",
+                                                   'form': form})
 
 
 class FacilityDelete(DeleteView):
