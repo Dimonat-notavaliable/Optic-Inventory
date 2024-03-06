@@ -37,7 +37,7 @@
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'hardware' %}" role="button" aria-expanded="false">
+                    <a class="nav-link active" href="{% url 'focls' %}" role="button" aria-expanded="false">
                       Кабельная инфраструктура
                     </a>
                     <ul class="navbar-nav">
@@ -46,7 +46,7 @@
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'hardware' %}" role="button" aria-expanded="false">
+                    <a class="nav-link active" href="{% url 'many_hardware' %}" role="button" aria-expanded="false">
                       Оборудование
                     </a>
                     <ul class="navbar-nav">
@@ -55,6 +55,13 @@
                       <li><a class="nav-link" href="#">Тип N</a></li>
                     </ul>
                   </li>
+                  {% if request.user.is_superuser %}
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users' %}" role="button" aria-expanded="false">
+                        Пользователи
+                    </a>
+                  </li>
+                  {% endif %}
                 </ul>
                 <form class="d-flex mt-3" role="search">
                   <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
@@ -82,7 +89,7 @@
                 </ul>
               </li>
               <li class="nav-item mx-2">
-                <a class="nav-link" aria-current="page" href="{% url 'hardware' %}">Оборудование</a>
+                <a class="nav-link" aria-current="page" href="{% url 'many_hardware' %}">Оборудование</a>
               </li>
               {% if request.user.is_superuser %}
               <li class="nav-item mx-2">

@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DeleteView, CreateView
 
-from .decorators import superuser_only
-from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm, FacilityForm
+from .decorators import superuser_only, writer_only
+from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm, FacilityForm, HardwareForm
 from .models import Hardware, Facility
 
 
@@ -57,7 +57,7 @@ def facility(request, pk):
     return render(request, 'facility.html', {'title': object.name, 'object': object})
 
 
-@login_required
+@writer_only
 def facility_create(request):
     if request.method == 'GET':
         form = FacilityForm()
@@ -92,7 +92,7 @@ def focls(request):
 
 
 @login_required
-def hardware(request):
+def many_hardware(request):
     model = Hardware
     queryset = model.objects.all().order_by('-id')
     params = {}
@@ -114,8 +114,37 @@ def hardware(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'hardware.html', {'title': 'Оборудование', 'objects': page_objects, 'params': params,
-                                             'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_hardware.html', {'title': 'Оборудование', 'objects': page_objects, 'params': params,
+                                                  'search_form': search_form, 'sort_form': sort_form})
+
+
+@login_required
+def hardware(request, pk):
+    object = Hardware.objects.get(id=pk)
+    return render(request, 'hardware.html', {'title': object.marking, 'object': object})
+
+
+@writer_only
+def hardware_create(request):
+    if request.method == 'GET':
+        form = HardwareForm()
+        return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
+                                               'form': form})
+
+    if request.method == 'POST':
+        form = HardwareForm(request.POST)
+        if form.is_valid():
+            hardware = form.save(commit=False)
+            hardware.save()
+            return redirect('hardware')
+        else:
+            return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
+                                                   'form': form})
+
+
+class HardwareDelete(DeleteView):
+    model = Hardware
+    success_url = "/hardware/"
 
 
 @superuser_only

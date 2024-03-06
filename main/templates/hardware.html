@@ -1,29 +1,60 @@
-{% extends 'many_objects.html'%}
-{% block objects_type %}Оборудование{% endblock %}
-{% block search_action %}"{% url 'hardware' %}"{% endblock %}
-{% block sorting_action %}"{% url 'hardware' %}"{% endblock %}
-{% block table %}
-  <caption>Оборудование</caption>
-  <thead class="table-dark">
-    <tr class="text-center">
-      <th scope="col">№</th>
-      <th scope="col">Наименование</th>
-      <th scope="col">Расположение</th>
-      <th scope="col">IP/MAC</th>
-      <th scope="col">Кол-во портов</th>
-      <th scope="col">Портов свободно</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr>
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td>{{ object.marking }}</td>
-      <td>{{ object.facility.name }}</td>
-      <td class="text-center">{{ object.IP }}</td>
-      <td class="text-center">{{ object.port_count }}</td>
-      <td class="text-center">{{ object.port_count }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2 class="my-3"><a href="{% url 'many_hardware' %}" class="text-success link-underline link-underline-opacity-0">Оборудование</a>/{{ object.marking }}</h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="text-success me-3">< Вернуться к списку</a>
+        {% if request.user.is_writer %}
+        <a href="" class="text-success me-3">Экспорт/Импорт</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+        {% endif %}
+    </div>
+
+    {% if request.user.is_writer %}
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'hardware_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container d-inline-flex">
+        <div class="align-content-end me-3 ps-3 pe-1 bg-light">
+            <p class="text-end">Сооружение связи:</p>
+            <p class="text-end">Наименование:</p>
+            <p class="text-end">Тип:</p>
+            <p class="text-end">Количество портов:</p>
+            <p class="text-end">IP-адрес:</p>
+            <p class="text-end">MAC-адрес:</p>
+        </div>
+        <div>
+            <p>{{ object.facility.name }}</p>
+            <p>{{ object.marking }}</p>
+            <p>{{ object.type }}</p>
+            <p>{{ object.port_count }}</p>
+            <p>{{ object.IP }}</p>
+            <p>{{ object.MAC }}</p>
+        </div>
+    </div>
 {% endblock %}
