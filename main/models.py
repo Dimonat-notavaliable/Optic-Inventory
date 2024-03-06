@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from colorfield.fields import ColorField
+
 
 # Сооружение связи
 class Facility(models.Model):
@@ -58,3 +60,44 @@ def create_hardware_ports(instance, **kwargs):
 
 
 models.signals.post_save.connect(create_hardware_ports, sender=Hardware, dispatch_uid='create_hardware_ports')
+
+
+class Cable(models.Model):
+    producer = models.CharField(_("Производитель"), blank=False)
+    marking = models.CharField(_("Маркировка"), blank=False)
+    map_hex = ColorField(_("Цвет на карте"), default='#FFFFFF')
+
+    class Meta:
+        verbose_name = 'Кабель'
+        verbose_name_plural = 'Кабели'
+
+    def __str__(self):
+        return f'{self.producer} {self.marking}'
+
+
+class Module(models.Model):
+    number = models.IntegerField(_("Номер"), blank=False, validators=[MinValueValidator(1)])
+    cable = models.ForeignKey(Cable, on_delete=models.CASCADE, related_name='modules', blank=False)
+    color = models.CharField(_("Цвет"), blank=False, default="Белый")
+    hex = ColorField(_("Отображаемый цвет"), default='#FFFFFF')
+
+    class Meta:
+        verbose_name = 'Модуль'
+        verbose_name_plural = 'Модули'
+
+    def __str__(self):
+        return f'{self.cable}: Модуль №{self.number}'
+
+
+class Fiber(models.Model):
+    number = models.IntegerField(_("Номер"), blank=False, validators=[MinValueValidator(1)])
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='fibers', blank=False)
+    color = models.CharField(_("Цвет"), blank=False, default="Белый")
+    hex = ColorField(_("Отображаемый цвет"), default='#FFFFFF')
+
+    class Meta:
+        verbose_name = 'Волокно'
+        verbose_name_plural = 'Волокна'
+
+    def __str__(self):
+        return f'{self.module}: Волокно №{self.number}'
