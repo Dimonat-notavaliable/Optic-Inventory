@@ -13,8 +13,9 @@ from .models import Hardware, Facility, FOCL
 @login_required
 def index(request):
     last_hardware = Hardware.objects.all().order_by('-id')[:5]
+    last_focls = FOCL.objects.all().order_by('-id')[:5]
     return render(request, 'index.html', {'title': 'Главная страница',
-                                          'last_hardware': last_hardware})
+                                          'last_hardware': last_hardware, 'last_focls': last_focls})
 
 
 @login_required
