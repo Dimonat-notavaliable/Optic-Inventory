@@ -29,7 +29,7 @@ class Hardware(models.Model):
     floor = models.IntegerField(_("Этаж расположения"), blank=False, default=1,
                                 validators=[MinValueValidator(1)])
     IP = models.GenericIPAddressField(_("IP-адрес"), protocol="both", blank=True, null=True)
-    MAC = models.CharField(_("MAC-адрес"), blank=True, null=True)
+    MAC = models.CharField(_("MAC-адрес"), blank=True)
     facility = models.ForeignKey(Facility, on_delete=models.SET_NULL, related_name='hardware', blank=True, null=True)
 
     class Meta:
@@ -74,6 +74,12 @@ class Cable(models.Model):
     def __str__(self):
         return f'{self.producer} {self.marking}'
 
+    def get_fiber_count(self):
+        count = 0
+        for module in self.modules.all():
+            count += len(module.fibers.all())
+        return count
+
 
 class Module(models.Model):
     number = models.IntegerField(_("Номер"), blank=False, validators=[MinValueValidator(1)])
@@ -101,3 +107,38 @@ class Fiber(models.Model):
 
     def __str__(self):
         return f'{self.module}: Волокно №{self.number}'
+
+
+class FOCL(models.Model):
+    cable = models.OneToOneField(Cable, on_delete=models.CASCADE, related_name='focl', blank=False)
+    cable_length = models.DecimalField(_("Длина по кабелю"), max_digits=9, decimal_places=2, blank=False)
+    fiber_length = models.DecimalField(_("Длина по волокну"), max_digits=9, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Линия связи'
+        verbose_name_plural = 'Линии связи'
+
+    def __str__(self):
+        return f'Линия связи: {self.cable}'
+
+    def get_start(self):
+        start_facility = self.passage.filter(is_start=True)[0].installation
+        return start_facility
+
+    def get_end(self):
+        end_facility = self.passage.filter(is_start=False)[0].installation
+        return end_facility
+
+
+class Passage(models.Model):
+    focl = models.ForeignKey(FOCL, on_delete=models.CASCADE, related_name='passage', blank=False)
+    installation = models.ForeignKey(Facility, on_delete=models.CASCADE,
+                                     related_name='passage', blank=False)
+    is_start = models.BooleanField(_("Начало"), blank=False)
+
+    class Meta:
+        verbose_name = 'Следование'
+        verbose_name_plural = 'Следования'
+
+    def __str__(self):
+        return f'{self.focl} через {self.installation}'

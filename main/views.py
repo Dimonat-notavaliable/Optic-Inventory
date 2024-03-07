@@ -7,7 +7,7 @@ from django.views.generic import DeleteView, CreateView
 
 from .decorators import superuser_only, writer_only
 from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm, FacilityForm, HardwareForm
-from .models import Hardware, Facility
+from .models import Hardware, Facility, FOCL
 
 
 @login_required
@@ -88,7 +88,9 @@ def facility_map(request, pk):
 
 @login_required
 def focls(request):
-    return render(request, 'focls.html', {'title': 'Кабельная инфраструктура'})
+    model = FOCL
+    queryset = model.objects.all().order_by('-id')
+    return render(request, 'focls.html', {'title': 'Кабельная инфраструктура', 'objects': queryset})
 
 
 @login_required
@@ -136,7 +138,7 @@ def hardware_create(request):
         if form.is_valid():
             hardware = form.save(commit=False)
             hardware.save()
-            return redirect('hardware')
+            return redirect('many_hardware')
         else:
             return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
                                                    'form': form})
