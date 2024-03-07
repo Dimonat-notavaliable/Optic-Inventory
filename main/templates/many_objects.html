@@ -12,7 +12,7 @@
       <input type="hidden" name="sorting" value="{{params.sorting}}"/>
       <div class="form-control mr-2 p-0 d-flex">
       {{ search_form.search }}
-      <button type="button" class="btn btn-outline-danger border-0"
+      <button type="button" class="btn btn-outline btn-red border-0"
               onClick="document.getElementById('id_search').value = ''">X</button>
       </div>
       <button class="btn btn-outline btn-green" type="submit">Найти</button>
@@ -27,25 +27,25 @@
     <ul class="pagination mb-3">
       {% if objects.has_previous %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ objects.previous_page_number }}" aria-label="Previous">
+          <a class="page-link shadow-none" href="?page={{ objects.previous_page_number }}" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
       {% else %}
         <li class="page-item disabled">
-          <a class="page-link">
+          <a class="page-link shadow-none">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
       {% endif %}
       {% for page in objects.paginator.page_range %}
         <li class="page-item {% if page == objects.number %}active{% endif %}">
-          <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+          <a class="page-link shadow-none" href="?page={{ page }}">{{ page }}</a>
         </li>
       {% endfor %}
       {% if objects.has_next %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ objects.next_page_number }}" aria-label="Next">
+          <a class="page-link shadow-none" href="?page={{ objects.next_page_number }}" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

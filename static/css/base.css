@@ -32,3 +32,12 @@ body {
     color: white;
     background-color: #8CA243;
 }
+
+.btn-success{
+    color: white!important;
+    background-color: #8CA243!important;
+}
+.btn-success:hover{
+    color: white!important;
+    background-color: #5D6B2C!important;
+}
