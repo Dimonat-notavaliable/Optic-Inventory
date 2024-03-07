@@ -28,7 +28,7 @@
       <th class="text-center" scope="row">{{ forloop.counter }}</th>
       <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
       <td>{{ object.facility.name }}</td>
-      <td class="text-center">{{ object.IP }}</td>
+      <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
       <td class="text-center">{{ object.port_count }}</td>
       <td class="text-center">{{ object.port_count }}</td>
     </tr>

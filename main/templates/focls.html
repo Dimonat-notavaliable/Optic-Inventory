@@ -27,7 +27,7 @@
       <td class="text-center">{{ object.get_end }}</td>
       <td class="text-center">{{ object.cable.get_fiber_count }}</td>
       <td class="text-center">{{ object.cable_length }}</td>
-      <td class="text-center">{{ object.fiber_length }}</td>
+      <td class="text-center">{{ object.fiber_length|default_if_none:"-" }}</td>
       <td class="text-center">{{ object.cable }}</td>
     </tr>
     {% endfor %}
