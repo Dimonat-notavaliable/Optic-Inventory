@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Facility, Hardware
+from .models import Facility, Hardware, Cable, Muff
 
 
 class SearchForm(forms.Form):
@@ -25,7 +25,7 @@ class HardwareSortForm(forms.Form):
                                                                                    "onchange": "this.form.submit()"}))
 
 
-class FacilitiesSortForm(forms.Form):
+class CentersSortForm(forms.Form):
     sorting = forms.CharField(required=False, label='', widget=forms.Select(choices=[("-id", "Дате добавления"),
                                                                                      ("name", "Наименованию")],
                                                                             attrs={"class": "form-select w-auto",
@@ -50,6 +50,25 @@ class FacilityForm(forms.ModelForm):
     class Meta:
         model = Facility
         fields = ["name", "floor_count", "latitude", "longitude"]
+
+
+class MuffForm(forms.ModelForm):
+    name = forms.CharField(required=True, label='Наименование',
+                           widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                         "data-width": "auto"}))
+    capacity = forms.IntegerField(required=True, label='Вместимость',
+                                  widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                "data-width": "auto"}))
+    latitude = forms.DecimalField(required=True, label='Широта',
+                                  widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                "data-width": "auto"}))
+    longitude = forms.DecimalField(required=True, label='Долгота',
+                                   widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                 "data-width": "auto"}))
+
+    class Meta:
+        model = Muff
+        fields = ["name", "capacity", "latitude", "longitude"]
 
 
 class HardwareForm(forms.ModelForm):

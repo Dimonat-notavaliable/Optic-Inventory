@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DeleteView, CreateView
 
 from .decorators import superuser_only, writer_only
-from .forms import SearchForm, UsersSortForm, HardwareSortForm, FacilitiesSortForm, FacilityForm, HardwareForm
-from .models import Hardware, Facility, FOCL
+from . import forms
+from .models import Hardware, CommunicationCenter, Facility, FOCL, Muff
 
 
 @login_required
@@ -19,18 +19,29 @@ def index(request):
 
 
 @login_required
+def communication_centers(request):
+    model = Facility
+    queryset = model.objects.all().order_by('-id')
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    page_objects = paginator.get_page(page_number)
+    return render(request, 'centers.html', {'title': 'Узлы связи', 'objects': page_objects})
+
+
+@login_required
 def facilities(request):
     model = Facility
     queryset = model.objects.all().order_by('-id')
     params = {}
 
-    search_form = SearchForm({"search": request.GET.get("search", None)})
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
     if search_form.is_valid():
         search_query = search_form.cleaned_data.get("search")
         params['search'] = search_query
         queryset = queryset.filter(name__icontains=search_query)
 
-    sort_form = FacilitiesSortForm({"sorting": request.GET.get("sorting", None)})
+    sort_form = forms.CentersSortForm({"sorting": request.GET.get("sorting", None)})
     if sort_form.is_valid():
         sort_query = sort_form.cleaned_data.get("sorting")
         if sort_query not in ['-id', 'name']:
@@ -46,10 +57,62 @@ def facilities(request):
 
 
 @login_required
+def muffs(request):
+    model = Muff
+    queryset = model.objects.all().order_by('-id')
+    params = {}
+
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
+    if search_form.is_valid():
+        search_query = search_form.cleaned_data.get("search")
+        params['search'] = search_query
+        queryset = queryset.filter(name__icontains=search_query)
+
+    sort_form = forms.CentersSortForm({"sorting": request.GET.get("sorting", None)})
+    if sort_form.is_valid():
+        sort_query = sort_form.cleaned_data.get("sorting")
+        if sort_query not in ['-id', 'name']:
+            sort_query = '-id'
+        params['sorting'] = sort_query
+        queryset = queryset.order_by(sort_query)
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    page_objects = paginator.get_page(page_number)
+    return render(request, 'muffs.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
+                                          'search_form': search_form, 'sort_form': sort_form})
+
+
+@writer_only
+def muff_create(request):
+    if request.method == 'GET':
+        form = forms.MuffForm()
+        return render(request, 'create.html', {'title': 'Добавление муфты', 'type': "муфты",
+                                               'form': form})
+
+    if request.method == 'POST':
+        form = forms.MuffForm(request.POST)
+        if form.is_valid():
+            muff = form.save(commit=False)
+            muff.save()
+            return redirect('muffs')
+        else:
+            return render(request, 'create.html', {'title': 'Добавление муфты', 'type': "муфты",
+                                                   'form': form})
+
+
+@login_required
 def facilities_map(request):
     model = Facility
     facilities = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'facilities_map.html', {'title': 'Карта', 'objects': facilities})
+    return render(request, 'facilities_map.html', {'title': 'Карта сооружений связи', 'objects': facilities})
+
+
+@login_required
+def muffs_map(request):
+    model = Muff
+    muffs = list(model.objects.values('latitude', 'longitude', 'name'))
+    return render(request, 'facilities_map.html', {'title': 'Карта муфт', 'objects': muffs})
 
 
 @login_required
@@ -61,12 +124,12 @@ def facility(request, pk):
 @writer_only
 def facility_create(request):
     if request.method == 'GET':
-        form = FacilityForm()
+        form = forms.FacilityForm()
         return render(request, 'create.html', {'title': 'Добавление сооружения связи', 'type': "сооружения связи",
                                                'form': form})
 
     if request.method == 'POST':
-        form = FacilityForm(request.POST)
+        form = forms.FacilityForm(request.POST)
         if form.is_valid():
             facility = form.save(commit=False)
             facility.save()
@@ -100,13 +163,13 @@ def many_hardware(request):
     queryset = model.objects.all().order_by('-id')
     params = {}
 
-    search_form = SearchForm({"search": request.GET.get("search", None)})
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
     if search_form.is_valid():
         search_query = search_form.cleaned_data.get("search")
         params['search'] = search_query
         queryset = queryset.filter(marking__icontains=search_query)
 
-    sort_form = HardwareSortForm({"sorting": request.GET.get("sorting", None)})
+    sort_form = forms.HardwareSortForm({"sorting": request.GET.get("sorting", None)})
     if sort_form.is_valid():
         sort_query = sort_form.cleaned_data.get("sorting")
         if sort_query not in ['-id', 'marking']:
@@ -130,12 +193,12 @@ def hardware(request, pk):
 @writer_only
 def hardware_create(request):
     if request.method == 'GET':
-        form = HardwareForm()
+        form = forms.HardwareForm()
         return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
                                                'form': form})
 
     if request.method == 'POST':
-        form = HardwareForm(request.POST)
+        form = forms.HardwareForm(request.POST)
         if form.is_valid():
             hardware = form.save(commit=False)
             hardware.save()
@@ -156,13 +219,13 @@ def users(request):
     queryset = model.objects.all().order_by('-id')
     params = {}
 
-    search_form = SearchForm({"search": request.GET.get("search", None)})
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
     if search_form.is_valid():
         search_query = search_form.cleaned_data.get("search")
         params['search'] = search_query
         queryset = queryset.filter(last_name__icontains=search_query)
 
-    sort_form = UsersSortForm({"sorting": request.GET.get("sorting", None)})
+    sort_form = forms.UsersSortForm({"sorting": request.GET.get("sorting", None)})
     if sort_form.is_valid():
         sort_query = sort_form.cleaned_data.get("sorting")
         if sort_query not in ['-id', 'last_name']:
