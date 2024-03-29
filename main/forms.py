@@ -52,6 +52,22 @@ class CentersSortForm(forms.Form):
                                                                                    "onchange": "this.form.submit()"}))
 
 
+class FOCLsSortForm(forms.Form):
+    sorting = forms.CharField(required=False, label='', widget=forms.Select(choices=[("-id", "Дате добавления"),
+                                                                                     ("cable_length", "Протяженности")],
+                                                                            attrs={"class": "form-select w-auto",
+                                                                                   "data-width": "auto",
+                                                                                   "onchange": "this.form.submit()"}))
+
+
+class CrossesSortForm(forms.Form):
+    sorting = forms.CharField(required=False, label='', widget=forms.Select(choices=[("-id", "Дате добавления"),
+                                                                                     ("adapter_count", "Числу адаптеров")],
+                                                                            attrs={"class": "form-select w-auto",
+                                                                                   "data-width": "auto",
+                                                                                   "onchange": "this.form.submit()"}))
+
+
 class FacilityForm(forms.ModelForm):
     name = forms.CharField(required=True, label='Наименование',
                            widget=forms.TextInput(attrs={"class": "form-control w-auto",

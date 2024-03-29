@@ -22,11 +22,27 @@ def index(request):
 def communication_centers(request):
     model = Facility
     queryset = model.objects.all().order_by('-id')
+    params = {}
+
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
+    if search_form.is_valid():
+        search_query = search_form.cleaned_data.get("search")
+        params['search'] = search_query
+        queryset = queryset.filter(name__icontains=search_query)
+
+    sort_form = forms.CentersSortForm({"sorting": request.GET.get("sorting", None)})
+    if sort_form.is_valid():
+        sort_query = sort_form.cleaned_data.get("sorting")
+        if sort_query not in ['-id', 'name']:
+            sort_query = '-id'
+        params['sorting'] = sort_query
+        queryset = queryset.order_by(sort_query)
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'centers.html', {'title': 'Узлы связи', 'objects': page_objects})
+    return render(request, 'centers.html', {'title': 'Узлы связи', 'objects': page_objects, 'params': params,
+                                            'search_form': search_form, 'sort_form': sort_form})
 
 
 @login_required
@@ -156,7 +172,28 @@ def facility_map(request, pk):
 def focls(request):
     model = FOCL
     queryset = model.objects.all().order_by('-id')
-    return render(request, 'focls.html', {'title': 'ВОЛС', 'objects': queryset})
+    params = {}
+
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
+    if search_form.is_valid():
+        search_query = search_form.cleaned_data.get("search")
+        params['search'] = search_query
+        queryset = queryset.filter(cable__marking__icontains=search_query)
+
+    sort_form = forms.FOCLsSortForm({"sorting": request.GET.get("sorting", None)})
+    if sort_form.is_valid():
+        sort_query = sort_form.cleaned_data.get("sorting")
+        if sort_query not in ['-id', 'cable_length']:
+            sort_query = '-id'
+        params['sorting'] = sort_query
+        queryset = queryset.order_by(sort_query)
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    page_objects = paginator.get_page(page_number)
+
+    return render(request, 'focls.html', {'title': 'ВОЛС', 'objects': page_objects, 'params': params,
+                                          'search_form': search_form, 'sort_form': sort_form})
 
 
 @writer_only
@@ -201,11 +238,19 @@ def crosses(request):
         params['search'] = search_query
         queryset = queryset.filter(facility__name__icontains=search_query)
 
+    sort_form = forms.CrossesSortForm({"sorting": request.GET.get("sorting", None)})
+    if sort_form.is_valid():
+        sort_query = sort_form.cleaned_data.get("sorting")
+        if sort_query not in ['-id', 'adapter_count']:
+            sort_query = '-id'
+        params['sorting'] = sort_query
+        queryset = queryset.order_by(sort_query)
+
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
     return render(request, 'crosses.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
-                                            'search_form': search_form})
+                                            'search_form': search_form, 'sort_form': sort_form})
 
 
 @writer_only
