@@ -1,3 +1,4 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -23,12 +24,12 @@ def sign_up(request):
             current_context = {
                 'name': user.get_full_name,
                 'email': user.email,
-                'search': user.last_name
+                'domain': get_current_site(request).domain,
             }
             html_content = get_template('email_template.html').render(current_context)
 
             mail_subject = f'Новая регистрация: {user.email} - Optic Inventory'
-            from_email = 'Optic Inventory <optic-inventory@yandex.ru>'
+            from_email = 'Optic Inventory <ha.ha.cheetos@gmail.com>'
             to_email = 'ds.shushin@gmail.com'
 
             msg = EmailMultiAlternatives(mail_subject, '', from_email, [to_email])
