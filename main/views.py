@@ -7,7 +7,7 @@ from django.views.generic import DeleteView, CreateView
 
 from .decorators import superuser_only, writer_only
 from . import forms
-from .models import Hardware, CommunicationCenter, Facility, FOCL, Muff
+from .models import Hardware, CommunicationCenter, Facility, FOCL, Muff, Cross
 
 
 @login_required
@@ -157,6 +157,75 @@ def focls(request):
     return render(request, 'focls.html', {'title': 'ВОЛС', 'objects': queryset})
 
 
+@writer_only
+def focl_create(request):
+    context = {'title': 'Добавление линии связи', 'type': "линия связи"}
+
+    if request.method == 'GET':
+        form = forms.FOCLForm()
+        context['form'] = form
+        return render(request, 'focl_create.html', context)
+
+    if request.method == 'POST':
+        form = forms.FOCLForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('focls')
+        else:
+            context['form'] = form
+    return render(request, 'focl_create.html', context)
+
+
+@writer_only
+def load_centers(request):
+    type = request.GET.get('type')
+    centers = []
+    if type == "muff":
+        centers = Muff.objects.all().order_by('name')
+    elif type == "facility":
+        centers = Facility.objects.all().order_by('name')
+    return render(request, 'center_dropdown_list_options.html', {'centers': centers})
+
+
+@login_required
+def crosses(request):
+    model = Cross
+    queryset = model.objects.all().order_by('-id')
+    params = {}
+
+    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
+    if search_form.is_valid():
+        search_query = search_form.cleaned_data.get("search")
+        params['search'] = search_query
+        queryset = queryset.filter(facility__name__icontains=search_query)
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page')
+    page_objects = paginator.get_page(page_number)
+    return render(request, 'crosses.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
+                                            'search_form': search_form})
+
+
+@writer_only
+def cross_create(request):
+    context = {'title': 'Добавление кросса'}
+
+    if request.method == 'GET':
+        form = forms.CrossForm()
+        context['form'] = form
+        return render(request, 'create.html', context)
+
+    if request.method == 'POST':
+        form = forms.CrossForm(request.POST)
+        if form.is_valid():
+            cross = form.save(commit=False)
+            cross.save()
+            return redirect('crosses')
+        else:
+            context['form'] = form
+    return render(request, 'create.html', context)
+
+
 @login_required
 def many_hardware(request):
     model = Hardware
@@ -239,33 +308,3 @@ def users(request):
 
     return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
-
-
-@writer_only
-def focl_create(request):
-    context = {'title': 'Добавление линии связи', 'type': "линия связи"}
-
-    if request.method == 'GET':
-        form = forms.FOCLForm()
-        context['form'] = form
-        return render(request, 'focl_create.html', context)
-
-    if request.method == 'POST':
-        form = forms.FOCLForm(request.POST)
-        if form.is_valid():
-            _ = form.save(commit=False)
-            return redirect('home')
-        else:
-            context['form'] = form
-    return render(request, 'focl_create.html', context)
-
-
-@writer_only
-def load_centers(request):
-    type = request.GET.get('type')
-    centers = []
-    if type == "muff":
-        centers = Muff.objects.all().order_by('name')
-    elif type == "facility":
-        centers = Facility.objects.all().order_by('name')
-    return render(request, 'center_dropdown_list_options.html', {'centers': centers})

@@ -79,6 +79,61 @@ def create_hardware_ports(instance, **kwargs):
 models.signals.post_save.connect(create_hardware_ports, sender=Hardware, dispatch_uid='create_hardware_ports')
 
 
+class AdapterType(models.Model):
+    marking = models.CharField(_("Наименование"), blank=False, unique=True)
+
+    class Meta:
+        verbose_name = 'Тип адаптера'
+        verbose_name_plural = 'Типы адаптеров'
+
+    def __str__(self):
+        return f'Тип {self.marking}'
+
+
+# Оптический кросс
+class Cross(models.Model):
+    floor = models.IntegerField(_("Этаж расположения"), blank=False, default=1,
+                                validators=[MinValueValidator(1)])
+    facility = models.ForeignKey(Facility, on_delete=models.SET_NULL, related_name='crosses', blank=True, null=True)
+    linear_type = models.ForeignKey(AdapterType, on_delete=models.CASCADE, related_name='linear', blank=False)
+    station_type = models.ForeignKey(AdapterType, on_delete=models.CASCADE, related_name='station', blank=False)
+    adapter_count = models.IntegerField(_("Количество адаптеров"), default=0, blank=False)
+
+    class Meta:
+        verbose_name = 'Оптический кросс'
+        verbose_name_plural = 'Оптические кроссы'
+
+    def __str__(self):
+        return f'Кросс #{self.id}'
+
+
+# Адаптер оптического кросса
+class Adapter(models.Model):
+    number = models.IntegerField(_("Номер"), blank=False, validators=[MinValueValidator(1)])
+    cross = models.ForeignKey(Cross, on_delete=models.CASCADE, related_name='adapters', blank=False)
+    type = models.ForeignKey(AdapterType, on_delete=models.CASCADE, related_name='adapters', blank=False)
+    is_linear = models.BooleanField(_("Линейная сторона"), blank=False)
+
+    class Meta:
+        verbose_name = 'Адаптер кросса'
+        verbose_name_plural = 'Адаптеры кросса'
+
+    def __str__(self):
+        type = "линейный" if self.is_linear else "станционный"
+        return f'{self.cross}: Адаптер {self.number} {type}'
+
+
+def create_cross_adapters(instance, **kwargs):
+    for number in range(instance.adapter_count):
+        linear_adapter, _ = Adapter.objects.get_or_create(number=number + 1, cross=instance,
+                                                          type=instance.linear_type, is_linear=True)
+        station_adapter, _ = Adapter.objects.get_or_create(number=number + 1, cross=instance,
+                                                           type=instance.station_type, is_linear=False)
+
+
+models.signals.post_save.connect(create_cross_adapters, sender=Cross, dispatch_uid='create_cross_adapters')
+
+
 class Cable(models.Model):
     producer = models.CharField(_("Производитель"), blank=False)
     marking = models.CharField(_("Маркировка"), blank=False)

@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection
+from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType
 
 
 class DynamicModelChoiceField(forms.ModelChoiceField):
@@ -195,6 +195,29 @@ class FOCLForm(forms.ModelForm):
             end_connection.save()
 
         return instance
+
+
+class CrossForm(forms.ModelForm):
+    facility = forms.ModelChoiceField(required=True, label='Сооружение связи',
+                                      queryset=Facility.objects.all().order_by('name'),
+                                      widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                 "data-width": "auto"}),
+                                      empty_label="-- Выберите значение --")
+    adapter_count = forms.IntegerField(required=True, label='Количество адаптеров',
+                                       widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                     "data-width": "auto"}))
+    linear_type = forms.ModelChoiceField(required=True, label='Тип адаптеров линейной стороны',
+                                         queryset=AdapterType.objects.all().order_by('marking'),
+                                         widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                    "data-width": "auto"}))
+    station_type = forms.ModelChoiceField(required=True, label='Тип адаптеров линейной стороны',
+                                          queryset=AdapterType.objects.all().order_by('marking'),
+                                          widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                     "data-width": "auto"}))
+
+    class Meta:
+        model = Cross
+        fields = ["facility", "adapter_count", "linear_type", "station_type"]
 
 
 class UserRightsForm(forms.ModelForm):

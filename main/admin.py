@@ -1,16 +1,20 @@
 from django.contrib import admin
-from .models import Hardware, Port, Facility, Cable, Module, Fiber, FOCL, Muff, FacilityConnection, MuffConnection
+from . import models
 # Register your models here.
-admin.site.register(Facility)
-admin.site.register(Muff)
+admin.site.register(models.Facility)
+admin.site.register(models.Muff)
 
-admin.site.register(Hardware)
-admin.site.register(Port)
+admin.site.register(models.Hardware)
+admin.site.register(models.Port)
 
-admin.site.register(Cable)
-admin.site.register(Module)
-admin.site.register(Fiber)
+admin.site.register(models.Cable)
+admin.site.register(models.Module)
+admin.site.register(models.Fiber)
 
-admin.site.register(FOCL)
-admin.site.register(FacilityConnection)
-admin.site.register(MuffConnection)
+admin.site.register(models.FOCL)
+admin.site.register(models.FacilityConnection)
+admin.site.register(models.MuffConnection)
+
+admin.site.register(models.Cross)
+admin.site.register(models.Adapter)
+admin.site.register(models.AdapterType)
