@@ -5,25 +5,42 @@ from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
 
 
-# Сооружение связи
-class Facility(models.Model):
-    name = models.CharField(_("Название"), blank=False)
-    floor_count = models.IntegerField(_("Количество этажей"), blank=False, default=1,
-                                      validators=[MinValueValidator(1)])
+# Узел связи
+class CommunicationCenter(models.Model):
+    name = models.CharField(_("Наименование"), blank=False)
     latitude = models.DecimalField(_("Широта"), max_digits=9, decimal_places=6, blank=False)
     longitude = models.DecimalField(_("Долгота"), max_digits=9, decimal_places=6, blank=False)
 
     class Meta:
-        verbose_name = 'Сооружение связи'
-        verbose_name_plural = 'Сооружения связи'
+        abstract = True
 
     def __str__(self):
         return self.name
 
 
+# Сооружение связи
+class Facility(CommunicationCenter):
+    floor_count = models.IntegerField(_("Количество этажей"), blank=False, default=1,
+                                      validators=[MinValueValidator(1)])
+
+    class Meta:
+        verbose_name = 'Сооружение связи'
+        verbose_name_plural = 'Сооружения связи'
+
+
+# Муфта
+class Muff(CommunicationCenter):
+    capacity = models.IntegerField(_("Вместимость"), blank=False, default=64,
+                                   validators=[MinValueValidator(1)])
+
+    class Meta:
+        verbose_name = 'Муфта'
+        verbose_name_plural = 'Муфты'
+
+
 # Сетевое оборудование (маршрутизаторы, IP-телефоны, коммутаторы и т.д.)
 class Hardware(models.Model):
-    marking = models.CharField(_("Название"), blank=False)
+    marking = models.CharField(_("Наименование"), blank=False)
     type = models.CharField(_("Тип"), blank=False)
     port_count = models.IntegerField(_("Количество портов"), default=0, blank=False)
     floor = models.IntegerField(_("Этаж расположения"), blank=False, default=1,
@@ -56,7 +73,7 @@ class Port(models.Model):
 
 def create_hardware_ports(instance, **kwargs):
     for number in range(instance.port_count):
-        port, _ = Port.objects.get_or_create(number=number+1, hardware=instance)
+        port, _ = Port.objects.get_or_create(number=number + 1, hardware=instance)
 
 
 models.signals.post_save.connect(create_hardware_ports, sender=Hardware, dispatch_uid='create_hardware_ports')
@@ -122,23 +139,45 @@ class FOCL(models.Model):
         return f'Линия связи: {self.cable}'
 
     def get_start(self):
-        start_facility = self.passage.filter(is_start=True)[0].installation
-        return start_facility
+        if self.connection_muff.filter(is_start=True):
+            start = self.connection_muff.filter(is_start=True)[0].muff
+        elif self.connection_facility.filter(is_start=True):
+            start = self.connection_facility.filter(is_start=True)[0].facility
+        else:
+            start = None
+        return start
 
     def get_end(self):
-        end_facility = self.passage.filter(is_start=False)[0].installation
-        return end_facility
+        if self.connection_muff.filter(is_start=False):
+            end = self.connection_muff.filter(is_start=False)[0].muff
+        elif self.connection_facility.filter(is_start=False):
+            end = self.connection_facility.filter(is_start=False)[0].facility
+        else:
+            end = None
+        return end
 
 
-class Passage(models.Model):
-    focl = models.ForeignKey(FOCL, on_delete=models.CASCADE, related_name='passage', blank=False)
-    installation = models.ForeignKey(Facility, on_delete=models.CASCADE,
-                                     related_name='passage', blank=False)
+class FacilityConnection(models.Model):
+    focl = models.ForeignKey(FOCL, on_delete=models.CASCADE, related_name='connection_facility', blank=False)
+    facility = models.ForeignKey(Facility, on_delete=models.CASCADE, related_name='connection', blank=False)
     is_start = models.BooleanField(_("Начало"), blank=False)
 
     class Meta:
-        verbose_name = 'Следование'
-        verbose_name_plural = 'Следования'
+        verbose_name = 'Следование через сооружение'
+        verbose_name_plural = 'Следования через сооружение'
 
     def __str__(self):
-        return f'{self.focl} через {self.installation}'
+        return f'{self.focl} через {self.facility}'
+
+
+class MuffConnection(models.Model):
+    focl = models.ForeignKey(FOCL, on_delete=models.CASCADE, related_name='connection_muff', blank=False)
+    muff = models.ForeignKey(Muff, on_delete=models.CASCADE, related_name='connection', blank=False)
+    is_start = models.BooleanField(_("Начало"), blank=False)
+
+    class Meta:
+        verbose_name = 'Следование через муфту'
+        verbose_name_plural = 'Следования через муфту'
+
+    def __str__(self):
+        return f'{self.focl} через {self.muff}'

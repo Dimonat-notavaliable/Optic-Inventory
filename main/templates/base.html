@@ -28,12 +28,12 @@
               <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'facilities' %}" role="button" aria-expanded="false">
-                      Сооружения связи
+                    <a class="nav-link active" href="{% url 'centers' %}" role="button" aria-expanded="false">
+                      Узлы связи
                     </a>
                     <ul class="navbar-nav">
-                      <li><a class="nav-link" href="#">Узлы связи</a></li>
-                      <li><a class="nav-link" href="#">Муфты</a></li>
+                      <li><a class="nav-link" href="{% url 'facilities' %}">Сооружения связи</a></li>
+                      <li><a class="nav-link" href="{% url 'muffs' %}">Муфты</a></li>
                     </ul>
                   </li>
                   <li class="nav-item">
@@ -41,7 +41,7 @@
                       Кабельная инфраструктура
                     </a>
                     <ul class="navbar-nav">
-                      <li><a class="nav-link" href="#">ВОЛС</a></li>
+                      <li><a class="nav-link" href="{% url 'focls' %}">ВОЛС</a></li>
                       <li><a class="nav-link" href="#">Кроссы</a></li>
                     </ul>
                   </li>
@@ -72,19 +72,19 @@
           <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
               <li class="nav-item mx-2 dropdown">
-                  <a class="nav-link link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'facilities' %}" role="button" aria-expanded="false">
-                    Сооружения связи
+                  <a class="nav-link link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{% url 'centers' %}" role="button" aria-expanded="false">
+                    Узлы связи
                   </a>
                   <ul class="dropdown-menu dropdown-menu-dark bg-dark">
-                    <li><a class="dropdown-item" href="#">Узлы связи</a></li>
-                    <li><a class="dropdown-item" href="#">Муфты</a></li>
+                    <li><a class="dropdown-item" href="{% url 'facilities' %}">Сооружения связи</a></li>
+                    <li><a class="dropdown-item" href="{% url 'muffs' %}">Муфты</a></li>
                   </ul>
               <li class="nav-item mx-2 dropdown">
                 <a class="nav-link" href="{% url 'focls' %}" role="button" aria-expanded="false">
                     Кабельная инфраструктура
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark bg-dark">
-                    <li><a class="dropdown-item" href="#">ВОЛС</a></li>
+                    <li><a class="dropdown-item" href="{% url 'focls' %}">ВОЛС</a></li>
                     <li><a class="dropdown-item" href="#">Кроссы</a></li>
                 </ul>
               </li>
