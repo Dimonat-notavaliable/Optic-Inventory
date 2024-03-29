@@ -1,7 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType
+from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType, \
+    HardwareType
 
 
 class DynamicModelChoiceField(forms.ModelChoiceField):
@@ -9,16 +10,7 @@ class DynamicModelChoiceField(forms.ModelChoiceField):
         try:
             value = super().to_python(value)
         except ValidationError:
-            key = self.to_field_name or 'pk'
-            muff = Muff.objects.filter(**{key: value})
-            facility = Facility.objects.filter(**{key: value})
-            if facility.exists():
-                value = facility
-            elif muff.exists():
-                value = muff
-            else:
-                raise
-            value = value.first()
+            return int(value)
         return value
 
 
@@ -62,7 +54,8 @@ class FOCLsSortForm(forms.Form):
 
 class CrossesSortForm(forms.Form):
     sorting = forms.CharField(required=False, label='', widget=forms.Select(choices=[("-id", "Дате добавления"),
-                                                                                     ("adapter_count", "Числу адаптеров")],
+                                                                                     ("adapter_count",
+                                                                                      "Числу адаптеров")],
                                                                             attrs={"class": "form-select w-auto",
                                                                                    "data-width": "auto",
                                                                                    "onchange": "this.form.submit()"}))
@@ -116,9 +109,10 @@ class HardwareForm(forms.ModelForm):
     marking = forms.CharField(required=True, label='Наименование',
                               widget=forms.TextInput(attrs={"class": "form-control w-auto",
                                                             "data-width": "auto"}))
-    type = forms.CharField(required=True, label='Тип',
-                           widget=forms.TextInput(attrs={"class": "form-control w-auto",
-                                                         "data-width": "auto"}))
+    type = forms.ModelChoiceField(required=True, label='Тип оборудования',
+                                  queryset=HardwareType.objects.all().order_by('marking'),
+                                  widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                             "data-width": "auto"}))
     port_count = forms.IntegerField(required=True, label='Количество портов',
                                     widget=forms.TextInput(attrs={"class": "form-control w-auto",
                                                                   "data-width": "auto"}))
@@ -140,7 +134,7 @@ class FOCLForm(forms.ModelForm):
                                                               "data-width": "auto"}))
 
     start = DynamicModelChoiceField(required=True, label='Начальный узел связи',
-                                    queryset=Facility.objects.all(),
+                                    queryset=Facility.objects.none(),
                                     widget=forms.Select(attrs={"class": "form-select w-auto",
                                                                "data-width": "auto"}),
                                     empty_label="— Выберите тип —")
@@ -150,13 +144,13 @@ class FOCLForm(forms.ModelForm):
                                                             "data-width": "auto"}))
 
     end = DynamicModelChoiceField(required=True, label='Конечный узел связи',
-                                  queryset=Facility.objects.all(),
+                                  queryset=Facility.objects.none(),
                                   widget=forms.Select(attrs={"class": "form-select w-auto",
                                                              "data-width": "auto"}),
                                   empty_label="— Выберите тип —")
 
     cable = forms.ModelChoiceField(required=True, label='Кабель',
-                                   queryset=Cable.objects.all().order_by('producer'),
+                                   queryset=Cable.objects.filter(focl=None).order_by('producer'),
                                    widget=forms.Select(attrs={"class": "form-select w-auto",
                                                               "data-width": "auto"}),
                                    empty_label="— Выберите значение —")
@@ -182,8 +176,6 @@ class FOCLForm(forms.ModelForm):
 
         self.fields['start_type'].choices = CENTER_CHOICES
         self.fields['end_type'].choices = CENTER_CHOICES
-        self.fields['start'].queryset = Facility.objects.none()
-        self.fields['end'].queryset = Facility.objects.none()
 
     def save(self, commit=True):
         instance = super(FOCLForm, self).save(commit=False)
@@ -196,19 +188,18 @@ class FOCLForm(forms.ModelForm):
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
 
-        if self.cleaned_data.get('start_type') == 'muff':
-            start_connection = MuffConnection(focl=instance, muff=start, is_start=True)
-            start_connection.save()
-        elif self.cleaned_data.get('start_type') == 'facility':
-            start_connection = FacilityConnection(focl=instance, facility=start, is_start=True)
-            start_connection.save()
+        for connection_type, connection in [('start_type', start), ('end_type', end)]:
+            is_start = (connection_type == 'start_type')
 
-        if self.cleaned_data.get('end_type') == 'muff':
-            end_connection = MuffConnection(focl=instance, muff=end, is_start=False)
-            end_connection.save()
-        elif self.cleaned_data.get('end_type') == 'facility':
-            end_connection = FacilityConnection(focl=instance, facility=end, is_start=False)
-            end_connection.save()
+            if self.cleaned_data.get(connection_type) == 'muff':
+                muff = Muff.objects.get(pk=connection)
+                connection = MuffConnection(focl=instance, muff=muff, is_start=is_start)
+                connection.save()
+
+            elif self.cleaned_data.get(connection_type) == 'facility':
+                facility = Facility.objects.get(pk=connection)
+                connection = FacilityConnection(focl=instance, facility=facility, is_start=is_start)
+                connection.save()
 
         return instance
 
@@ -226,7 +217,7 @@ class CrossForm(forms.ModelForm):
                                          queryset=AdapterType.objects.all().order_by('marking'),
                                          widget=forms.Select(attrs={"class": "form-select w-auto",
                                                                     "data-width": "auto"}))
-    station_type = forms.ModelChoiceField(required=True, label='Тип адаптеров линейной стороны',
+    station_type = forms.ModelChoiceField(required=True, label='Тип адаптеров станционной стороны',
                                           queryset=AdapterType.objects.all().order_by('marking'),
                                           widget=forms.Select(attrs={"class": "form-select w-auto",
                                                                      "data-width": "auto"}))

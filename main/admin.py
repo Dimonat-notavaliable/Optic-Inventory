@@ -5,6 +5,7 @@ admin.site.register(models.Facility)
 admin.site.register(models.Muff)
 
 admin.site.register(models.Hardware)
+admin.site.register(models.HardwareType)
 admin.site.register(models.Port)
 
 admin.site.register(models.Cable)

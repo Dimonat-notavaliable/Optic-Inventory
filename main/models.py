@@ -38,10 +38,21 @@ class Muff(CommunicationCenter):
         verbose_name_plural = 'Муфты'
 
 
+class HardwareType(models.Model):
+    marking = models.CharField(_("Наименование"), blank=False, unique=True)
+
+    class Meta:
+        verbose_name = 'Тип оборудования'
+        verbose_name_plural = 'Типы оборудования'
+
+    def __str__(self):
+        return f'{self.marking}'
+
+
 # Сетевое оборудование (маршрутизаторы, IP-телефоны, коммутаторы и т.д.)
 class Hardware(models.Model):
     marking = models.CharField(_("Наименование"), blank=False)
-    type = models.CharField(_("Тип"), blank=False)
+    type = models.ForeignKey(HardwareType, on_delete=models.CASCADE, related_name='hardware', blank=False)
     port_count = models.IntegerField(_("Количество портов"), default=0, blank=False)
     floor = models.IntegerField(_("Этаж расположения"), blank=False, default=1,
                                 validators=[MinValueValidator(1)])
