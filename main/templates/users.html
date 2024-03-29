@@ -22,9 +22,9 @@
       <td>{{ object.last_name }}</td>
       <td>{{ object.first_name }}</td>
       <td>{{ object.patronymic }}</td>
-      <td class="text-center"><input class="form-check-input " type="checkbox" disabled {% if user.is_active %} checked {% endif %} /></td>
-      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if user.is_writer %} checked {% endif %} /></td>
-      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if user.is_superuser %} checked {% endif %} /></td>
+      <td class="text-center"><input class="form-check-input " type="checkbox" disabled {% if object.is_active %} checked {% endif %} /></td>
+      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_writer %} checked {% endif %} /></td>
+      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_superuser %} checked {% endif %} /></td>
     </tr>
     {% endfor %}
   </tbody>

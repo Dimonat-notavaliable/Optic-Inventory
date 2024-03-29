@@ -24,21 +24,3 @@ facilities.forEach(facility => {
     marker.bindPopup(facility.name).openPopup();
     marker.addTo(map);
 })
-
-/*
-map.on('click', (event) => {
-    let lat = event.latlng.lat;
-    let lng = event.latlng.lng;
-    L.marker([lat, lng]).addTo(map);
-    fetch(`/get-nearest-facility?latitude=${lat}&longitude=${lng}`).then(response => response.json()).then(result => {
-        var facility_coordinates = result.coordinates;
-        var click_coordinates = [lat, lng];
-        let polyline = L.polyline([click_coordinates, facility_coordinates]).addTo(map);
-
-        var popup = L.popup()
-        .setLatLng(click_coordinates)
-        .setContent(`<p>Nearest facility is in <br/>${result.distance} km</p>`)
-        .openOn(map);
-    })
-})
-*/
