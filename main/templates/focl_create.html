@@ -3,7 +3,7 @@
     {{title}}
 {% endblock %}
 {% block content %}
-    <h5 class="my-3">Добавление {{type}}</h5>
+    <h5 class="my-3">{{title}}</h5>
     <form method="POST" id="focl_form" enctype="multipart/form-data" class="my-3" data-centers-url="{% url 'ajax_load_centers' %}" novalidate>
         {% csrf_token %}
         {{ form.as_p }}

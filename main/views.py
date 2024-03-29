@@ -85,10 +85,11 @@ def muffs(request):
 
 @writer_only
 def muff_create(request):
+    context = {'title': 'Добавление муфты'}
     if request.method == 'GET':
         form = forms.MuffForm()
-        return render(request, 'create.html', {'title': 'Добавление муфты', 'type': "муфты",
-                                               'form': form})
+        context['form'] = form
+        return render(request, 'create.html', context)
 
     if request.method == 'POST':
         form = forms.MuffForm(request.POST)
@@ -97,8 +98,8 @@ def muff_create(request):
             muff.save()
             return redirect('muffs')
         else:
-            return render(request, 'create.html', {'title': 'Добавление муфты', 'type': "муфты",
-                                                   'form': form})
+            context['form'] = form
+            return render(request, 'create.html', context)
 
 
 @login_required
@@ -123,10 +124,11 @@ def facility(request, pk):
 
 @writer_only
 def facility_create(request):
+    context = {'title': 'Добавление сооружения связи'}
     if request.method == 'GET':
         form = forms.FacilityForm()
-        return render(request, 'create.html', {'title': 'Добавление сооружения связи', 'type': "сооружения связи",
-                                               'form': form})
+        context['form'] = form
+        return render(request, 'create.html', context)
 
     if request.method == 'POST':
         form = forms.FacilityForm(request.POST)
@@ -135,8 +137,8 @@ def facility_create(request):
             facility.save()
             return redirect('facilities')
         else:
-            return render(request, 'create.html', {'title': 'Добавление сооружения связи', 'type': "сооружения связи",
-                                                   'form': form})
+            context['form'] = form
+            return render(request, 'create.html', context)
 
 
 class FacilityDelete(DeleteView):
@@ -159,7 +161,7 @@ def focls(request):
 
 @writer_only
 def focl_create(request):
-    context = {'title': 'Добавление линии связи', 'type': "линия связи"}
+    context = {'title': 'Добавление линии связи'}
 
     if request.method == 'GET':
         form = forms.FOCLForm()
@@ -261,10 +263,12 @@ def hardware(request, pk):
 
 @writer_only
 def hardware_create(request):
+    context = {'title': 'Добавление оборудования'}
+
     if request.method == 'GET':
         form = forms.HardwareForm()
-        return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
-                                               'form': form})
+        context['form'] = form
+        return render(request, 'create.html', context)
 
     if request.method == 'POST':
         form = forms.HardwareForm(request.POST)
@@ -273,8 +277,8 @@ def hardware_create(request):
             hardware.save()
             return redirect('many_hardware')
         else:
-            return render(request, 'create.html', {'title': 'Добавление оборудования', 'type': "оборудования",
-                                                   'form': form})
+            context['form'] = form
+            return render(request, 'create.html', context)
 
 
 class HardwareDelete(DeleteView):
