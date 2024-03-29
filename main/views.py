@@ -154,7 +154,7 @@ def facility_map(request, pk):
 def focls(request):
     model = FOCL
     queryset = model.objects.all().order_by('-id')
-    return render(request, 'focls.html', {'title': 'Кабельная инфраструктура', 'objects': queryset})
+    return render(request, 'focls.html', {'title': 'ВОЛС', 'objects': queryset})
 
 
 @login_required
@@ -239,3 +239,33 @@ def users(request):
 
     return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
+
+
+@writer_only
+def focl_create(request):
+    context = {'title': 'Добавление линии связи', 'type': "линия связи"}
+
+    if request.method == 'GET':
+        form = forms.FOCLForm()
+        context['form'] = form
+        return render(request, 'focl_create.html', context)
+
+    if request.method == 'POST':
+        form = forms.FOCLForm(request.POST)
+        if form.is_valid():
+            _ = form.save(commit=False)
+            return redirect('home')
+        else:
+            context['form'] = form
+    return render(request, 'focl_create.html', context)
+
+
+@writer_only
+def load_centers(request):
+    type = request.GET.get('type')
+    centers = []
+    if type == "muff":
+        centers = Muff.objects.all().order_by('name')
+    elif type == "facility":
+        centers = Facility.objects.all().order_by('name')
+    return render(request, 'center_dropdown_list_options.html', {'centers': centers})

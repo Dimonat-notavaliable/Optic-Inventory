@@ -13,10 +13,14 @@ urlpatterns = [
     path('facilities/delete/<int:pk>/', writer_only(views.FacilityDelete.as_view()), name="facility_delete"),
     path('muffs/', views.muffs, name="muffs"),
     path('muffs/map', views.muffs_map, name="muffs_map"),
+    path('muffs/new/', views.muff_create, name="muff_create"),
     path('focls/', views.focls, name="focls"),
+    path('focls/new/', views.focl_create, name="focl_create"),
+    path('ajax/load-centers/', views.load_centers, name='ajax_load_centers'),
     path('hardware/', views.many_hardware, name="many_hardware"),
     path('hardware/new/', views.hardware_create, name="hardware_create"),
     path('hardware/<int:pk>/', views.hardware, name="hardware"),
     path('hardware/delete/<int:pk>/', writer_only(views.HardwareDelete.as_view()), name="hardware_delete"),
     path('users/', views.users, name="users"),
+
 ]

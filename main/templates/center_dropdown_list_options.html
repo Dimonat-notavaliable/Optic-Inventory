@@ -1,0 +1,8 @@
+{% if centers %}
+    <option value="">— Выберите значение —</option>
+    {% for center in centers %}
+    <option value="{{ center.pk }}">{{ center.name }}</option>
+    {% endfor %}
+{%else%}
+    <option value="">— Выберите тип —</option>
+{% endif %}

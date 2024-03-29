@@ -1,6 +1,25 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
-from .models import Facility, Hardware, Cable, Muff
+from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection
+
+
+class DynamicModelChoiceField(forms.ModelChoiceField):
+    def to_python(self, value):
+        try:
+            value = super().to_python(value)
+        except ValidationError:
+            key = self.to_field_name or 'pk'
+            muff = Muff.objects.filter(**{key: value})
+            facility = Facility.objects.filter(**{key: value})
+            if facility.exists():
+                value = facility
+            elif muff.exists():
+                value = muff
+            else:
+                raise
+            value = value.first()
+        return value
 
 
 class SearchForm(forms.Form):
@@ -97,3 +116,96 @@ class HardwareForm(forms.ModelForm):
     class Meta:
         model = Hardware
         fields = ["facility", "marking", "type", "port_count", "IP", "MAC"]
+
+
+class FOCLForm(forms.ModelForm):
+    start_type = forms.ChoiceField(required=True, label='Тип начального узла связи', choices=[],
+                                   widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                              "data-width": "auto"}))
+
+    start = DynamicModelChoiceField(required=True, label='Начальный узел связи',
+                                    queryset=Facility.objects.all(),
+                                    widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                               "data-width": "auto"}),
+                                    empty_label="— Выберите тип —")
+
+    end_type = forms.ChoiceField(required=True, label='Тип конечного узла связи', choices=[],
+                                 widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                            "data-width": "auto"}))
+
+    end = DynamicModelChoiceField(required=True, label='Конечный узел связи',
+                                  queryset=Facility.objects.all(),
+                                  widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                             "data-width": "auto"}),
+                                  empty_label="— Выберите тип —")
+
+    cable = forms.ModelChoiceField(required=True, label='Кабель',
+                                   queryset=Cable.objects.all().order_by('producer'),
+                                   widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                              "data-width": "auto"}),
+                                   empty_label="— Выберите значение —")
+    cable_length = forms.DecimalField(required=True, label='Длина по кабелю (м.)',
+                                      widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                    "data-width": "auto"}))
+    fiber_length = forms.DecimalField(required=False, label='Длина по волокну (м.)',
+                                      widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                                    "data-width": "auto"}))
+
+    class Meta:
+        model = FOCL
+        fields = ["start_type", "start", "end_type", "end", "cable", "cable_length", "fiber_length"]
+
+    def __init__(self, *args, **kwargs):
+        super(FOCLForm, self).__init__(*args, **kwargs)
+
+        CENTER_CHOICES = [
+            (None, "— Выберите значение —"),
+            ("facility", "Сооружение связи"),
+            ("muff", "Муфта"),
+        ]
+
+        self.fields['start_type'].choices = CENTER_CHOICES
+        self.fields['end_type'].choices = CENTER_CHOICES
+        self.fields['start'].queryset = Facility.objects.none()
+        self.fields['end'].queryset = Facility.objects.none()
+
+    def save(self, commit=True):
+        instance = super(FOCLForm, self).save(commit=False)
+        instance.cable_length = self.cleaned_data.get('cable_length')
+        instance.cable = self.cleaned_data.get('cable')
+        instance.fiber_length = self.cleaned_data.get('fiber_length')
+
+        instance.save()
+
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+
+        if self.cleaned_data.get('start_type') == 'muff':
+            start_connection = MuffConnection(focl=instance, muff=start, is_start=True)
+            start_connection.save()
+        elif self.cleaned_data.get('start_type') == 'facility':
+            start_connection = FacilityConnection(focl=instance, facility=start, is_start=True)
+            start_connection.save()
+
+        if self.cleaned_data.get('end_type') == 'muff':
+            end_connection = MuffConnection(focl=instance, muff=end, is_start=False)
+            end_connection.save()
+        elif self.cleaned_data.get('end_type') == 'facility':
+            end_connection = FacilityConnection(focl=instance, facility=end, is_start=False)
+            end_connection.save()
+
+        return instance
+
+
+class UserRightsForm(forms.ModelForm):
+    is_active = forms.BooleanField(required=False, label='Активен',
+                                   widget=forms.CheckboxInput(attrs={"class": "form-check-input shadow-none"}),
+                                   )
+    is_writer = forms.BooleanField(required=False, label='Редактор',
+                                   widget=forms.CheckboxInput(attrs={"class": "form-check-input shadow-none"}))
+    is_superuser = forms.BooleanField(required=False, label='Администратор',
+                                      widget=forms.CheckboxInput(attrs={"class": "form-check-input shadow-none"}))
+
+    class Meta:
+        model = Hardware
+        fields = ["is_active", "is_writer", "is_superuser"]
