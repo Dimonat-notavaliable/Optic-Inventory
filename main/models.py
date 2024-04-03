@@ -79,6 +79,22 @@ class Port(models.Model):
         verbose_name = 'Порт оборудования'
         verbose_name_plural = 'Порты оборудования'
 
+    def is_commutated(self):
+        if self.start_connections.exists() or self.end_connections.exists():
+            return True
+        else:
+            return False
+
+    def get_connection(self):
+        if self.is_commutated:
+            if self.start_connections.exists():
+                connection = self.start_connections.first()
+            else:
+                connection = self.end_connections.first()
+            return connection
+        else:
+            return None
+
     def __str__(self):
         return f'{self.hardware.marking} #{self.hardware.id}: Порт {self.number}'
 
@@ -262,3 +278,42 @@ class Notification(models.Model):
 
     def __str__(self):
         return f'Действие от {self.user.get_full_name}'
+
+
+class Connection(models.Model):
+    facility = models.ForeignKey(Facility, on_delete=models.CASCADE, related_name='connections', blank=False)
+    start_port = models.ForeignKey(Port, on_delete=models.CASCADE, related_name='start_connections',
+                                   blank=True, null=True)
+    start_adapter = models.ForeignKey(Adapter, on_delete=models.CASCADE, related_name='start_connections',
+                                      blank=True, null=True)
+    start_fiber = models.ForeignKey(Fiber, on_delete=models.CASCADE, related_name='start_connections',
+                                    blank=True, null=True)
+    end_port = models.ForeignKey(Port, on_delete=models.CASCADE, related_name='end_connections',
+                                 blank=True, null=True)
+    end_adapter = models.ForeignKey(Adapter, on_delete=models.CASCADE, related_name='end_connections',
+                                    blank=True, null=True)
+    end_fiber = models.ForeignKey(Fiber, on_delete=models.CASCADE, related_name='end_connections',
+                                  blank=True, null=True)
+
+    def get_start(self):
+        if self.start_port:
+            return self.start_port
+        elif self.start_adapter:
+            return self.start_adapter
+        else:
+            return self.start_fiber
+
+    def get_end(self):
+        if self.end_port:
+            return self.end_port
+        elif self.end_adapter:
+            return self.end_adapter
+        else:
+            return self.end_fiber
+
+    class Meta:
+        verbose_name = 'Соединение'
+        verbose_name_plural = 'Соединения'
+
+    def __str__(self):
+        return f'Соединение №{self.id}'

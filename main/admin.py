@@ -20,4 +20,6 @@ admin.site.register(models.Cross)
 admin.site.register(models.Adapter)
 admin.site.register(models.AdapterType)
 
+admin.site.register(models.Connection)
+
 admin.site.register(models.Notification)
