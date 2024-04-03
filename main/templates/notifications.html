@@ -1,0 +1,22 @@
+{% if notifications %}
+    {% for notification in notifications %}
+      <div class="notification">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+              <div {% if not notification.is_read %} onclick="readNotification(this, {{notification.id}})" {% endif %}
+                   style="cursor: pointer;" class="d-inline-flex  {% if notification.is_read %}text-secondary{% endif %}"
+                   data-bs-toggle="collapse" data-bs-target="#collapse{{ notification.pk }}"
+                   aria-expanded="false" aria-controls="collapseExample">
+                  <h5 class="my-0">{{notification.user.get_full_name}}</h5>
+                  <p class="my-0">{{ notification.timestamp }}</p>
+              </div>
+              <button type="submit" onclick="deleteNotification(this, {{notification.id}})"
+                      class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          <div class="collapse multi-collapse" id="collapse{{ notification.pk }}">
+            <p>{{ notification.message }}</p>
+          </div>
+      </div>
+    {% endfor %}
+{% else %}
+    <p>Нет новых уведомлений</p>
+{% endif %}

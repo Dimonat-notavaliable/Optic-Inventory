@@ -1,6 +1,7 @@
 from django.urls import path
-from .decorators import writer_only
+
 from . import views
+from .decorators import writer_only
 
 urlpatterns = [
     path('', views.index, name="home"),
@@ -29,6 +30,10 @@ urlpatterns = [
     path('hardware/new/', views.hardware_create, name="hardware_create"),
     path('hardware/<int:pk>/', views.hardware, name="hardware"),
     path('hardware/delete/<int:pk>/', writer_only(views.HardwareDelete.as_view()), name="hardware_delete"),
+
     path('users/', views.users, name="users"),
+    path('ajax/load-notifications/', views.load_notifications, name='ajax_load_notifications'),
+    path('notifications/read/<int:pk>/', views.read_notification, name='read_notification'),
+    path('notifications/delete/<int:pk>/', views.delete_notification, name="notification_delete"),
 
 ]

@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from colorfield.fields import ColorField
+from django.contrib.auth import get_user_model
 
 
 # Узел связи
@@ -247,3 +248,17 @@ class MuffConnection(models.Model):
 
     def __str__(self):
         return f'{self.focl} через {self.muff}'
+
+
+class Notification(models.Model):
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Уведомление'
+        verbose_name_plural = 'Уведомления'
+
+    def __str__(self):
+        return f'Действие от {self.user.get_full_name}'

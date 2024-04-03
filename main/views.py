@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.generic import DeleteView, CreateView
+from django.views.generic import DeleteView
 
-from .decorators import superuser_only, writer_only
 from . import forms
-from .models import Hardware, CommunicationCenter, Facility, FOCL, Muff, Cross
+from .decorators import superuser_only, writer_only
+from .models import Hardware, Facility, FOCL, Muff, Cross, Notification
 
 
 @login_required
@@ -208,7 +209,12 @@ def focl_create(request):
     if request.method == 'POST':
         form = forms.FOCLForm(request.POST)
         if form.is_valid():
-            form.save(commit=True)
+            instance = form.save(commit=True)
+            current_user = request.user
+            if not current_user.is_superuser:
+                message = f'Создана новая линия связи между {instance.get_start.name} и {instance.get_end.name}'
+                notification = Notification(user=current_user, message=message)
+                notification.save()
             return redirect('focls')
         else:
             context['form'] = form
@@ -320,6 +326,11 @@ def hardware_create(request):
         if form.is_valid():
             hardware = form.save(commit=False)
             hardware.save()
+            current_user = request.user
+            if not current_user.is_superuser:
+                message = f'Добавлено оборудование {hardware.marking} в {hardware.facility.name}'
+                notification = Notification(user=current_user, message=message)
+                notification.save()
             return redirect('many_hardware')
         else:
             context['form'] = form
@@ -357,3 +368,34 @@ def users(request):
 
     return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
+
+
+@superuser_only
+def load_notifications(request):
+    notifications = Notification.objects.all().order_by('is_read', '-id')
+    return render(request, 'notifications.html', {'notifications': notifications})
+
+
+@superuser_only
+def read_notification(request, pk):
+    notification = Notification.objects.get(id=pk)
+    notification.is_read = True
+    notification.save()
+    return HttpResponse(status=200)
+
+
+@superuser_only
+def delete_notification(request, pk):
+    if request.method == 'POST':
+        notification = Notification.objects.get(id=pk)
+        notification.delete()
+        return HttpResponse(status=200)
+
+
+class NotificationDelete(DeleteView):
+    model = Notification
+
+    def get_success_url(self):
+        # Assuming there is a ForeignKey from Comment to Post in your model
+        post = self.request.META.get('HTTP_REFERER')
+        return post
