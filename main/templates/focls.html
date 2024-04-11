@@ -11,29 +11,30 @@
 {% block search_action %}{% url 'focls' %}{% endblock %}
 {% block sorting_action %}{% url 'focls' %}{% endblock %}
 {% block table %}
-  <caption>ВОЛС</caption>
-  <thead class="table-dark">
-    <tr class="text-center align-middle">
-      <th scope="col" title="Номер по порядку">№</th>
-      <th scope="col" title="Начальная точка">Начальная точка</th>
-      <th scope="col" title="Конечная точка">Конечная точка</th>
-      <th scope="col" title="Количество оптических волокон">Кол-во ОВ</th>
-      <th scope="col" title="Длина по кабелю (м.)">Длина по кабелю (м.)</th>
-      <th scope="col" title="Длина по волокну (м.)">Длина по волокну (м.)</th>
-      <th scope="col" title="Марка кабеля">Марка кабеля</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr class="align-middle">
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td class="text-center">{{ object.get_start }}</td>
-      <td class="text-center">{{ object.get_end }}</td>
-      <td class="text-center">{{ object.cable.get_fiber_count }}</td>
-      <td class="text-center">{{ object.cable_length }}</td>
-      <td class="text-center">{{ object.fiber_length|default_if_none:"-" }}</td>
-      <td class="text-center">{{ object.cable }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="ВОЛС">
+    <thead class="table-dark">
+      <tr class="text-center align-middle">
+        <th scope="col" title="Номер по порядку">№</th>
+        <th scope="col" title="Начальная точка">Начальная точка</th>
+        <th scope="col" title="Конечная точка">Конечная точка</th>
+        <th scope="col" title="Количество оптических волокон">Кол-во ОВ</th>
+        <th scope="col" title="Длина по кабелю (м.)">Длина по кабелю (м.)</th>
+        <th scope="col" title="Длина по волокну (м.)">Длина по волокну (м.)</th>
+        <th scope="col" title="Марка кабеля">Марка кабеля</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr class="align-middle">
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td class="text-center">{{ object.get_start }}</td>
+        <td class="text-center">{{ object.get_end }}</td>
+        <td class="text-center">{{ object.cable.get_fiber_count }}</td>
+        <td class="text-center">{{ object.cable_length }}</td>
+        <td class="text-center">{{ object.fiber_length|default_if_none:"-" }}</td>
+        <td class="text-center">{{ object.cable }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

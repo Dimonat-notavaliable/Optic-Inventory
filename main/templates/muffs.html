@@ -11,23 +11,25 @@
 {% block search_action %}{% url 'muffs' %}{% endblock %}
 {% block sorting_action %}{% url 'muffs' %}{% endblock %}
 {% block table %}
-  <caption>Муфты <a href="{% url 'muffs_map' %}" class="text-success">Карта</a></caption>
-  <thead class="table-dark">
-    <tr class="text-center align-middle">
-      <th scope="col" title="Номер по порядку">№</th>
-      <th scope="col" title="Наименование">Наименование</th>
-      <th scope="col" title="Широта">Широта</th>
-      <th scope="col" title="Долгота">Долгота</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr class="align-middle">
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td>{{ object.name }}</td>
-      <td class="text-center">{{ object.latitude }}</td>
-      <td class="text-center">{{ object.longitude }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="Муфты">
+    <caption><a href="{% url 'muffs_map' %}" class="text-success">Карта</a></caption>
+    <thead class="table-dark">
+      <tr class="text-center align-middle">
+        <th scope="col" title="Номер по порядку">№</th>
+        <th scope="col" title="Наименование">Наименование</th>
+        <th scope="col" title="Широта">Широта</th>
+        <th scope="col" title="Долгота">Долгота</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr class="align-middle">
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td>{{ object.name }}</td>
+        <td class="text-center">{{ object.latitude }}</td>
+        <td class="text-center">{{ object.longitude }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

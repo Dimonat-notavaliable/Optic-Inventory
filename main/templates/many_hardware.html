@@ -11,27 +11,28 @@
 {% block search_action %}{% url 'many_hardware' %}{% endblock %}
 {% block sorting_action %}{% url 'many_hardware' %}{% endblock %}
 {% block table %}
-  <caption>Оборудование</caption>
-  <thead class="table-dark">
-    <tr class="text-center">
-      <th scope="col">№</th>
-      <th scope="col">Наименование</th>
-      <th scope="col">Расположение</th>
-      <th scope="col">IP/MAC</th>
-      <th scope="col">Кол-во портов</th>
-      <th scope="col">Портов свободно</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr>
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
-      <td>{{ object.facility.name }}</td>
-      <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
-      <td class="text-center">{{ object.port_count }}</td>
-      <td class="text-center">{{ object.port_count }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="Оборудование">
+    <thead class="table-dark">
+      <tr class="text-center">
+        <th scope="col">№</th>
+        <th scope="col">Наименование</th>
+        <th scope="col">Расположение</th>
+        <th scope="col">IP/MAC</th>
+        <th scope="col">Кол-во портов</th>
+        <th scope="col">Портов свободно</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr>
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
+        <td>{{ object.facility.name }}</td>
+        <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
+        <td class="text-center">{{ object.port_count }}</td>
+        <td class="text-center">{{ object.count_commutated }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

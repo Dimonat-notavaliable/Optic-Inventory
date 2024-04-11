@@ -11,25 +11,27 @@
 {% block search_action %}{% url 'facilities' %}{% endblock %}
 {% block sorting_action %}{% url 'facilities' %}{% endblock %}
 {% block table %}
-  <caption>Сооружения связи <a href="{% url 'facilities_map' %}" class="text-success">Карта</a></caption>
-  <thead class="table-dark">
-    <tr class="text-center">
-      <th scope="col">№</th>
-      <th scope="col">Наименование</th>
-      <th scope="col">Широта</th>
-      <th scope="col">Долгота</th>
-      <th scope="col">Кол-во этажей</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr>
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td><a href="{% url 'facility' object.id%}" class="text-success link-underline link-underline-opacity-0">{{ object.name }}</a></td>
-      <td class="text-center">{{ object.latitude }}</td>
-      <td class="text-center">{{ object.longitude }}</td>
-      <td class="text-center">{{ object.floor_count }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="Сооружения связи">
+    <caption><a href="{% url 'facilities_map' %}" class="text-success">Карта</a></caption>
+    <thead class="table-dark">
+      <tr class="text-center">
+        <th scope="col">№</th>
+        <th scope="col">Наименование</th>
+        <th scope="col">Широта</th>
+        <th scope="col">Долгота</th>
+        <th scope="col">Кол-во этажей</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr>
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td><a href="{% url 'facility' object.id%}" class="text-success link-underline link-underline-opacity-0">{{ object.name }}</a></td>
+        <td class="text-center">{{ object.latitude }}</td>
+        <td class="text-center">{{ object.longitude }}</td>
+        <td class="text-center">{{ object.floor_count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

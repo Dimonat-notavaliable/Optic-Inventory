@@ -11,25 +11,26 @@
 {% block search_action %}{% url 'crosses' %}{% endblock %}
 {% block sorting_action %}{% url 'crosses' %}{% endblock %}
 {% block table %}
-  <caption>Кроссы</caption>
-  <thead class="table-dark">
-    <tr class="text-center align-middle">
-      <th scope="col" title="Номер по порядку">№</th>
-      <th scope="col" title="Расположение">Расположение</th>
-      <th scope="col" title="Линейные адаптеры">Линейные адаптеры</th>
-      <th scope="col" title="Станционные адаптеры">Станционные адаптеры</th>
-      <th scope="col" title="Количество адаптеров">Количество адаптеров</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr class="align-middle">
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td>{{ object.facility.name }}</td>
-      <td>{{ object.linear_type }}</td>
-      <td>{{ object.station_type }}</td>
-      <td class="text-center">{{ object.adapter_count }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="Кроссы">
+    <thead class="table-dark">
+      <tr class="text-center align-middle">
+        <th scope="col" title="Номер по порядку">№</th>
+        <th scope="col" title="Расположение">Расположение</th>
+        <th scope="col" title="Линейные адаптеры">Линейные адаптеры</th>
+        <th scope="col" title="Станционные адаптеры">Станционные адаптеры</th>
+        <th scope="col" title="Количество адаптеров">Количество адаптеров</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr class="align-middle">
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td>{{ object.facility.name }}</td>
+        <td>{{ object.linear_type }}</td>
+        <td>{{ object.station_type }}</td>
+        <td class="text-center">{{ object.adapter_count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

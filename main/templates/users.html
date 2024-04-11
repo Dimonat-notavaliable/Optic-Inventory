@@ -3,29 +3,30 @@
 {% block search_action %}"{% url 'users' %}"{% endblock %}
 {% block sorting_action %}"{% url 'users' %}"{% endblock %}
 {% block table %}
-  <caption>Пользователи</caption>
-  <thead class="table-dark">
-    <tr class="text-center">
-      <th scope="col">№</th>
-      <th scope="col">Фамилия</th>
-      <th scope="col">Имя</th>
-      <th scope="col">Отчество</th>
-      <th scope="col">Активен</th>
-      <th scope="col">Редактор</th>
-      <th scope="col">Администратор</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for object in objects %}
-    <tr>
-      <th class="text-center" scope="row">{{ forloop.counter }}</th>
-      <td>{{ object.last_name }}</td>
-      <td>{{ object.first_name }}</td>
-      <td>{{ object.patronymic }}</td>
-      <td class="text-center"><input class="form-check-input " type="checkbox" disabled {% if object.is_active %} checked {% endif %} /></td>
-      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_writer %} checked {% endif %} /></td>
-      <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_superuser %} checked {% endif %} /></td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <table class="table border" aria-label="Пользователи">
+    <thead class="table-dark">
+      <tr class="text-center">
+        <th scope="col">№</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Отчество</th>
+        <th scope="col">Активен</th>
+        <th scope="col">Редактор</th>
+        <th scope="col">Администратор</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr>
+        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <td>{{ object.last_name }}</td>
+        <td>{{ object.first_name }}</td>
+        <td>{{ object.patronymic }}</td>
+        <td class="text-center"><input class="form-check-input " type="checkbox" disabled {% if object.is_active %} checked {% endif %} /></td>
+        <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_writer %} checked {% endif %} /></td>
+        <td class="text-center"><input class="form-check-input" type="checkbox" disabled {% if object.is_superuser %} checked {% endif %} /></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

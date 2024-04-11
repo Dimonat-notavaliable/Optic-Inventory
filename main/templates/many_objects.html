@@ -59,7 +59,7 @@
     </ul>
   </nav>
   {% if objects %}
-    <table class="table border">{% block table %}{% endblock %}</table>
+    {% block table %}{% endblock %}
   {%else%}
     <p>Ничего не найдено</p>
   {% endif %}
