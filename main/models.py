@@ -65,6 +65,13 @@ class Hardware(models.Model):
         verbose_name = 'Сетевое оборудование'
         verbose_name_plural = 'Сетевое оборудование'
 
+    def count_commutated(self):
+        count = 0
+        for port in self.ports.all():
+            if not port.is_commutated():
+                count += 1
+        return count
+
     def __str__(self):
         return f'{self.marking} #{self.id}'
 
@@ -73,7 +80,6 @@ class Hardware(models.Model):
 class Port(models.Model):
     number = models.IntegerField(_("Номер"), blank=False, validators=[MinValueValidator(1)])
     hardware = models.ForeignKey(Hardware, on_delete=models.CASCADE, related_name='ports', blank=False)
-    port = models.ForeignKey('self', on_delete=models.SET_NULL, related_name='commutation', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Порт оборудования'
@@ -145,6 +151,12 @@ class Adapter(models.Model):
     class Meta:
         verbose_name = 'Адаптер кросса'
         verbose_name_plural = 'Адаптеры кросса'
+
+    def is_commutated(self):
+        if self.start_connections.exists() or self.end_connections.exists():
+            return True
+        else:
+            return False
 
     def __str__(self):
         type = "линейный" if self.is_linear else "станционный"

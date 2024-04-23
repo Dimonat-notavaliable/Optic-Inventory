@@ -30,6 +30,9 @@ urlpatterns = [
     path('hardware/new/', views.hardware_create, name="hardware_create"),
     path('hardware/<int:pk>/', views.hardware, name="hardware"),
     path('hardware/delete/<int:pk>/', writer_only(views.HardwareDelete.as_view()), name="hardware_delete"),
+    path('hardware/<int:hardware_id>/commutate/<int:port_id>', views.commutate_port, name="commutate_port"),
+    path('ajax/load-port-commutations/<int:hardware_id>', views.load_port_commutations,
+         name='ajax_load_port_commutations'),
 
     path('users/', views.users, name="users"),
     path('ajax/load-notifications/', views.load_notifications, name='ajax_load_notifications'),

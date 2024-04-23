@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType, \
-    HardwareType
+    HardwareType, Connection, Adapter, Port
 
 
 class DynamicModelChoiceField(forms.ModelChoiceField):
@@ -126,6 +126,47 @@ class HardwareForm(forms.ModelForm):
     class Meta:
         model = Hardware
         fields = ["facility", "marking", "type", "port_count", "IP", "MAC"]
+
+
+class HardwareCommutationForm(forms.ModelForm):
+    commutation_type = forms.ChoiceField(required=True, label='Тип соединения', choices=[],
+                                         widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                    "data-width": "auto"}))
+    commutation = DynamicModelChoiceField(required=True, label='Соединение',
+                                          queryset=Port.objects.none(),
+                                          widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                     "data-width": "auto"}),
+                                          empty_label="— Выберите тип —")
+
+    class Meta:
+        model = Connection
+        fields = ["commutation_type", "commutation"]
+
+    def __init__(self, *args, **kwargs):
+        super(HardwareCommutationForm, self).__init__(*args, **kwargs)
+
+        self.fields['commutation_type'].choices = [
+            (None, "— Выберите значение —"),
+            ("adapter", "Адаптер кросса"),
+            ("port", "Порт оборудования"),
+        ]
+
+    def save(self, commit=False):
+        instance = super(HardwareCommutationForm, self).save(commit=False)
+
+        commutation = self.cleaned_data.get('commutation')
+
+        if self.cleaned_data.get("commutation_type") == 'adapter':
+            adapter = Adapter.objects.get(pk=commutation)
+            instance.facility = adapter.cross.facility
+            instance.end_adapter = adapter
+
+        elif self.cleaned_data.get("commutation_type") == 'port':
+            port = Port.objects.get(pk=commutation)
+            instance.facility = port.hardware.facility
+            instance.end_port = port
+
+        return instance
 
 
 class FOCLForm(forms.ModelForm):

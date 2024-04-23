@@ -8,7 +8,7 @@ from django.views.generic import DeleteView
 
 from . import forms
 from .decorators import superuser_only, writer_only
-from .models import Hardware, Facility, FOCL, Muff, Cross, Notification
+from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter
 
 
 @login_required
@@ -96,7 +96,7 @@ def muffs(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'muffs.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
+    return render(request, 'muffs.html', {'title': 'Муфты', 'objects': page_objects, 'params': params,
                                           'search_form': search_form, 'sort_form': sort_form})
 
 
@@ -229,7 +229,7 @@ def load_centers(request):
         centers = Muff.objects.all().order_by('name')
     elif type == "facility":
         centers = Facility.objects.all().order_by('name')
-    return render(request, 'center_dropdown_list_options.html', {'centers': centers})
+    return render(request, 'dropdown_list_options.html', {'options': centers})
 
 
 @login_required
@@ -255,7 +255,7 @@ def crosses(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'crosses.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
+    return render(request, 'crosses.html', {'title': 'Оптические кроссы', 'objects': page_objects, 'params': params,
                                             'search_form': search_form, 'sort_form': sort_form})
 
 
@@ -309,7 +309,8 @@ def many_hardware(request):
 @login_required
 def hardware(request, pk):
     object = Hardware.objects.get(id=pk)
-    return render(request, 'hardware.html', {'title': object.marking, 'object': object})
+    ports = object.ports.all()
+    return render(request, 'hardware.html', {'title': object.marking, 'object': object, 'ports': ports})
 
 
 @writer_only
@@ -340,6 +341,50 @@ def hardware_create(request):
 class HardwareDelete(DeleteView):
     model = Hardware
     success_url = "/hardware/"
+
+
+@writer_only
+def commutate_port(request, hardware_id, port_id):
+    context = {'title': 'Коммутация оборудования', 'hardware_id': hardware_id}
+
+    if request.method == 'GET':
+        form = forms.HardwareCommutationForm()
+        context['form'] = form
+        return render(request, 'hardware_commutation.html', context)
+
+    if request.method == 'POST':
+        form = forms.HardwareCommutationForm(request.POST)
+        if form.is_valid():
+            connection = form.save(commit=False)
+            connection.start_port = Port.objects.get(pk=port_id)
+            connection.save()
+            return redirect('hardware', pk=hardware_id)
+        else:
+            context['form'] = form
+            return render(request, 'hardware_commutation.html', context)
+
+
+@writer_only
+def load_port_commutations(request, hardware_id):
+    type = request.GET.get('type')
+    hardware = Hardware.objects.get(id=hardware_id)
+    commutations = []
+    facility = hardware.facility
+
+    if type == "adapter":
+        if facility.crosses.exists():
+            commutations = Adapter.objects.none()
+            for object in facility.crosses.all():
+                id_list = [adapter.id for adapter in object.adapters.all() if not adapter.is_commutated()]
+                commutations |= object.adapters.filter(id__in=id_list, is_linear=False)
+
+    elif type == "port":
+        if facility.hardware.exclude(pk=hardware.pk).exists():
+            commutations = Port.objects.none()
+            for object in facility.hardware.exclude(pk=hardware.pk):
+                id_list = [port.id for port in object.ports.all() if not port.is_commutated()]
+                commutations |= object.ports.filter(id__in=id_list)
+    return render(request, 'dropdown_list_options.html', {'options': commutations})
 
 
 @superuser_only
