@@ -2,9 +2,19 @@
 {% block objects_type %}Оборудование{% endblock %}
 {% block buttons %}
   <div class="mt-3">
+    <div class="btn-group">
+      <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+      </button>
+      <ul class="dropdown-menu">
+        <li><h6 class="dropdown-header">Выберите формат</h6></li>
+        <li><a class="dropdown-item" href="{% url 'export_hardware' 'xlsx' %}">Excel</a></li>
+        <li><a class="dropdown-item" href="{% url 'export_hardware' 'csv' %}">CSV</a></li>
+      </ul>
+    </div>
     {% if request.user.is_writer %}
-    <a href="" class="text-success me-3">Экспорт/Импорт</a>
-    <a href="{% url 'hardware_create' %}" class="text-success">Добавить</a>
+    <a href="#" class="btn btn-outline btn-green me-1">Импорт</a>
+    <a href="{% url 'hardware_create' %}" class="btn btn-outline btn-green me-1">Добавить</a>
     {% endif %}
   </div>
 {% endblock %}

@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'authorization.apps.AuthorizationConfig',
+    'files.apps.FilesConfig',
     'colorfield',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -110,7 +112,7 @@ LOGIN_URL = 'auth/'
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Krasnoyarsk'
 
 USE_I18N = True
 
