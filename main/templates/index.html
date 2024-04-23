@@ -9,8 +9,8 @@
       <li class="nav-item p-2 bg-dark">
           <p class="m-0 text-white headline">Оборудование</p>
       </li>
-      <li class="nav-item p-2">
-          <a href="{% url 'many_hardware' %}" class="text-success">Смотреть все →</a>
+      <li class="nav-item">
+          <a href="{% url 'many_hardware' %}" class="btn btn-outline btn-green rounded-0 h-100">Смотреть все →</a>
       </li>
     </ul>
   </div>
@@ -43,8 +43,8 @@
       <li class="nav-item p-2 bg-dark">
           <p class="m-0 text-white headline">ВОЛС</p>
       </li>
-      <li class="nav-item p-2">
-          <a href="{% url 'focls' %}" class="text-success">Смотреть все →</a>
+      <li class="nav-item">
+          <a href="{% url 'focls' %}" class="btn btn-outline btn-green rounded-0 h-100">Смотреть все →</a>
       </li>
     </ul>
   </div>
@@ -62,12 +62,18 @@
       <tbody>
         {% for object in last_focls %}
         <tr class="align-middle">
-          <th class="text-center" scope="row">{{ forloop.counter }}</th>
-          <td class="text-center">{{ object.get_start }}</td>
-          <td class="text-center">{{ object.get_end }}</td>
+          <th class="text-center" scope="row">
+            <a href="#" class="text-success">{{ forloop.counter }}</a>
+          </th>
+          <td>
+            <a href="#" class="text-success">{{ object.get_start }}</a>
+          </td>
+          <td>
+            <a href="#" class="text-success">{{ object.get_end }}</a>
+          </td>
           <td class="text-center">{{ object.cable.get_fiber_count }}</td>
           <td class="text-center">{{ object.cable_length }}</td>
-          <td class="text-center">{{ object.cable }}</td>
+          <td>{{ object.cable }}</td>
         </tr>
         {% endfor %}
       </tbody>
