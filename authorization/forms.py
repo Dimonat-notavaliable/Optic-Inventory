@@ -8,38 +8,38 @@ from .models import User
 
 class LoginForm(forms.Form):
     email = forms.CharField(max_length=255, label='',
-                            widget=forms.EmailInput(attrs={"class": "form-control form-control-lg border-dark mr-2",
+                            widget=forms.EmailInput(attrs={"class": "form-control form-control-lg border-dark bg-transparent mr-2",
                                                            "placeholder": "Электронная почта", "aria-label": "Email"}))
     password = forms.CharField(max_length=255, label='',
                                widget=forms.PasswordInput(
-                                   attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                   attrs={"class": "form-control form-control-lg border-dark bg-transparent mr-2",
                                           "placeholder": "Пароль", "aria-label": "Пароль"}))
 
 
 class RegisterForm(UserCreationForm):
     email = forms.CharField(max_length=255, label='',
-                            widget=forms.EmailInput(attrs={"class": "form-control form-control-lg border-dark mr-2",
+                            widget=forms.EmailInput(attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                                            "placeholder": "Электронная почта*",
                                                            "aria-label": "Email"}))
     last_name = forms.CharField(max_length=150, label='',
-                                widget=forms.TextInput(attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                widget=forms.TextInput(attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                                               "placeholder": "Фамилия*",
                                                               "aria-label": "Last Name"}))
     first_name = forms.CharField(max_length=150, label='',
-                                 widget=forms.TextInput(attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                 widget=forms.TextInput(attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                                                "placeholder": "Имя*",
                                                                "aria-label": "First Name"}))
     patronymic = forms.CharField(max_length=150, label='', required=False,
-                                 widget=forms.TextInput(attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                 widget=forms.TextInput(attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                                                "placeholder": "Отчество",
                                                                "aria-label": "Patronymic"}))
     password1 = forms.CharField(max_length=255, label='',
                                 widget=forms.PasswordInput(
-                                    attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                    attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                            "placeholder": "Пароль*", "aria-label": "Password1"}))
     password2 = forms.CharField(max_length=255, label='',
                                 widget=forms.PasswordInput(
-                                    attrs={"class": "form-control form-control-lg border-dark mr-2",
+                                    attrs={"class": "form-control form-control-lg bg-transparent border-dark mr-2",
                                            "placeholder": "Повторите пароль*", "aria-label": "Password2"}))
 
     class Meta:
