@@ -12,6 +12,11 @@ from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, A
 
 
 @login_required
+def scheme(request):
+    return render(request, 'scheme.html', {'title': 'Схема коммутации'})
+
+
+@login_required
 def index(request):
     last_hardware = Hardware.objects.all().order_by('-id')[:5]
     last_focls = FOCL.objects.all().order_by('-id')[:5]
@@ -101,45 +106,6 @@ def muffs(request):
 
 
 @writer_only
-def muff_create(request):
-    context = {'title': 'Добавление муфты'}
-    if request.method == 'GET':
-        form = forms.MuffForm()
-        context['form'] = form
-        return render(request, 'create.html', context)
-
-    if request.method == 'POST':
-        form = forms.MuffForm(request.POST)
-        if form.is_valid():
-            muff = form.save(commit=False)
-            muff.save()
-            return redirect('muffs')
-        else:
-            context['form'] = form
-            return render(request, 'create.html', context)
-
-
-@login_required
-def facilities_map(request):
-    model = Facility
-    facilities = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'facilities_map.html', {'title': 'Карта сооружений связи', 'objects': facilities})
-
-
-@login_required
-def muffs_map(request):
-    model = Muff
-    muffs = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'facilities_map.html', {'title': 'Карта муфт', 'objects': muffs})
-
-
-@login_required
-def facility(request, pk):
-    object = Facility.objects.get(id=pk)
-    return render(request, 'facility.html', {'title': object.name, 'object': object})
-
-
-@writer_only
 def facility_create(request):
     context = {'title': 'Добавление сооружения связи'}
     if request.method == 'GET':
@@ -158,15 +124,78 @@ def facility_create(request):
             return render(request, 'create.html', context)
 
 
+@writer_only
+def muff_create(request):
+    context = {'title': 'Добавление муфты'}
+    if request.method == 'GET':
+        form = forms.MuffForm()
+        context['form'] = form
+        return render(request, 'create.html', context)
+
+    if request.method == 'POST':
+        form = forms.MuffForm(request.POST)
+        if form.is_valid():
+            muff = form.save(commit=False)
+            muff.save()
+            return redirect('muffs')
+        else:
+            context['form'] = form
+            return render(request, 'create.html', context)
+
+
 class FacilityDelete(DeleteView):
     model = Facility
     success_url = "/facilities/"
 
 
+class MuffDelete(DeleteView):
+    model = Muff
+    success_url = "/muffs/"
+
+
+@login_required
+def facilities_map(request):
+    model = Facility
+    facilities = list(model.objects.values('latitude', 'longitude', 'name'))
+    return render(request, 'facilities_map.html', {'title': 'Карта сооружений связи', 'objects': facilities})
+
+
+@login_required
+def muffs_map(request):
+    model = Muff
+    muffs = list(model.objects.values('latitude', 'longitude', 'name'))
+    return render(request, 'facilities_map.html', {'title': 'Карта муфт', 'objects': muffs})
+
+
+@login_required
+def facility(request, pk):
+    model = Facility
+    object = model.objects.get(id=pk)
+    hardware = object.hardware.all()
+    connections = object.connection.all()
+    return render(request, 'facility.html', {'title': object.name, 'object': object,
+                                             'many_hardware': hardware, 'connections': connections})
+
+
+@login_required
+def muff(request, pk):
+    model = Muff
+    object = model.objects.get(id=pk)
+    connections = object.connection.all()
+    return render(request, 'muff.html', {'title': object.name, 'object': object,
+                                         'connections': connections})
+
+
 @login_required
 def facility_map(request, pk):
     object = model_to_dict(Facility.objects.get(id=pk))
-    return render(request, 'facility_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
+    return render(request, 'single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
+
+
+@login_required
+def muff_map(request, pk):
+    object = model_to_dict(Muff.objects.get(id=pk))
+    return render(request, 'single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
 
 
 @login_required
@@ -407,7 +436,7 @@ def users(request):
         params['sorting'] = sort_query
         queryset = queryset.order_by(sort_query)
 
-    paginator = Paginator(queryset, 20)
+    paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
 

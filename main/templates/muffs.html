@@ -35,7 +35,7 @@
       {% for object in objects %}
       <tr class="align-middle">
         <th class="text-center" scope="row">{{ forloop.counter }}</th>
-        <td>{{ object.name }}</td>
+        <td><a href="{% url 'muff' object.id%}" class="text-success">{{ object.name }}</a></td>
         <td class="text-center">{{ object.latitude }}</td>
         <td class="text-center">{{ object.longitude }}</td>
       </tr>

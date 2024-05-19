@@ -5,6 +5,7 @@ from .decorators import writer_only
 
 urlpatterns = [
     path('', views.index, name="home"),
+    path('scheme', views.scheme, name="scheme"),
 
     path('centers/', views.communication_centers, name="centers"),
 
@@ -18,6 +19,10 @@ urlpatterns = [
     path('muffs/', views.muffs, name="muffs"),
     path('muffs/map', views.muffs_map, name="muffs_map"),
     path('muffs/new/', views.muff_create, name="muff_create"),
+    path('muffs/<int:pk>/', views.muff, name="muff"),
+    path('muffs/map/<int:pk>/', views.muff_map, name="muff_map"),
+    path('muffs/delete/<int:pk>/', writer_only(views.MuffDelete.as_view()), name="muff_delete"),
+
 
     path('focls/', views.focls, name="focls"),
     path('focls/new/', views.focl_create, name="focl_create"),
