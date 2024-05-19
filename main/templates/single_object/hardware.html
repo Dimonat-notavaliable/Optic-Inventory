@@ -53,7 +53,7 @@
             <p class="mb-0">MAC-адрес:</p>
         </div>
         <div>
-            <p>{{ object.facility.name }}</p>
+            <p><a class="text-success" href="{% url 'facility' object.facility.id%}">{{ object.facility.name }}</a></p>
             <p>{{ object.floor }}</p>
             <p>{{ object.marking }}</p>
             <p>{{ object.type }}</p>

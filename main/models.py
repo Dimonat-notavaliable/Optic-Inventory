@@ -28,6 +28,10 @@ class Facility(CommunicationCenter):
         verbose_name = 'Сооружение связи'
         verbose_name_plural = 'Сооружения связи'
 
+    @staticmethod
+    def class_name():
+        return "Facility"
+
 
 # Муфта
 class Muff(CommunicationCenter):
@@ -37,6 +41,10 @@ class Muff(CommunicationCenter):
     class Meta:
         verbose_name = 'Муфта'
         verbose_name_plural = 'Муфты'
+
+    @staticmethod
+    def class_name():
+        return "Muff"
 
 
 class HardwareType(models.Model):
@@ -234,7 +242,7 @@ class FOCL(models.Model):
         verbose_name_plural = 'Линии связи'
 
     def __str__(self):
-        return f'Линия связи: {self.cable}'
+        return f'Линия связи: {self.get_start()} - {self.get_end()}'
 
     def get_start(self):
         if self.connection_muff.filter(is_start=True):

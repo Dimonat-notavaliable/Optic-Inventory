@@ -47,12 +47,29 @@
             <p>Конечная точка:</p>
             <p>Кабель:</p>
             <p>Количество ОВ:</p>
-            <p>Длина по кабелю:</p>
-            <p class="mb-0">Длина по волокну:</p>
+            <p>Длина по кабелю (м.):</p>
+            <p class="mb-0">Длина по волокну (м.):</p>
         </div>
         <div>
-            <p>{{ object.get_start }}</p>
-            <p>{{ object.get_end }}</p>
+
+            <p>
+            {% if object.get_start.class_name == 'Facility' %}
+                <a class="text-success" href="{% url 'facility' object.get_start.id%}">
+            {% else %}
+                <a class="text-success" href="{% url 'muff' object.get_start.id%}">
+            {% endif %}
+                {{ object.get_start }}
+                </a>
+            </p>
+            <p>
+                {% if object.get_end.class_name == 'Facility' %}
+                    <a class="text-success" href="{% url 'facility' object.get_end.id%}">
+                {% else %}
+                    <a class="text-success" href="{% url 'muff' object.get_end.id%}">
+                {% endif %}
+                    {{ object.get_end }}
+                    </a>
+            </p>
             <p>{{ object.cable }}</p>
             <p>{{ object.cable.get_fiber_count }}</p>
             <p>{{ object.cable_length }}</p>
