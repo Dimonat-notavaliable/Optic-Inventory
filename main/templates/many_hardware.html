@@ -40,7 +40,7 @@
         <td>{{ object.facility.name }}</td>
         <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
         <td class="text-center">{{ object.port_count }}</td>
-        <td class="text-center">{{ object.count_commutated }}</td>
+        <td class="text-center">{{ object.count_free }}</td>
       </tr>
       {% endfor %}
     </tbody>

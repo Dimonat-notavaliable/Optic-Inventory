@@ -4,12 +4,13 @@
     <h2 class="my-3"><a href="{% url 'centers' %}" class="text-success link-underline link-underline-opacity-0">Узлы связи</a>/<a href="{% url 'facilities' %}" class="text-success link-underline link-underline-opacity-0">Сооружения связи</a>/{{ object.name }}</h2>
     <hr>
     <div class="container my-3">
-        <a href="javascript:history.go(-1)" class="text-success me-3">< Вернуться к списку</a>
-        <a href="" class="text-success me-3">Схема</a>
-        {% if request.user.is_writer %}
-        <a href="{% url 'facility_map' object.id %}" class="text-success me-3"
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
+        <a href="" class="btn btn-outline btn-green me-1 dropdown-toggle">Экспорт</a>
+        <a href="" class="btn btn-outline btn-green me-1">Схема</a>
+        <a href="{% url 'facility_map' object.id %}" class="btn btn-outline btn-green me-1"
            target="_blank" rel="noopener noreferrer">На карте</a>
-        <a href="" class="text-success me-3">Экспорт/Импорт</a>
+        {% if request.user.is_writer %}
+        <a href="" class="btn btn-outline btn-green me-1">Редактировать</a>
         <!-- Button that opens a modal -->
         <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
             Удалить
@@ -41,41 +42,93 @@
     </div>
     {% endif %}
 
-    <div class="container d-inline-flex">
-        <div class="align-content-end me-3 ps-3 pe-1 bg-light">
-            <p class="text-end">Широта:</p>
-            <p class="text-end">Долгота:</p>
-            <p class="text-end">Кол-во этажей:</p>
+    <div class="container d-inline-flex mb-3">
+        <div class="me-3 px-3 bg-light">
+            <p>Наименование:</p>
+            <p>Широта:</p>
+            <p>Долгота:</p>
+            <p class="mb-0">Кол-во этажей:</p>
         </div>
         <div>
+            <p>{{ object.name }}</p>
             <p>{{ object.latitude }}</p>
             <p>{{ object.longitude }}</p>
-            <p>{{ object.floor_count }}</p>
+            <p class="mb-0">{{ object.floor_count }}</p>
         </div>
     </div>
-    <div class="container my-3">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Оборудование</a>
+    <div class="container">
+        <ul class="nav nav-tabs" id="facilityTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active btn-success" data-bs-toggle="tab" data-bs-target="#hardware_table"
+                        type="button" role="tab" aria-controls="hardware_table" aria-selected="true">Оборудование</button>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">ВОЛС</a>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link btn-success" data-bs-toggle="tab" data-bs-target="#focl_table"
+                        type="button" role="tab" aria-controls="focl_table" aria-selected="false">ВОЛС</button>
             </li>
         </ul>
-        <table class="table border">
-          <caption>Оборудование</caption>
-          <thead class="table-dark">
-            <tr class="text-center">
-              <th scope="col">Наименование</th>
-              <th scope="col">Описание</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="" class="text-success">Название как ссылка</a></td>
-              <td class="text-center">Информация о коммутации</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="tab-content">
+            <div class="tab-pane active" id="hardware_table" role="tabpanel" aria-labelledby="hardware-tab">
+                <table class="table border align-middle" aria-label="Оборудование сооружения">
+                    <thead class="table-dark w-auto">
+                        <tr class="text-center">
+                            <th scope="col">№</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for hardware in many_hardware %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td ><a href="{% url 'hardware' hardware.id%}" class="text-success">{{ hardware }}</a></td>
+                            <td>Свободно портов: {{ hardware.count_free }}</td>
+                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button></td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td class="text-center" colspan="4"><a href="" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="focl_table" role="tabpanel" aria-labelledby="focl-tab">
+                <table class="table border align-middle" aria-label="Линии связи в сооружении">
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            <th scope="col">№</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for connection in connections %}
+                        <tr>
+                            <td class="text-center">
+                                <a href="{% url 'hardware' connection.id%}" class="text-success">{{ forloop.counter }}</a>
+                            </td>
+                            <td><a href="{% url 'hardware' connection.id%}" class="text-success">{{ connection.get_other_end }}</a></td>
+                            <td>Количество волокон: {{ connection.focl.cable.get_fiber_count }};
+                                Длина по кабелю: {{ connection.focl.cable_length }} м</td>
+                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button></td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td class="text-center" colspan="4"><a href="" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}

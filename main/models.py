@@ -65,7 +65,7 @@ class Hardware(models.Model):
         verbose_name = 'Сетевое оборудование'
         verbose_name_plural = 'Сетевое оборудование'
 
-    def count_commutated(self):
+    def count_free(self):
         count = 0
         for port in self.ports.all():
             if not port.is_commutated():
@@ -263,6 +263,15 @@ class FacilityConnection(models.Model):
 
     def __str__(self):
         return f'{self.focl} через {self.facility}'
+
+    def get_other_end(self):
+        muff_connection = MuffConnection.objects.filter(focl=self.focl)
+        if muff_connection.exists():
+            other_end = muff_connection.first().muff
+        else:
+            facility_connection = FacilityConnection.objects.filter(focl=self.focl).exclude(facility=self.facility)
+            other_end = facility_connection.first().facility
+        return other_end
 
 
 class MuffConnection(models.Model):
