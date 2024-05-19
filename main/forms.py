@@ -100,15 +100,18 @@ class MuffForm(forms.ModelForm):
 
 
 class HardwareForm(forms.ModelForm):
+    marking = forms.CharField(required=True, label='Наименование',
+                              widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                            "data-width": "auto"}))
     facility = forms.ModelChoiceField(required=True, label='Сооружение связи',
                                       queryset=Facility.objects.all().order_by('name'),
                                       widget=forms.Select(attrs={"class": "form-select w-auto",
                                                                  "data-width": "auto"}),
                                       empty_label="-- Выберите значение --"
                                       )
-    marking = forms.CharField(required=True, label='Наименование',
-                              widget=forms.TextInput(attrs={"class": "form-control w-auto",
-                                                            "data-width": "auto"}))
+    floor = forms.IntegerField(required=True, label='Этаж расположения',
+                               widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                             "data-width": "auto"}))
     type = forms.ModelChoiceField(required=True, label='Тип оборудования',
                                   queryset=HardwareType.objects.all().order_by('marking'),
                                   widget=forms.Select(attrs={"class": "form-select w-auto",
@@ -125,7 +128,7 @@ class HardwareForm(forms.ModelForm):
 
     class Meta:
         model = Hardware
-        fields = ["facility", "marking", "type", "port_count", "IP", "MAC"]
+        fields = ["facility", "floor", "marking", "type", "port_count", "IP", "MAC"]
 
 
 class HardwareCommutationForm(forms.ModelForm):

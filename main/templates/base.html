@@ -84,6 +84,7 @@
                     <li><a class="dropdown-item text-light" href="{% url 'facilities' %}">Сооружения связи</a></li>
                     <li><a class="dropdown-item text-light" href="{% url 'muffs' %}">Муфты</a></li>
                   </ul>
+              </li>
               <li class="nav-item mx-2 dropdown">
                 <a class="nav-link text-light" href="{% url 'focls' %}" role="button" aria-expanded="false">
                     Кабельная инфраструктура
@@ -116,7 +117,7 @@
               </li>
               <li class="mx-2"><div class="vr"></div></li>
               <li class="nav-item">
-                <a class="nav-link active" href="{% url 'logout' %}">Выйти</a>
+                <a class="nav-link active fa-lg" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
               </li>
             </ul>
           </div>
@@ -139,7 +140,6 @@
                     <button type="button" class="btn" id="updateNotifications" onclick="updateNotifications()" aria-label="Close"><i class="fa-solid fa-rotate"></i></button>
                 </div>
                     <button type="button" class="btn-close text-reset align-self-center" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-
             </div>
             <div id="note_list" class="offcanvas-body"></div>
         </div>
