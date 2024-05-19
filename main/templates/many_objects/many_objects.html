@@ -10,12 +10,14 @@
   <div class="input-group">
     <form action="{% block search_action %}{% endblock %}" class="d-flex w-100 my-3" method="get">
       <input type="hidden" name="sorting" value="{{params.sorting}}"/>
-      <div class="form-control mr-2 p-0 d-flex">
-      {{ search_form.search }}
-      <button type="button" class="btn btn-outline btn-red border-0"
-              onClick="document.getElementById('id_search').value = ''">X</button>
+      <div class="rounded-0 rounded-start form-control mr-2 bg-dark border-0 p-1 px-2 d-flex">
+        <div class="form-control p-0 d-flex border-0">
+        {{ search_form.search }}
+        <button type="button" class="btn btn-outline btn-red border-0"
+                onClick="document.getElementById('id_search').value = ''">X</button>
+        </div>
       </div>
-      <button class="btn btn-outline btn-green" type="submit">Найти</button>
+      <button class="btn btn-outline btn-green rounded-0 rounded-end" type="submit">Найти</button>
     </form>
   </div>
   <nav class="d-flex justify-content-between" aria-label="filter">

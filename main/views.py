@@ -47,8 +47,9 @@ def communication_centers(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'centers.html', {'title': 'Узлы связи', 'objects': page_objects, 'params': params,
-                                            'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/centers.html',
+                  {'title': 'Узлы связи', 'objects': page_objects, 'params': params,
+                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @login_required
@@ -74,8 +75,9 @@ def facilities(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'facilities.html', {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
-                                               'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/facilities.html',
+                  {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
+                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @login_required
@@ -101,8 +103,8 @@ def muffs(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'muffs.html', {'title': 'Муфты', 'objects': page_objects, 'params': params,
-                                          'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/muffs.html', {'title': 'Муфты', 'objects': page_objects, 'params': params,
+                                                       'search_form': search_form, 'sort_form': sort_form})
 
 
 @writer_only
@@ -157,14 +159,14 @@ class MuffDelete(DeleteView):
 def facilities_map(request):
     model = Facility
     facilities = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'facilities_map.html', {'title': 'Карта сооружений связи', 'objects': facilities})
+    return render(request, 'maps_html/many_map.html', {'title': 'Карта сооружений связи', 'objects': facilities})
 
 
 @login_required
 def muffs_map(request):
     model = Muff
     muffs = list(model.objects.values('latitude', 'longitude', 'name'))
-    return render(request, 'facilities_map.html', {'title': 'Карта муфт', 'objects': muffs})
+    return render(request, 'maps_html/many_map.html', {'title': 'Карта муфт', 'objects': muffs})
 
 
 @login_required
@@ -173,8 +175,8 @@ def facility(request, pk):
     object = model.objects.get(id=pk)
     hardware = object.hardware.all()
     connections = object.connection.all()
-    return render(request, 'facility.html', {'title': object.name, 'object': object,
-                                             'many_hardware': hardware, 'connections': connections})
+    return render(request, 'single_object/facility.html', {'title': object.name, 'object': object,
+                                                           'many_hardware': hardware, 'connections': connections})
 
 
 @login_required
@@ -182,20 +184,20 @@ def muff(request, pk):
     model = Muff
     object = model.objects.get(id=pk)
     connections = object.connection.all()
-    return render(request, 'muff.html', {'title': object.name, 'object': object,
-                                         'connections': connections})
+    return render(request, 'single_object/muff.html', {'title': object.name, 'object': object,
+                                                       'connections': connections})
 
 
 @login_required
 def facility_map(request, pk):
     object = model_to_dict(Facility.objects.get(id=pk))
-    return render(request, 'single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
+    return render(request, 'maps_html/single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
 
 
 @login_required
 def muff_map(request, pk):
     object = model_to_dict(Muff.objects.get(id=pk))
-    return render(request, 'single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
+    return render(request, 'maps_html/single_map.html', {'title': f'Карта: {object["name"]}', 'object': object})
 
 
 @login_required
@@ -222,8 +224,8 @@ def focls(request):
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
 
-    return render(request, 'focls.html', {'title': 'ВОЛС', 'objects': page_objects, 'params': params,
-                                          'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/focls.html', {'title': 'ВОЛС', 'objects': page_objects, 'params': params,
+                                                       'search_form': search_form, 'sort_form': sort_form})
 
 
 @writer_only
@@ -284,8 +286,9 @@ def crosses(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'crosses.html', {'title': 'Оптические кроссы', 'objects': page_objects, 'params': params,
-                                            'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/crosses.html',
+                  {'title': 'Оптические кроссы', 'objects': page_objects, 'params': params,
+                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @writer_only
@@ -331,15 +334,16 @@ def many_hardware(request):
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
-    return render(request, 'many_hardware.html', {'title': 'Оборудование', 'objects': page_objects, 'params': params,
-                                                  'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/many_hardware.html',
+                  {'title': 'Оборудование', 'objects': page_objects, 'params': params,
+                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @login_required
 def hardware(request, pk):
     object = Hardware.objects.get(id=pk)
     ports = object.ports.all()
-    return render(request, 'hardware.html', {'title': object.marking, 'object': object, 'ports': ports})
+    return render(request, 'single_object/hardware.html', {'title': object.marking, 'object': object, 'ports': ports})
 
 
 @writer_only
@@ -440,8 +444,9 @@ def users(request):
     page_number = request.GET.get('page')
     page_objects = paginator.get_page(page_number)
 
-    return render(request, 'users.html', {'title': 'Пользователи', 'objects': page_objects, 'params': params,
-                                          'search_form': search_form, 'sort_form': sort_form})
+    return render(request, 'many_objects/users.html',
+                  {'title': 'Пользователи', 'objects': page_objects, 'params': params,
+                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @superuser_only
