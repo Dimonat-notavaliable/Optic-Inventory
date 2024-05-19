@@ -318,6 +318,21 @@ def cross_create(request):
     return render(request, 'create.html', context)
 
 
+class CrossDelete(DeleteView):
+    model = Cross
+    success_url = "/crosses/"
+
+
+@login_required
+def cross(request, pk):
+    model = Cross
+    object = model.objects.get(id=pk)
+    linear_adapters = object.adapters.filter(is_linear=True).order_by("number")
+    station_adapters = object.adapters.filter(is_linear=False).order_by("number")
+    adapters = zip(linear_adapters, station_adapters)
+    return render(request, 'single_object/cross.html', {'title': object, 'object': object, 'adapters': adapters})
+
+
 @login_required
 def many_hardware(request):
     model = Hardware

@@ -32,6 +32,8 @@ urlpatterns = [
 
     path('crosses/', views.crosses, name="crosses"),
     path('crosses/new/', views.cross_create, name="cross_create"),
+    path('crosses/<int:pk>/', views.cross, name="cross"),
+    path('crosses/delete/<int:pk>/', writer_only(views.CrossDelete.as_view()), name="cross_delete"),
 
     path('hardware/', views.many_hardware, name="many_hardware"),
     path('hardware/new/', views.hardware_create, name="hardware_create"),

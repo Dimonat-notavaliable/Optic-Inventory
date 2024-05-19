@@ -34,10 +34,10 @@
     <tbody>
       {% for object in objects %}
       <tr class="align-middle">
-        <th class="text-center" scope="row">{{ forloop.counter }}</th>
-        <td>{{ object.facility.name }}</td>
-        <td>{{ object.linear_type }}</td>
-        <td>{{ object.station_type }}</td>
+        <th class="text-center" scope="row"><a href="{% url 'cross' object.id%}" class="text-success">{{ forloop.counter }}</a></th>
+        <td><a href="{% url 'facility' object.facility.id%}" class="text-success">{{ object.facility.name }}</a></td>
+        <td class="text-center">{{ object.linear_type }}</td>
+        <td class="text-center">{{ object.station_type }}</td>
         <td class="text-center">{{ object.adapter_count }}</td>
       </tr>
       {% endfor %}
