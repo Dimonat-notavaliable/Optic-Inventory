@@ -228,6 +228,13 @@ def focls(request):
                                                        'search_form': search_form, 'sort_form': sort_form})
 
 
+@login_required
+def focl(request, pk):
+    model = FOCL
+    object = model.objects.get(id=pk)
+    return render(request, 'single_object/focl.html', {'title': object, 'object': object})
+
+
 @writer_only
 def focl_create(request):
     context = {'title': 'Добавление линии связи'}

@@ -27,6 +27,8 @@ urlpatterns = [
     path('focls/', views.focls, name="focls"),
     path('focls/new/', views.focl_create, name="focl_create"),
     path('ajax/load-centers/', views.load_centers, name='ajax_load_centers'),
+    path('focls/<int:pk>/', views.focl, name="focl"),
+
 
     path('crosses/', views.crosses, name="crosses"),
     path('crosses/new/', views.cross_create, name="cross_create"),

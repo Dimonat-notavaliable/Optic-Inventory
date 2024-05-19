@@ -1,0 +1,116 @@
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2 class="my-3"><a href="{% url 'centers' %}" class="text-success link-underline link-underline-opacity-0">Кабельная инфраструктура</a>/<a href="{% url 'focls' %}" class="text-success link-underline link-underline-opacity-0">ВОЛС</a>/{{ object }}</h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
+        <a href="" class="btn btn-outline btn-green me-1 dropdown-toggle">Экспорт</a>
+        <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1"
+           target="_blank" rel="noopener noreferrer">На карте</a>
+        {% if request.user.is_writer %}
+        <a href="" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+        {% endif %}
+    </div>
+    {% if request.user.is_writer %}
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'muff_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container d-inline-flex mb-3">
+        <div class="me-3 px-3 bg-light">
+            <p>Начальная точка:</p>
+            <p>Конечная точка:</p>
+            <p>Кабель:</p>
+            <p>Количество ОВ:</p>
+            <p>Длина по кабелю:</p>
+            <p class="mb-0">Длина по волокну:</p>
+        </div>
+        <div>
+            <p>{{ object.get_start }}</p>
+            <p>{{ object.get_end }}</p>
+            <p>{{ object.cable }}</p>
+            <p>{{ object.cable.get_fiber_count }}</p>
+            <p>{{ object.cable_length }}</p>
+            <p class="mb-0">{{ object.fiber_length|default_if_none:"-" }}</p>
+        </div>
+    </div>
+    <div class="d-flex">
+        <table class="table border border-dark align-middle" aria-label="Коммутация линии связи">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th scope="col">М</th>
+                    <th scope="col">ОВ</th>
+                    <th scope="col">{{ object.get_start }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in object.cable.modules.all %}
+                <tr>
+                    <td style="background-color:{{ module.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark" rowspan="{{ module.get_fiber_count|add:'1' }}">
+                        {{ forloop.counter }}
+                    </td>
+                </tr>
+                {% for fiber in module.fibers.all %}
+                <tr>
+                    <td style="background-color:{{ fiber.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark">
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <table class="table border border-dark align-middle" aria-label="Коммутация линии связи">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th scope="col">М</th>
+                    <th scope="col">ОВ</th>
+                    <th scope="col">{{ object.get_end }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in object.cable.modules.all %}
+                <tr>
+                    <td style="background-color:{{ module.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark" rowspan="{{ module.get_fiber_count|add:'1' }}">
+                        {{ forloop.counter }}
+                    </td>
+                </tr>
+                {% for fiber in module.fibers.all %}
+                <tr>
+                    <td style="background-color:{{ fiber.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark">
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

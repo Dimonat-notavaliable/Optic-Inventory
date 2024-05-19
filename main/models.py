@@ -189,7 +189,7 @@ class Cable(models.Model):
     def get_fiber_count(self):
         count = 0
         for module in self.modules.all():
-            count += len(module.fibers.all())
+            count += module.get_fiber_count()
         return count
 
 
@@ -205,6 +205,9 @@ class Module(models.Model):
 
     def __str__(self):
         return f'{self.cable}: Модуль №{self.number}'
+
+    def get_fiber_count(self):
+        return len(self.fibers.all())
 
 
 class Fiber(models.Model):
@@ -285,6 +288,15 @@ class MuffConnection(models.Model):
 
     def __str__(self):
         return f'{self.focl} через {self.muff}'
+
+    def get_other_end(self):
+        facility_connection = FacilityConnection.objects.filter(focl=self.focl)
+        if facility_connection.exists():
+            other_end = facility_connection.first().facility
+        else:
+            muff_connection = MuffConnection.objects.filter(focl=self.focl).exclude(muff=self.muff)
+            other_end = muff_connection.first().muff
+        return other_end
 
 
 class Notification(models.Model):
