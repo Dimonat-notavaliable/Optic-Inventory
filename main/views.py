@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, UpdateView
 
 from . import forms
 from .decorators import superuser_only, writer_only
@@ -396,6 +396,13 @@ def hardware_create(request):
 class HardwareDelete(DeleteView):
     model = Hardware
     success_url = "/hardware/"
+
+
+class HardwareUpdate(UpdateView):
+    model = Hardware
+    success_url = '/hardware/'
+    form_class = forms.HardwareForm
+    template_name = "create.html"
 
 
 @writer_only

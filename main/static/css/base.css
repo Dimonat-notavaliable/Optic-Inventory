@@ -78,9 +78,17 @@ body {
     height: 1.5em!important;
 }
 
-.form-select:focus {
+.form-select {
   border-color: #5D6B2C;
-  box-shadow: 0 0 0 0.2rem rgba(93, 107, 44, 0.2);
+}
+
+.form-select:focus {
+  border-color: #5D6B2C!important;
+  box-shadow: 0 0 0 0.2rem rgba(93, 107, 44, 0.2)!important;
+}
+
+.form-control {
+  border-color: #5D6B2C;
 }
 
 .form-control:focus {
@@ -110,6 +118,15 @@ body {
     color: white!important;
     background-color: #7C1F1F!important;
     border-color: #7C1F1F!important;
+}
+
+.btn-gray{
+    color: #4E5754;
+    border-color: #4E5754;
+}
+.btn-gray:hover{
+    color: white;
+    background-color: #4E5754;
 }
 
 .btn-secondary{

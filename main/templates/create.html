@@ -1,6 +1,6 @@
 {% extends 'base.html'%}
 {% block title %}
-    {{title}}
+    {{ title }}
 {% endblock %}
 {% block content %}
     <h5 class="my-3">{{title}}</h5>
@@ -8,5 +8,6 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-green" value="Сохранить">
+        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-gray">Отмена</a>
     </form>
 {% endblock %}

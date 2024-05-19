@@ -7,7 +7,7 @@
         <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
         <a href="" class="btn btn-outline btn-green me-1 dropdown-toggle">Экспорт</a>
         {% if request.user.is_writer %}
-        <a href="" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <a href="{% url 'hardware_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
         <!-- Button that opens a modal -->
         <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
             Удалить
