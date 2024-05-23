@@ -5,7 +5,14 @@
     <hr>
     <div class="container my-3">
         <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
-        <a href="" class="btn btn-outline btn-green me-1 dropdown-toggle">Экспорт</a>
+        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+        </button>
+        <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">Выберите формат</h6></li>
+            <li><a class="dropdown-item" href="{% url 'export_facility' 'xlsx' object.id %}">Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'export_facility' 'csv' object.id %}">CSV</a></li>
+        </ul>
         <a href="" class="btn btn-outline btn-green me-1">Схема</a>
         <a href="{% url 'facility_map' object.id %}" class="btn btn-outline btn-green me-1"
            target="_blank" rel="noopener noreferrer">На карте</a>
