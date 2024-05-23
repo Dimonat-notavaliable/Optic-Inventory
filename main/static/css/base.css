@@ -45,6 +45,13 @@ body {
     border-color: #465021!important;
 }
 
+.alert-success{
+    color: white!important;
+    opacity: 0.85;
+    background-color: #5D6B2C!important;
+    border-color: #465021!important;
+}
+
 .btn-success.active {
     pointer-events: none;
     color: white!important;
@@ -120,6 +127,13 @@ body {
     border-color: #7C1F1F!important;
 }
 
+.alert-danger{
+    color: white!important;
+    opacity: 0.85;
+    background-color: #A52A2A!important;
+    border-color: #7C1F1F!important;
+}
+
 .btn-gray{
     color: #4E5754;
     border-color: #4E5754;
@@ -140,6 +154,13 @@ body {
     border-color: #3A413F!important;
 }
 
+.alert-secondary{
+    color: white!important;
+    opacity: 0.85;
+    background-color: #4E5754!important;
+    border-color: #3A413F!important;
+}
+
 .text-secondary{
     color: #4E5754!important;
 }
@@ -152,5 +173,12 @@ body {
 .btn-warning:hover{
     color: white!important;
     background-color: #966603!important;
+    border-color: #966603!important;
+}
+
+.alert-warning{
+    color: white!important;
+    opacity: 0.85;
+    background-color: #C88804!important;
     border-color: #966603!important;
 }
