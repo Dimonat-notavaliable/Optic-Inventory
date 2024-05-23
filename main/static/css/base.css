@@ -16,6 +16,10 @@ body {
     font-family: "Inter", sans-serif;
 }
 
+.alert-trim {
+  display: inline-block;
+}
+
 .text-success {
     color: #5D6B2C!important;
 }
@@ -45,17 +49,17 @@ body {
     border-color: #465021!important;
 }
 
-.alert-success{
-    color: white!important;
-    opacity: 0.85;
-    background-color: #5D6B2C!important;
-    border-color: #465021!important;
-}
-
 .btn-success.active {
     pointer-events: none;
     color: white!important;
     background-color: #465021!important;
+    border-color: #465021!important;
+}
+
+.alert-success{
+    color: white!important;
+    opacity: 0.75;
+    background-color: #5D6B2C!important;
     border-color: #465021!important;
 }
 
@@ -129,7 +133,7 @@ body {
 
 .alert-danger{
     color: white!important;
-    opacity: 0.85;
+    opacity: 0.75;
     background-color: #A52A2A!important;
     border-color: #7C1F1F!important;
 }
@@ -156,7 +160,7 @@ body {
 
 .alert-secondary{
     color: white!important;
-    opacity: 0.85;
+    opacity: 0.75;
     background-color: #4E5754!important;
     border-color: #3A413F!important;
 }
@@ -178,7 +182,7 @@ body {
 
 .alert-warning{
     color: white!important;
-    opacity: 0.85;
+    opacity: 0.75;
     background-color: #C88804!important;
     border-color: #966603!important;
 }

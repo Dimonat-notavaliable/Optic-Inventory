@@ -15,6 +15,7 @@ urlpatterns = [
     path('facilities/<int:pk>/', views.facility, name="facility"),
     path('facilities/map/<int:pk>/', views.facility_map, name="facility_map"),
     path('facilities/delete/<int:pk>/', writer_only(views.FacilityDelete.as_view()), name="facility_delete"),
+    path('facilities/update/<int:pk>/', writer_only(views.FacilityUpdate.as_view()), name="facility_update"),
 
     path('muffs/', views.muffs, name="muffs"),
     path('muffs/map', views.muffs_map, name="muffs_map"),
@@ -22,18 +23,24 @@ urlpatterns = [
     path('muffs/<int:pk>/', views.muff, name="muff"),
     path('muffs/map/<int:pk>/', views.muff_map, name="muff_map"),
     path('muffs/delete/<int:pk>/', writer_only(views.MuffDelete.as_view()), name="muff_delete"),
+    path('muffs/update/<int:pk>/', writer_only(views.MuffUpdate.as_view()), name="muff_update"),
 
 
     path('focls/', views.focls, name="focls"),
     path('focls/new/', views.focl_create, name="focl_create"),
-    path('ajax/load-centers/', views.load_centers, name='ajax_load_centers'),
     path('focls/<int:pk>/', views.focl, name="focl"),
+    path('focls/delete/<int:pk>/', writer_only(views.FOCLDelete.as_view()), name="focl_delete"),
+    path('focls/update/<int:pk>/', writer_only(views.FOCLUpdate.as_view()), name="focl_update"),
+
+    path('ajax/load-centers/', views.load_centers, name='ajax_load_centers'),
+
 
 
     path('crosses/', views.crosses, name="crosses"),
     path('crosses/new/', views.cross_create, name="cross_create"),
     path('crosses/<int:pk>/', views.cross, name="cross"),
     path('crosses/delete/<int:pk>/', writer_only(views.CrossDelete.as_view()), name="cross_delete"),
+    path('crosses/update/<int:pk>/', writer_only(views.CrossUpdate.as_view()), name="cross_update"),
 
     path('hardware/', views.many_hardware, name="many_hardware"),
     path('hardware/new/', views.hardware_create, name="hardware_create"),

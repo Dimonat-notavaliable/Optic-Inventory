@@ -9,7 +9,7 @@
         <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1"
            target="_blank" rel="noopener noreferrer">На карте</a>
         {% if request.user.is_writer %}
-        <a href="" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <a href="{% url 'focl_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
         <!-- Button that opens a modal -->
         <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
             Удалить
@@ -26,7 +26,7 @@
             <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
           </div>
 
-          <form action="{% url 'muff_delete' object.id %}" method="post">
+          <form action="{% url 'focl_delete' object.id %}" method="post">
               {% csrf_token %}
               <div class="modal-body bg-light">
                 <p class="m-0">Вы действительно хотите удалить этот объект?</p>

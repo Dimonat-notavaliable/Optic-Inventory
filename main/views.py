@@ -150,9 +150,23 @@ class FacilityDelete(DeleteView):
     success_url = "/facilities/"
 
 
+class FacilityUpdate(UpdateView):
+    model = Facility
+    success_url = '/facilities/'
+    form_class = forms.FacilityForm
+    template_name = "edit.html"
+
+
 class MuffDelete(DeleteView):
     model = Muff
     success_url = "/muffs/"
+
+
+class MuffUpdate(UpdateView):
+    model = Muff
+    success_url = '/muffs/'
+    form_class = forms.MuffForm
+    template_name = "edit.html"
 
 
 @login_required
@@ -259,6 +273,18 @@ def focl_create(request):
     return render(request, 'focl_create.html', context)
 
 
+class FOCLDelete(DeleteView):
+    model = FOCL
+    success_url = "/focls/"
+
+
+class FOCLUpdate(UpdateView):
+    model = FOCL
+    success_url = '/focls/'
+    form_class = forms.FOCLForm
+    template_name = "edit.html"
+
+
 @writer_only
 def load_centers(request):
     type = request.GET.get('type')
@@ -321,6 +347,13 @@ def cross_create(request):
 class CrossDelete(DeleteView):
     model = Cross
     success_url = "/crosses/"
+
+
+class CrossUpdate(UpdateView):
+    model = Cross
+    success_url = '/crosses/'
+    form_class = forms.CrossForm
+    template_name = "edit.html"
 
 
 @login_required
@@ -402,7 +435,7 @@ class HardwareUpdate(UpdateView):
     model = Hardware
     success_url = '/hardware/'
     form_class = forms.HardwareForm
-    template_name = "create.html"
+    template_name = "edit.html"
 
 
 @writer_only
