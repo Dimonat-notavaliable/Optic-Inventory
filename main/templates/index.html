@@ -20,9 +20,9 @@
           <th scope="col">№</th>
           <th scope="col">Наименование</th>
           <th scope="col">Расположение</th>
-          <th scope="col">IP/MAC</th>
-          <th scope="col">Кол-во портов</th>
-          <th scope="col">Портов свободно</th>
+          <th scope="col" class="mobile-hidden">IP/MAC</th>
+          <th scope="col" class="mobile-hidden">Кол-во портов</th>
+          <th scope="col" class="mobile-hidden">Портов свободно</th>
         </tr>
       </thead>
       <tbody>
@@ -31,9 +31,9 @@
           <th class="text-center" scope="row">{{ forloop.counter }}</th>
           <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
           <td>{{ object.facility.name }}</td>
-          <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
-          <td class="text-center">{{ object.port_count }}</td>
-          <td class="text-center">{{ object.port_count }}</td>
+          <td class="text-center mobile-hidden">{{ object.IP|default_if_none:"-" }}</td>
+          <td class="text-center mobile-hidden">{{ object.port_count }}</td>
+          <td class="text-center mobile-hidden">{{ object.port_count }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -54,9 +54,9 @@
           <th scope="col">№</th>
           <th scope="col">Начальная точка</th>
           <th scope="col">Конечная точка</th>
-          <th scope="col">Кол-во ОВ</th>
-          <th scope="col">Длина по кабелю (м.)</th>
-          <th scope="col">Марка кабеля</th>
+          <th scope="col" class="mobile-hidden">Кол-во ОВ</th>
+          <th scope="col" class="mobile-hidden">Длина по кабелю (м.)</th>
+          <th scope="col" class="mobile-hidden">Марка кабеля</th>
         </tr>
       </thead>
       <tbody>
@@ -71,9 +71,9 @@
           <td>
             <a href="#" class="text-success">{{ object.get_end }}</a>
           </td>
-          <td class="text-center">{{ object.cable.get_fiber_count }}</td>
-          <td class="text-center">{{ object.cable_length }}</td>
-          <td>{{ object.cable }}</td>
+          <td class="text-center mobile-hidden">{{ object.cable.get_fiber_count }}</td>
+          <td class="text-center mobile-hidden">{{ object.cable_length }}</td>
+          <td class="mobile-hidden">{{ object.cable }}</td>
         </tr>
         {% endfor %}
       </tbody>

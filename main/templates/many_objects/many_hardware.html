@@ -23,13 +23,13 @@
 {% block table %}
   <table class="table border" aria-label="Оборудование">
     <thead class="table-dark">
-      <tr class="text-center">
+      <tr class="text-center align-middle">
         <th scope="col">№</th>
         <th scope="col">Наименование</th>
         <th scope="col">Расположение</th>
-        <th scope="col">IP/MAC</th>
-        <th scope="col">Кол-во портов</th>
-        <th scope="col">Портов свободно</th>
+        <th scope="col" class="mobile-hidden">IP/MAC</th>
+        <th scope="col" class="mobile-hidden">Кол-во портов</th>
+        <th scope="col" class="mobile-hidden">Портов свободно</th>
       </tr>
     </thead>
     <tbody>
@@ -38,9 +38,9 @@
         <th class="text-center" scope="row">{{ forloop.counter }}</th>
         <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
         <td><a href="{% url 'facility' object.facility.id%}" class="text-success">{{ object.facility.name }}</a></td>
-        <td class="text-center">{{ object.IP|default_if_none:"-" }}</td>
-        <td class="text-center">{{ object.port_count }}</td>
-        <td class="text-center">{{ object.count_free }}</td>
+        <td class="text-center mobile-hidden">{{ object.IP|default_if_none:"-" }}</td>
+        <td class="text-center mobile-hidden">{{ object.port_count }}</td>
+        <td class="text-center mobile-hidden">{{ object.count_free }}</td>
       </tr>
       {% endfor %}
     </tbody>

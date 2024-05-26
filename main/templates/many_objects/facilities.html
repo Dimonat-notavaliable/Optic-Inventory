@@ -27,9 +27,9 @@
       <tr class="text-center">
         <th scope="col">№</th>
         <th scope="col">Наименование</th>
-        <th scope="col">Широта</th>
-        <th scope="col">Долгота</th>
-        <th scope="col">Кол-во этажей</th>
+        <th scope="col" class="mobile-hidden">Широта</th>
+        <th scope="col" class="mobile-hidden">Долгота</th>
+        <th scope="col" class="mobile-hidden">Кол-во этажей</th>
       </tr>
     </thead>
     <tbody>
@@ -37,9 +37,9 @@
       <tr>
         <th class="text-center" scope="row">{{ forloop.counter }}</th>
         <td><a href="{% url 'facility' object.id%}" class="text-success">{{ object.name }}</a></td>
-        <td class="text-center">{{ object.latitude }}</td>
-        <td class="text-center">{{ object.longitude }}</td>
-        <td class="text-center">{{ object.floor_count }}</td>
+        <td class="text-center mobile-hidden">{{ object.latitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.longitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.floor_count }}</td>
       </tr>
       {% endfor %}
     </tbody>

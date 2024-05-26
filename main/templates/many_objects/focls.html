@@ -27,10 +27,10 @@
         <th scope="col" title="Номер по порядку">№</th>
         <th scope="col" title="Начальная точка">Начальная точка</th>
         <th scope="col" title="Конечная точка">Конечная точка</th>
-        <th scope="col" title="Количество оптических волокон">Кол-во ОВ</th>
-        <th scope="col" title="Длина по кабелю (м.)">Длина по кабелю (м.)</th>
-        <th scope="col" title="Длина по волокну (м.)">Длина по волокну (м.)</th>
-        <th scope="col" title="Марка кабеля">Марка кабеля</th>
+        <th scope="col" title="Количество оптических волокон" class="mobile-hidden">Кол-во ОВ</th>
+        <th scope="col" title="Длина по кабелю (м.)" class="mobile-hidden">Длина по кабелю (м.)</th>
+        <th scope="col" title="Длина по волокну (м.)" class="mobile-hidden">Длина по волокну (м.)</th>
+        <th scope="col" title="Марка кабеля" class="mobile-hidden">Марка кабеля</th>
       </tr>
     </thead>
     <tbody>
@@ -55,10 +55,10 @@
             {{ object.get_end }}
           </a>
         </td>
-        <td class="text-center">{{ object.cable.get_fiber_count }}</td>
-        <td class="text-center">{{ object.cable_length }}</td>
-        <td class="text-center">{{ object.fiber_length|default_if_none:"-" }}</td>
-        <td class="text-center">{{ object.cable }}</td>
+        <td class="text-center mobile-hidden">{{ object.cable.get_fiber_count }}</td>
+        <td class="text-center mobile-hidden">{{ object.cable_length }}</td>
+        <td class="text-center mobile-hidden">{{ object.fiber_length|default_if_none:"-" }}</td>
+        <td class="text-center mobile-hidden">{{ object.cable }}</td>
       </tr>
       {% endfor %}
     </tbody>

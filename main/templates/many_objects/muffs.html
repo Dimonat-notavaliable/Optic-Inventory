@@ -27,8 +27,8 @@
       <tr class="text-center align-middle">
         <th scope="col" title="Номер по порядку">№</th>
         <th scope="col" title="Наименование">Наименование</th>
-        <th scope="col" title="Широта">Широта</th>
-        <th scope="col" title="Долгота">Долгота</th>
+        <th scope="col" title="Широта" class="mobile-hidden">Широта</th>
+        <th scope="col" title="Долгота" class="mobile-hidden">Долгота</th>
       </tr>
     </thead>
     <tbody>
@@ -36,8 +36,8 @@
       <tr class="align-middle">
         <th class="text-center" scope="row">{{ forloop.counter }}</th>
         <td><a href="{% url 'muff' object.id%}" class="text-success">{{ object.name }}</a></td>
-        <td class="text-center">{{ object.latitude }}</td>
-        <td class="text-center">{{ object.longitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.latitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.longitude }}</td>
       </tr>
       {% endfor %}
     </tbody>

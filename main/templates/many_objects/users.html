@@ -7,9 +7,10 @@
     <thead class="table-dark">
       <tr class="text-center">
         <th scope="col">№</th>
-        <th scope="col">Фамилия</th>
-        <th scope="col">Имя</th>
-        <th scope="col">Отчество</th>
+        <th scope="col" class="desktop-hidden">ФИО</th>
+        <th scope="col" class="mobile-hidden">Фамилия</th>
+        <th scope="col" class="mobile-hidden">Имя</th>
+        <th scope="col" class="mobile-hidden">Отчество</th>
         <th scope="col">Активен</th>
         <th scope="col">Редактор</th>
         <th scope="col">Администратор</th>
@@ -19,9 +20,10 @@
       {% for object in objects %}
       <tr>
         <th class="text-center" scope="row">{{ forloop.counter }}</th>
-        <td>{{ object.last_name }}</td>
-        <td>{{ object.first_name }}</td>
-        <td>{{ object.patronymic }}</td>
+        <td class="desktop-hidden">{{ object.get_full_name }}</td>
+        <td class="mobile-hidden">{{ object.last_name }}</td>
+        <td class="mobile-hidden">{{ object.first_name }}</td>
+        <td class="mobile-hidden">{{ object.patronymic }}</td>
         <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_active %} checked {% endif %} /></td>
         <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_writer %} checked {% endif %} /></td>
         <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_superuser %} checked {% endif %} /></td>
