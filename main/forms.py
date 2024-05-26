@@ -1,8 +1,17 @@
+from colorfield.fields import ColorField
+from colorfield.widgets import ColorWidget
 from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType, \
-    HardwareType, Connection, Adapter, Port
+    HardwareType, Connection, Adapter, Port, Module, Fiber
+
+COLOR_PALETTE = {
+    "#FFFFFF": "Белый", "#000000": "Черный", "#00FFFF": "Бирюзовый", "#0000FF": "Синий",
+    "#FF00FF": "Розовый", "#808080": "Серый", "#008000": "Зеленый", "#00FF00": "Свтл. Зеленый",
+    "#800000": "Тмн. Красный", "#000080": "Тмн. Синий", "#808000": "Оливковый", "#800080": "Фиолетовый",
+    "#FF0000": "Красный", "#C0C0C0": "Серебряный", "#008080": "Серо-зеленый", "#FFFF00": "Желтый",
+}
 
 
 class DynamicModelChoiceField(forms.ModelChoiceField):
@@ -162,7 +171,7 @@ class HardwareCommutationForm(forms.ModelForm):
         if self.cleaned_data.get("commutation_type") == 'adapter':
             adapter = Adapter.objects.get(pk=commutation)
             instance.facility = adapter.cross.facility
-            instance.end_adapter = adapter
+            instance.start_adapter = adapter
 
         elif self.cleaned_data.get("commutation_type") == 'port':
             port = Port.objects.get(pk=commutation)
@@ -271,6 +280,67 @@ class CrossForm(forms.ModelForm):
         fields = ["facility", "adapter_count", "linear_type", "station_type"]
 
 
+class LinearAdapterCommutationForm(forms.ModelForm):
+    commutation = forms.ModelChoiceField(required=True, label='Соединение',
+                                         queryset=Fiber.objects.none(),
+                                         widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                    "data-width": "auto"}),
+                                         empty_label="-- Выберите волокно --")
+
+    class Meta:
+        model = Connection
+        fields = ["commutation"]
+
+    def __init__(self, cross, *args, **kwargs):
+        super(LinearAdapterCommutationForm, self).__init__(*args, **kwargs)
+        facility = Cross.objects.get(pk=cross).facility
+        connections = facility.connection
+        cables = [connection.focl.cable for connection in connections.all()]
+        free_fiber_ids = []
+        for cable in cables:
+            for module in cable.modules.all():
+                free_fiber_ids += [fiber.id for fiber in module.fibers.all() if not fiber.is_commutated()]
+
+        self.fields['commutation'].queryset = Fiber.objects.filter(id__in=free_fiber_ids)
+
+    def save(self, commit=False):
+        instance = super(LinearAdapterCommutationForm, self).save(commit=False)
+
+        fiber = self.cleaned_data.get('commutation')
+        instance.start_fiber = fiber
+
+        return instance
+
+
+class StationAdapterCommutationForm(forms.ModelForm):
+    commutation = forms.ModelChoiceField(required=True, label='Соединение',
+                                         queryset=Fiber.objects.none(),
+                                         widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                                    "data-width": "auto"}),
+                                         empty_label="-- Выберите оборудование --")
+
+    class Meta:
+        model = Connection
+        fields = ["commutation"]
+
+    def __init__(self, cross, *args, **kwargs):
+        super(StationAdapterCommutationForm, self).__init__(*args, **kwargs)
+        facility = Cross.objects.get(pk=cross).facility
+        hardware = facility.hardware.all()
+        free_port_ids = []
+        for one in hardware:
+            free_port_ids += [port.id for port in one.ports.all() if not port.is_commutated()]
+        self.fields['commutation'].queryset = Port.objects.filter(id__in=free_port_ids)
+
+    def save(self, commit=False):
+        instance = super(StationAdapterCommutationForm, self).save(commit=False)
+
+        port = self.cleaned_data.get('commutation')
+        instance.end_port = port
+
+        return instance
+
+
 class UserRightsForm(forms.ModelForm):
     is_active = forms.BooleanField(required=False, label='Активен',
                                    widget=forms.CheckboxInput(attrs={"class": "form-check-input shadow-none"}),
@@ -283,3 +353,31 @@ class UserRightsForm(forms.ModelForm):
     class Meta:
         model = Hardware
         fields = ["is_active", "is_writer", "is_superuser"]
+
+
+class FiberForm(forms.ModelForm):
+    number = forms.IntegerField(required=True, label='Номер',
+                                widget=forms.TextInput(attrs={"class": "form-control w-auto",
+                                                              "data-width": "auto"}))
+    module = forms.ModelChoiceField(required=True, label='Сооружение связи',
+                                    queryset=Module.objects.all(),
+                                    widget=forms.Select(attrs={"class": "form-select w-auto",
+                                                               "data-width": "auto"}),
+                                    empty_label="-- Выберите значение --")
+
+    hex = forms.CharField(required=True, label='Цвет',
+                          widget=forms.TextInput(attrs={'type': 'text',
+                                                        "class": "swatchy-output swatchy-trigger swatchy-display"}))
+
+    class Meta:
+        model = Fiber
+        fields = ["number", "module", "hex"]
+
+    def save(self, commit=True):
+        instance = super(FiberForm, self).save(commit=False)
+        hex = self.cleaned_data.get('hex')
+        instance.color = COLOR_PALETTE[hex]
+
+        instance.save()
+
+        return instance

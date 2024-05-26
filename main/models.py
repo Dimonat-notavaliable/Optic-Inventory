@@ -166,6 +166,16 @@ class Adapter(models.Model):
         else:
             return False
 
+    def get_connection(self):
+        if self.is_commutated:
+            if self.start_connections.exists():
+                connection = self.start_connections.first()
+            else:
+                connection = self.end_connections.first()
+            return connection
+        else:
+            return None
+
     def __str__(self):
         type = "линейный" if self.is_linear else "станционный"
         return f'{self.cross}: Адаптер {self.number} {type}'
@@ -230,6 +240,12 @@ class Fiber(models.Model):
 
     def __str__(self):
         return f'{self.module}: Волокно №{self.number}'
+
+    def is_commutated(self):
+        if self.start_connections.exists() or self.end_connections.exists():
+            return True
+        else:
+            return False
 
 
 class FOCL(models.Model):

@@ -1,6 +1,16 @@
 {% extends 'base.html'%}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+        <style>
+            span {
+              content: "";
+              display: inline-flex;
+              width: 15px;
+              height: 15px;
+              border: solid 1px;
+              margin-right: 5px;
+            }
+        </style>
     <h2 class="my-3"><a href="{% url 'centers' %}" class="text-success link-underline link-underline-opacity-0">Кабельная инфраструктура</a>/
         <a href="{% url 'crosses' %}" class="text-success link-underline link-underline-opacity-0">Кроссы</a>/
         {{ object }}</h2>
@@ -68,24 +78,52 @@
             <thead class="table-dark">
                 <tr class="text-center">
                     <th scope="col">Линейная сторона</th>
+                    <th scope="col"></th>
                     <th scope="col">Тип</th>
                     <th scope="col">№</th>
                     <th scope="col">Тип</th>
                     <th scope="col">Станционная сторона</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
             {% for linear_adapter, station_adapter in adapters %}
                 <tr>
-                    <td class="text-center">
-                        <a href="" class="text-success"><i class="fa-solid fa-plus"></i></a>
+                    {% if not linear_adapter.is_commutated %}
+                    <td class="text-center align-middle" colspan="2">
+                        <a href="{% url 'commutate_linear_adapter' object.id linear_adapter.id%}" class="text-success">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
                     </td>
+                    {% else %}
+                    <td class="text-center align-middle">
+                        <a href="{% url 'focl' linear_adapter.get_connection.get_start.module.cable.focl.id%}" class="text-success">
+                        {{ linear_adapter.get_connection.get_start.module.cable.focl }}
+                        </a>
+                        <p class="mb-0">
+                            <span style="background: {{linear_adapter.get_connection.get_start.module.hex}}"></span>№{{linear_adapter.get_connection.get_start.module.number}} {{ linear_adapter.get_connection.get_start.module.color }} /
+                            <span style="background: {{linear_adapter.get_connection.get_start.hex}}"></span>№{{linear_adapter.get_connection.get_start.number}} {{ linear_adapter.get_connection.get_start.color }}
+                        </p>
+                    </td>
+                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    {% endif %}
                     <td class="text-center">{{ linear_adapter.type.marking }}</td>
                     <td class="text-center">{{ forloop.counter }}</td>
                     <td class="text-center">{{ station_adapter.type.marking }}</td>
-                    <td class="text-center">
-                        <a href="" class="text-success"><i class="fa-solid fa-plus"></i></a>
+                    {% if not station_adapter.is_commutated %}
+                    <td class="text-center" colspan="2">
+                        <a href="{% url 'commutate_station_adapter' object.id station_adapter.id%}" class="text-success">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
                     </td>
+                    {% else %}
+                    <td class="text-center">
+                        <a href="{% url 'hardware' station_adapter.get_connection.get_end.hardware.id%}" class="text-success">
+                            {{ station_adapter.get_connection.get_end }}
+                        </a>
+                    </td>
+                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

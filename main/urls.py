@@ -25,7 +25,6 @@ urlpatterns = [
     path('muffs/delete/<int:pk>/', writer_only(views.MuffDelete.as_view()), name="muff_delete"),
     path('muffs/update/<int:pk>/', writer_only(views.MuffUpdate.as_view()), name="muff_update"),
 
-
     path('focls/', views.focls, name="focls"),
     path('focls/new/', views.focl_create, name="focl_create"),
     path('focls/<int:pk>/', views.focl, name="focl"),
@@ -34,13 +33,15 @@ urlpatterns = [
 
     path('ajax/load-centers/', views.load_centers, name='ajax_load_centers'),
 
-
-
     path('crosses/', views.crosses, name="crosses"),
     path('crosses/new/', views.cross_create, name="cross_create"),
     path('crosses/<int:pk>/', views.cross, name="cross"),
     path('crosses/delete/<int:pk>/', writer_only(views.CrossDelete.as_view()), name="cross_delete"),
     path('crosses/update/<int:pk>/', writer_only(views.CrossUpdate.as_view()), name="cross_update"),
+    path('crosses/<int:cross_id>/commutate-linear/<int:adapter_id>',
+         views.commutate_linear_adapter, name="commutate_linear_adapter"),
+    path('crosses/<int:cross_id>/commutate-station/<int:adapter_id>',
+         views.commutate_station_adapter, name="commutate_station_adapter"),
 
     path('hardware/', views.many_hardware, name="many_hardware"),
     path('hardware/new/', views.hardware_create, name="hardware_create"),

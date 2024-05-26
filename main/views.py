@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from django.http import HttpResponse
@@ -7,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, UpdateView
 
 from . import forms
-from .decorators import superuser_only, writer_only
+from .decorators import superuser_only, writer_only, login_required
 from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter
 
 
@@ -366,6 +365,52 @@ def cross(request, pk):
     return render(request, 'single_object/cross.html', {'title': object, 'object': object, 'adapters': adapters})
 
 
+@writer_only
+def commutate_linear_adapter(request, cross_id, adapter_id):
+    context = {'title': 'Коммутация кросса', 'cross_id': cross_id}
+
+    if request.method == 'GET':
+        form = forms.LinearAdapterCommutationForm(cross_id)
+        context['form'] = form
+        return render(request, 'create.html', context)
+
+    if request.method == 'POST':
+        form = forms.LinearAdapterCommutationForm(cross_id, request.POST)
+        if form.is_valid():
+            connection = form.save(commit=False)
+            adapter = Adapter.objects.get(pk=adapter_id)
+            connection.end_adapter = adapter
+            connection.facility = adapter.cross.facility
+            connection.save()
+            return redirect('cross', pk=cross_id)
+        else:
+            context['form'] = form
+            return render(request, 'create.html', context)
+
+
+@writer_only
+def commutate_station_adapter(request, cross_id, adapter_id):
+    context = {'title': 'Коммутация кросса', 'cross_id': cross_id}
+
+    if request.method == 'GET':
+        form = forms.StationAdapterCommutationForm(cross_id)
+        context['form'] = form
+        return render(request, 'create.html', context)
+
+    if request.method == 'POST':
+        form = forms.StationAdapterCommutationForm(cross_id, request.POST)
+        if form.is_valid():
+            connection = form.save(commit=False)
+            adapter = Adapter.objects.get(pk=adapter_id)
+            connection.start_adapter = adapter
+            connection.facility = adapter.cross.facility
+            connection.save()
+            return redirect('cross', pk=cross_id)
+        else:
+            context['form'] = form
+            return render(request, 'create.html', context)
+
+
 @login_required
 def many_hardware(request):
     model = Hardware
@@ -451,7 +496,7 @@ def commutate_port(request, hardware_id, port_id):
         form = forms.HardwareCommutationForm(request.POST)
         if form.is_valid():
             connection = form.save(commit=False)
-            connection.start_port = Port.objects.get(pk=port_id)
+            connection.end_port = Port.objects.get(pk=port_id)
             connection.save()
             return redirect('hardware', pk=hardware_id)
         else:
