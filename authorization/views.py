@@ -60,7 +60,8 @@ def sign_in(request):
             if user:
                 login(request, user)
                 messages.success(request, f'Здравствуйте, {user.first_name}!')
-                return redirect('home')
+                next_url = request.GET.get("next", "home")
+                return redirect(next_url)
         # form is not valid or user is not authenticated
         messages.error(request, 'Неверный адрес почты или пароль')
         return render(request, 'login.html', {'form': form})
