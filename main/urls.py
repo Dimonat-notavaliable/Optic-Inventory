@@ -5,7 +5,6 @@ from .decorators import writer_only
 
 urlpatterns = [
     path('', views.index, name="home"),
-    path('scheme', views.scheme, name="scheme"),
 
     path('centers/', views.communication_centers, name="centers"),
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'authorization.apps.AuthorizationConfig',
     'files.apps.FilesConfig',
+    'graphic.apps.GraphicConfig',
     'colorfield',
     'import_export',
 ]

@@ -13,7 +13,7 @@
             <li><a class="dropdown-item" href="{% url 'export_muff' 'xlsx' object.id %}">Excel</a></li>
             <li><a class="dropdown-item" href="{% url 'export_muff' 'csv' object.id %}">CSV</a></li>
         </ul>
-        <a href="" class="btn btn-outline btn-green me-1">Схема</a>
+        <a href="{% url 'muff_scheme' object.id %}" class="btn btn-outline btn-green me-1">Схема</a>
         <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1"
            target="_blank" rel="noopener noreferrer">На карте</a>
         {% if request.user.is_writer %}

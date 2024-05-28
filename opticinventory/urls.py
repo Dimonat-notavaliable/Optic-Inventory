@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('main.urls')),
     path('auth/', include('authorization.urls')),
     path('files/', include('files.urls')),
+    path('scheme/', include('graphic.urls')),
 ]

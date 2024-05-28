@@ -11,11 +11,6 @@ from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, A
 
 
 @login_required
-def scheme(request):
-    return render(request, 'scheme.html', {'title': 'Схема коммутации'})
-
-
-@login_required
 def index(request):
     last_hardware = Hardware.objects.all().order_by('-id')[:5]
     last_focls = FOCL.objects.all().order_by('-id')[:5]
