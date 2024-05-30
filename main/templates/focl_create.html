@@ -8,6 +8,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="btn btn-success" value="Сохранить">
+        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-gray">Отмена</a>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
