@@ -21,5 +21,6 @@ admin.site.register(models.Adapter)
 admin.site.register(models.AdapterType)
 
 admin.site.register(models.Connection)
+admin.site.register(models.MuffWelding)
 
 admin.site.register(models.Notification)

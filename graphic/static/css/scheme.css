@@ -105,3 +105,46 @@
 .mid-circle {
     z-index: 2; /* Круги на верхнем уровне */
 }
+
+.select-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.select-container select {
+    appearance: none; /* Убираем стандартное оформление */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 20px; /* Ширина стрелки */
+    height: 20px; /* Высота стрелки */
+    position: relative;
+    z-index: 10;
+    color: transparent; /* Прозрачный текст */
+}
+
+.select-container select:focus {
+    color: black; /* Цвет текста при открытии меню */
+    text-indent: 0; /* Сброс text-indent при открытии меню */
+    white-space: normal; /* Разрешаем перенос текста при открытии меню */
+}
+
+.select-container::after {
+    content: "▼"; /* Символ стрелки */
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}

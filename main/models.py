@@ -242,6 +242,7 @@ class Fiber(models.Model):
     def __str__(self):
         return f'{self.module}: Волокно №{self.number}'
 
+    @property
     def get_cable(self):
         return self.module.cable
 

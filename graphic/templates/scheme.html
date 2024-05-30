@@ -127,7 +127,8 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
-{{ graphic|json_script:"graphic_json" }}
+{{ connections|json_script:"graphic_json" }}
+{{ weldings|json_script:"welding_json" }}
 <script src="{% static 'js/scheme.js' %}"></script>
 </html>
 
