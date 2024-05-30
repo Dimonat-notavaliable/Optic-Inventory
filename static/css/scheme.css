@@ -1,0 +1,103 @@
+#network-container {
+    width: 80vw;
+    height: 80vh;
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+.scheme {
+
+  --wM: 1px;        /* Толщина линии */
+  --xM: 10px;       /* Отступ по ширине */
+  --yM: 10px;       /* Отступ по высоте */
+  --cM: #ccc;       /* Цвет линии */
+
+  --wB: 1px;        /* Толщина линии */
+  --xB: 100px;      /* Отступ по ширине */
+  --yB: 100px;      /* Отступ по высоте */
+  --cB: #333; /* Цвет линии */
+
+  background-position: -1px 0;
+  background-image:
+    linear-gradient(90deg, var(--cB) var(--wB), transparent var(--wB)),
+    linear-gradient(0deg, var(--cB) var(--wB), transparent var(--wB)),
+    linear-gradient(90deg, var(--cM) var(--wM), transparent var(--wM)),
+    linear-gradient(0deg, var(--cM) var(--wM), transparent var(--wM));
+  background-size:
+    var(--xB) 100%, 100% var(--yB),
+    var(--xM) 100%, 100% var(--yM);
+
+  position: relative;
+  overflow: auto;
+}
+
+.cable {
+    position: absolute;
+    padding: 10px;
+    border: 1px solid #000;
+    background-color: black;
+    color: white;
+    display: block;
+    cursor: grab;
+}
+
+ .cableName, .moduleName {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+ .cableName.vertical-right, .moduleName.vertical-right {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.cableName.vertical-left, .moduleName.vertical-left {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.cable.moving {
+    cursor: grabbing;
+    border: dotted white 1px;
+}
+
+.module {
+    border: 1px solid #000;
+    display: inline-block;
+    position: absolute;
+    font-size: smaller;
+    vertical-align: middle;
+}
+
+.fiber {
+    padding: 5px;
+    border: 1px solid #000;
+    display: inline-block;
+    position: absolute;
+}
+
+.connection-group {
+    transition: stroke 0.1s, stroke-width 0.1s; /* Плавный переход */
+}
+
+.connection-group:hover .connection-line {
+    stroke: red; /* Цвет линии при наведении */
+    stroke-width: 7; /* Толщина линии при наведении */
+}
+
+.connection-line {
+    z-index: 1; /* Линии на нижнем уровне */
+}
+
+.mid-circle {
+    z-index: 2; /* Круги на верхнем уровне */
+}
