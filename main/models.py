@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
@@ -241,11 +242,67 @@ class Fiber(models.Model):
     def __str__(self):
         return f'{self.module}: Волокно №{self.number}'
 
+    def get_cable(self):
+        return self.module.cable
+
     def is_commutated(self):
         if self.start_connections.exists() or self.end_connections.exists():
             return True
         else:
             return False
+
+    def is_start_commutated(self):
+        if self.is_commutated():
+            focl = self.get_cable().focl
+            if focl.connection_facility.filter(is_start=True).exists():
+                facility = focl.connection_facility.filter(is_start=True).first().facility
+                if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
+                    if facility.connections.filter(Q(start_fiber=self) & Q(end_fiber=self)).exists():
+                        return facility.connections.filter(start_fiber=self).exists()
+                    return True
+        return False
+
+    def get_start_commutation(self):
+        if self.is_start_commutated():
+            focl = self.get_cable().focl
+            facility = focl.connection_facility.filter(is_start=True).first().facility
+            connection = facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).first()
+            return connection
+        return None
+
+    def get_start_commutation_type(self):
+        if self.is_start_commutated():
+            connection = self.get_start_commutation()
+            if connection.start_adapter or connection.end_adapter:
+                return "adapter"
+            else:
+                return "fiber"
+
+    def is_end_commutated(self):
+        if self.is_commutated():
+            focl = self.get_cable().focl
+            if focl.connection_facility.filter(is_start=False).exists():
+                facility = focl.connection_facility.filter(is_start=False).first().facility
+                if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
+                    if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
+                        return True
+        return False
+
+    def get_end_commutation(self):
+        if self.is_end_commutated():
+            focl = self.get_cable().focl
+            facility = focl.connection_facility.filter(is_start=False).first().facility
+            connection = facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).first()
+            return connection
+        return None
+
+    def get_end_commutation_type(self):
+        if self.is_end_commutated():
+            connection = self.get_end_commutation()
+            if connection.start_adapter or connection.end_adapter:
+                return "adapter"
+            else:
+                return "fiber"
 
 
 class FOCL(models.Model):
@@ -374,3 +431,18 @@ class Connection(models.Model):
 
     def __str__(self):
         return f'Соединение №{self.id}'
+
+
+class MuffWelding(models.Model):
+    muff = models.ForeignKey(Muff, on_delete=models.CASCADE, related_name='connections', blank=False)
+    start_fiber = models.ForeignKey(Fiber, on_delete=models.CASCADE, related_name='start_muff_connections',
+                                    blank=True, null=True)
+    end_fiber = models.ForeignKey(Fiber, on_delete=models.CASCADE, related_name='end_muff_connections',
+                                  blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Волоконная сварка'
+        verbose_name_plural = 'Волоконные сварки'
+
+    def __str__(self):
+        return f'Сварка №{self.id}'
