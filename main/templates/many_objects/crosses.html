@@ -33,8 +33,8 @@
     </thead>
     <tbody>
       {% for object in objects %}
-      <tr class="align-middle">
-        <th class="text-center" scope="row"><a href="{% url 'cross' object.id%}" class="text-success">{{ forloop.counter }}</a></th>
+      <tr class="align-middle clickable-row" data-href="{% url 'cross' object.id%}">
+        <th class="text-center counter" scope="row"><a href="{% url 'cross' object.id%}" class="text-success">{{ forloop.counter }}</a></th>
         <td><a href="{% url 'facility' object.facility.id%}" class="text-success">{{ object.facility.name }}</a></td>
         <td class="text-center mobile-hidden">{{ object.linear_type }}</td>
         <td class="text-center mobile-hidden">{{ object.station_type }}</td>

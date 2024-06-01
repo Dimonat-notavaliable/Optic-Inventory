@@ -186,3 +186,12 @@ body {
     background-color: #C88804!important;
     border-color: #966603!important;
 }
+
+.clickable-row{
+    cursor: pointer;
+}
+
+.counter{
+    width: 1%!important;
+    white-space: nowrap!important;
+}

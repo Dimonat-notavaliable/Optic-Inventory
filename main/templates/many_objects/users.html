@@ -19,7 +19,7 @@
     <tbody>
       {% for object in objects %}
       <tr>
-        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+        <th class="text-center counter" scope="row">{{ forloop.counter }}</th>
         <td class="desktop-hidden">{{ object.get_full_name }}</td>
         <td class="mobile-hidden">{{ object.last_name }}</td>
         <td class="mobile-hidden">{{ object.first_name }}</td>
