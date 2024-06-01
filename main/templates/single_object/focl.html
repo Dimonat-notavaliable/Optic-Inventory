@@ -1,6 +1,16 @@
 {% extends 'base.html'%}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+    <style>
+            span {
+              content: "";
+              display: inline-flex;
+              width: 15px;
+              height: 15px;
+              border: solid 1px;
+              margin-right: 5px;
+            }
+    </style>
     <h2 class="my-3"><a href="{% url 'centers' %}" class="text-success link-underline link-underline-opacity-0">Кабельная инфраструктура</a>/<a href="{% url 'focls' %}" class="text-success link-underline link-underline-opacity-0">ВОЛС</a>/{{ object }}</h2>
     <hr>
     <div class="container my-3">
@@ -58,23 +68,22 @@
             <p class="mb-0">Длина по волокну (м.):</p>
         </div>
         <div>
-
             <p>
-            {% if object.get_start.class_name == 'Facility' %}
+            {% if start.class_name == 'Facility' %}
                 <a class="text-success" href="{% url 'facility' object.get_start.id%}">
             {% else %}
                 <a class="text-success" href="{% url 'muff' object.get_start.id%}">
             {% endif %}
-                {{ object.get_start }}
+                    {{ start.name }}
                 </a>
             </p>
             <p>
-                {% if object.get_end.class_name == 'Facility' %}
+                {% if end.class_name == 'Facility' %}
                     <a class="text-success" href="{% url 'facility' object.get_end.id%}">
                 {% else %}
                     <a class="text-success" href="{% url 'muff' object.get_end.id%}">
                 {% endif %}
-                    {{ object.get_end }}
+                        {{ end.name }}
                     </a>
             </p>
             <p>{{ object.cable }}</p>
@@ -84,57 +93,79 @@
         </div>
     </div>
     <div class="d-flex">
+        {% if start.class_name == 'Facility' %}
+            <a href="{% url 'facility_scheme' start.id %}" class="text-success me-1">
+                <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'muff_scheme' start.id %}" class="text-success me-1">
+                <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </a>
+        {% endif %}
+
+        {% for center, modules in connections %}
         <table class="table border border-dark align-middle" aria-label="Коммутация линии связи">
             <thead class="table-dark">
                 <tr class="text-center">
                     <th scope="col">М</th>
                     <th scope="col">ОВ</th>
-                    <th scope="col">{{ object.get_start }}</th>
+                    <th scope="col">{{ center }}</th>
                 </tr>
             </thead>
             <tbody>
-            {% for module in object.cable.modules.all %}
+            {% for module in modules %}
                 <tr>
-                    <td style="background-color:{{ module.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark" rowspan="{{ module.get_fiber_count|add:'1' }}">
+                    <td style="background-color:{{ module.object.hex }}; width: 1%; white-space: nowrap;"
+                        class="text-center border border-dark" rowspan="{{ module.object.get_fiber_count|add:'1' }}">
                         {{ forloop.counter }}
                     </td>
                 </tr>
-                {% for fiber in module.fibers.all %}
+                {% for fiber in module.fibers %}
                 <tr>
                     <td style="background-color:{{ fiber.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark">
                         {{ forloop.counter }}
                     </td>
-                    <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                    {% if not fiber.is_commutated %}
+                        <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                    {% else %}
+                        {% if fiber.connection_type == 'fiber' %}
+                            <td class="text-center align-middle">
+                                <a href="{% url 'focl' fiber.connection.get_cable.focl.id %}" class="text-success">
+                                    {{ fiber.connection.get_cable.focl }}
+                                </a>
+                                <p class="mb-0">
+                                    <span style="background: {{fiber.connection.module.hex}}"></span>№{{fiber.connection.module.number}} {{ fiber.connection.module.color }} /
+                                    <span style="background: {{fiber.connection.hex}}"></span>№{{fiber.connection.number}} {{ fiber.connection.color }}
+                                </p>
+                            </td>
+                        {% elif fiber.connection_type == 'adapter' %}
+                            <td class="text-center">
+                                <a href="{% url 'cross' fiber.connection.cross.id%}" class="text-success">
+                                    {{ fiber.connection }}
+                                </a>
+                            </td>
+                        {% else %}
+                            <td class="text-center">
+                                <a href="{% url 'hardware' fiber.connection.hardware.id%}" class="text-success">
+                                    {{ fiber.connection }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
                 </tr>
                 {% endfor %}
             {% endfor %}
             </tbody>
         </table>
-        <table class="table border border-dark align-middle" aria-label="Коммутация линии связи">
-            <thead class="table-dark">
-                <tr class="text-center">
-                    <th scope="col">М</th>
-                    <th scope="col">ОВ</th>
-                    <th scope="col">{{ object.get_end }}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for module in object.cable.modules.all %}
-                <tr>
-                    <td style="background-color:{{ module.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark" rowspan="{{ module.get_fiber_count|add:'1' }}">
-                        {{ forloop.counter }}
-                    </td>
-                </tr>
-                {% for fiber in module.fibers.all %}
-                <tr>
-                    <td style="background-color:{{ fiber.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark">
-                        {{ forloop.counter }}
-                    </td>
-                    <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
-                </tr>
-                {% endfor %}
-            {% endfor %}
-            </tbody>
-        </table>
+        {% endfor %}
+        {% if end.class_name == 'Facility' %}
+            <a href="{% url 'facility_scheme' end.id %}" class="text-success ms-1">
+                <i class="fa-solid fa-arrow-right fa-xl"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'muff_scheme' end.id %}" class="text-success ms-1">
+                <i class="fa-solid fa-arrow-right fa-xl"></i>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

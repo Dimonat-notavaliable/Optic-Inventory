@@ -179,7 +179,7 @@ class Adapter(models.Model):
 
     def __str__(self):
         type = "линейный" if self.is_linear else "станционный"
-        return f'{self.cross}: Адаптер {self.number} {type}'
+        return f'{self.cross}: Адаптер {self.number} {type} {self.type}'
 
 
 def create_cross_adapters(instance, **kwargs):
@@ -246,64 +246,17 @@ class Fiber(models.Model):
     def get_cable(self):
         return self.module.cable
 
-    def is_commutated(self):
+    def is_facility_commutated(self):
         if self.start_connections.exists() or self.end_connections.exists():
             return True
         else:
             return False
 
-    def is_start_commutated(self):
-        if self.is_commutated():
-            focl = self.get_cable().focl
-            if focl.connection_facility.filter(is_start=True).exists():
-                facility = focl.connection_facility.filter(is_start=True).first().facility
-                if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
-                    if facility.connections.filter(Q(start_fiber=self) & Q(end_fiber=self)).exists():
-                        return facility.connections.filter(start_fiber=self).exists()
-                    return True
-        return False
-
-    def get_start_commutation(self):
-        if self.is_start_commutated():
-            focl = self.get_cable().focl
-            facility = focl.connection_facility.filter(is_start=True).first().facility
-            connection = facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).first()
-            return connection
-        return None
-
-    def get_start_commutation_type(self):
-        if self.is_start_commutated():
-            connection = self.get_start_commutation()
-            if connection.start_adapter or connection.end_adapter:
-                return "adapter"
-            else:
-                return "fiber"
-
-    def is_end_commutated(self):
-        if self.is_commutated():
-            focl = self.get_cable().focl
-            if focl.connection_facility.filter(is_start=False).exists():
-                facility = focl.connection_facility.filter(is_start=False).first().facility
-                if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
-                    if facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).exists():
-                        return True
-        return False
-
-    def get_end_commutation(self):
-        if self.is_end_commutated():
-            focl = self.get_cable().focl
-            facility = focl.connection_facility.filter(is_start=False).first().facility
-            connection = facility.connections.filter(Q(start_fiber=self) | Q(end_fiber=self)).first()
-            return connection
-        return None
-
-    def get_end_commutation_type(self):
-        if self.is_end_commutated():
-            connection = self.get_end_commutation()
-            if connection.start_adapter or connection.end_adapter:
-                return "adapter"
-            else:
-                return "fiber"
+    def is_muff_commutated(self):
+        if self.start_muff_connections.exists() or self.end_muff_connections.exists():
+            return True
+        else:
+            return False
 
 
 class FOCL(models.Model):
@@ -440,6 +393,12 @@ class MuffWelding(models.Model):
                                     blank=True, null=True)
     end_fiber = models.ForeignKey(Fiber, on_delete=models.CASCADE, related_name='end_muff_connections',
                                   blank=True, null=True)
+
+    def get_start(self):
+        return self.start_fiber
+
+    def get_end(self):
+        return self.end_fiber
 
     class Meta:
         verbose_name = 'Волоконная сварка'

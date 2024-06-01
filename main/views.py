@@ -6,8 +6,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, UpdateView
 
 from . import forms
+from .utils import get_modules_info
 from .decorators import superuser_only, writer_only, login_required
-from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter
+from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter, Connection, MuffWelding
 
 
 @login_required
@@ -240,7 +241,20 @@ def focls(request):
 def focl(request, pk):
     model = FOCL
     object = model.objects.get(id=pk)
-    return render(request, 'single_object/focl.html', {'title': object, 'object': object})
+    start = object.get_start()
+    end = object.get_end()
+    start_modules = object.cable.modules.all().order_by('number')
+    end_modules = object.cable.modules.all().order_by('number')
+
+    start_modules_info = get_modules_info(start_modules, start)
+    end_modules_info = get_modules_info(end_modules, end)
+
+    all_connections = zip([start.name, end.name],
+                          [start_modules_info, end_modules_info])
+
+    return render(request, 'single_object/focl.html', {'title': object, 'object': object,
+                                                       'start': start, 'end': end,
+                                                       'connections': all_connections})
 
 
 @writer_only
