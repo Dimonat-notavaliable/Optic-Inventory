@@ -1,7 +1,9 @@
 {% extends 'base.html'%}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    <h2 class="my-3"><a href="{% url 'many_hardware' %}" class="text-success link-underline link-underline-opacity-0">Оборудование</a>/{{ object.marking }}</h2>
+    <h2 class="my-3">
+        <a href="{% url 'many_hardware' %}" class="text-success link-underline link-underline-opacity-0">Оборудование</a>/{{ object.marking }}
+    </h2>
     <hr>
     <div class="container my-3">
         <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>

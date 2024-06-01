@@ -195,3 +195,12 @@ body {
     width: 1%!important;
     white-space: nowrap!important;
 }
+
+span {
+    content: "";
+    display: inline-flex;
+    width: 15px;
+    height: 15px;
+    border: solid 1px;
+    margin-right: 5px;
+}

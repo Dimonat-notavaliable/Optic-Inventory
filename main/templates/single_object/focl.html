@@ -11,7 +11,9 @@
               margin-right: 5px;
             }
     </style>
-    <h2 class="my-3"><a href="{% url 'centers' %}" class="text-success link-underline link-underline-opacity-0">Кабельная инфраструктура</a>/<a href="{% url 'focls' %}" class="text-success link-underline link-underline-opacity-0">ВОЛС</a>/{{ object }}</h2>
+    <h2 class="my-3">
+        Кабельная инфраструктура/<a href="{% url 'focls' %}" class="text-success link-underline link-underline-opacity-0">ВОЛС</a>/{{ object }}
+    </h2>
     <hr>
     <div class="container my-3">
         <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
