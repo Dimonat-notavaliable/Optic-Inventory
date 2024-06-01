@@ -1,3 +1,69 @@
+function getQueryParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
+
+function loadSchemeList(schemeSelector){
+    // Загрузка списка схем
+    fetch(`all/`)
+        .then(response => response.json())
+        .then(data => {
+            data.schemes.forEach(scheme => {
+                const option = document.createElement('option');
+                option.value = scheme.id;
+                option.text = `Схема от ${scheme.last_change}`;
+                schemeSelector.appendChild(option);
+            });
+            // Устанавливаем выбранную схему
+            const selectedSchemeId = getQueryParameter('scheme_id');
+            if (selectedSchemeId) {
+                schemeSelector.value = selectedSchemeId;
+            } else {
+                // Устанавливаем последнюю схему как выбранную, если параметр не указан
+                const lastScheme = data.schemes[0];
+                if (lastScheme) {
+                    schemeSelector.value = lastScheme.id;
+                }
+            }
+        })
+        .catch(error => console.error('Ошибка при загрузке списка схем:', error));
+}
+
+function saveScheme() {
+    const cables = document.querySelectorAll('.cable');
+    const connections = [];
+
+    cables.forEach(cable => {
+        const id = cable.id.replace('cable', ''); // Удаляем префикс "cable" из ID
+        const left = parseInt(cable.style.left, 10); // Координата X
+        const top = parseInt(cable.style.top, 10); // Координата Y
+        const direction = cable.getAttribute('data-direction'); // Направление кабеля
+
+        connections.push({ id, left, top, direction });
+    });
+
+    fetch(`save/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken, // Не забудьте добавить CSRF-токен
+        },
+        body: JSON.stringify({ connections })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Схема успешно сохранена');
+        } else {
+            alert('Ошибка при сохранении схемы: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+    });
+}
+
 
 function setDirectionNameClass(nameDiv, direction) {
     if (direction === 'right') {nameDiv.classList.add("vertical-right");}
@@ -143,6 +209,41 @@ function setCableModules(cable, direction, cableDiv, cableLength){
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    // Вызов функции сохранения,привязан к нажатию кнопки
+    document.getElementById('save-button').addEventListener('click', saveScheme);
+
+    const schemeSelectorContainer = document.getElementById('scheme-selector-container');
+    const schemeSelector = document.getElementById('scheme-selector');
+    const dropdownButton = document.getElementById('dropdown-scheme-selector');
+
+    loadSchemeList(schemeSelector);
+
+    // Обработчик для загрузки списка схем при клике на кнопку
+    dropdownButton.addEventListener('click', function() {
+        schemeSelectorContainer.classList.toggle('show');
+    });
+
+    // Закрыть dropdown, если пользователь кликает вне его области
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('#dropdown-scheme-selector') && !event.target.matches('.fa-clock-rotate-left')) {
+            schemeSelectorContainer.classList.remove('show');
+        }
+    });
+
+    // Обработчик изменения селектора схем
+    schemeSelector.addEventListener('change', function() {
+        const selectedSchemeId = schemeSelector.value;
+        // Обновление URL с новым идентификатором схемы
+        loadScheme(selectedSchemeId);
+    });
+
+    // Функция для загрузки выбранной схемы
+    function loadScheme(schemeId) {
+        let url = new URL(window.location);
+        url.searchParams.set('scheme_id', schemeId);
+        window.location.href = url.toString();
+    }
+
      const DragManager = {
         cursor: { x: 0, y: 0 },
         dragObject: null,
@@ -220,7 +321,6 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     function setCable(container, cable, direction, cableDiv, DragManager){
-        console.log(cable.left, cable.top);
         cableDiv.style.left = `${cable.left}px`;
         cableDiv.style.top = `${cable.top}px`;
 
@@ -247,10 +347,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const directionSelect = document.createElement('select');
         directionSelect.innerHTML = `
-            <option value="right">Вправо</option>
-            <option value="left">Влево</option>
-            <option value="up">Вверх</option>
-            <option value="down">Вниз</option>
+            <option value="right">▶Вправо</option>
+            <option value="left">◀Влево</option>
+            <option value="up">▲Вверх</option>
+            <option value="down">▼Вниз</option>
         `;
 
         directionSelect.value = direction;
@@ -262,8 +362,12 @@ document.addEventListener("DOMContentLoaded", function() {
         directionSelect.addEventListener('change', function() {
             const selectedDirection = this.value;
             const container = document.getElementById('network-container');
+
             hideAllConnectionLines(cableDiv);
-            cableDiv.setAttribute('data-direction', selectedDirection);
+
+            cable.left = parseInt(cableDiv.style.left, 10) || 0;
+            cable.top = parseInt(cableDiv.style.top, 10) || 0;
+
             // Далее можете вызвать функцию setPositionAndDirection для обновления позиции и направления кабеля
             cableDiv.removeAttribute("style");
             cableDiv.innerHTML = "";
@@ -456,7 +560,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const fiber2Id = lineGroup.classList[1].replace('line-', '');
             const cable1Id = lineGroup.classList[2].replace('line-', '');
             const cable2Id = lineGroup.classList[3].replace('line-', '');
-            console.log(fiber1Id, fiber2Id, cable1Id, cable2Id);
 
             // Удаляем текущую группу линий
             lineGroup.remove();
@@ -467,5 +570,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const weldings = JSON.parse(document.getElementById('welding_json').textContent);
     weldings.forEach(welding => {
         createConnectionLine(welding.start, welding.end, welding.cable_start, welding.cable_end)
+    });
+
+
+    const print_button = document.getElementById('print-button');
+    print_button.addEventListener('click', function() {
+        window.print();
+    });
+
+    const screenshot_button = document.getElementById('screenshot-button');
+    screenshot_button.addEventListener('click', function() {
+        const screen_content = document.getElementById('network-container');
+        html2canvas(screen_content).then(canvas => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'network-scheme.png';
+            link.click();
+        });
     });
 });

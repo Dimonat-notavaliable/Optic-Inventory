@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from main.decorators import login_required
-from main.models import Facility, FacilityConnection, Muff, MuffConnection, MuffWelding, Cable
+from django.shortcuts import render, get_object_or_404
+from main.decorators import login_required, writer_only
+from main.models import Facility, FacilityConnection, Muff, MuffConnection, MuffWelding, FOCL
 from graphic.models import MuffScheme, MuffSchemeFOCL
+import json
+from django.http import JsonResponse
 
 
 def serialize_cable(cable):
@@ -83,7 +85,12 @@ def facility_scheme(request, pk):
 @login_required
 def muff_scheme(request, pk):
     muff = Muff.objects.get(pk=pk)
-    scheme = MuffScheme.objects.filter(muff=muff).first()
+    scheme_id = request.GET.get('scheme_id')
+    if scheme_id:
+        scheme = get_object_or_404(MuffScheme, pk=scheme_id, muff=muff)
+    else:
+        scheme = MuffScheme.objects.filter(muff=muff).latest('last_change')
+
     connections = MuffSchemeFOCL.objects.filter(scheme=scheme)
     connections_data = []
     for connection in connections:
@@ -106,3 +113,51 @@ def muff_scheme(request, pk):
     title = f"Схема коммутации: {muff.name}"
     return render(request, 'scheme.html', {'title': title, 'object': muff,
                                            'connections': connections_data, 'weldings': weldings_data})
+
+
+@login_required
+def get_muff_schemes(request, pk):
+    muff = Muff.objects.get(pk=pk)
+    schemes = MuffScheme.objects.filter(muff=muff).order_by('-last_change')
+    schemes_data = [
+        {
+            'id': scheme.id,
+            'last_change': scheme.last_change.strftime('%d.%m.%Y %H:%M:%S')
+        }
+        for scheme in schemes
+    ]
+    return JsonResponse({'schemes': schemes_data})
+
+
+@writer_only
+def save_muff_scheme(request, pk):
+    try:
+        # Получаем муфту и её схему
+        muff = Muff.objects.get(pk=pk)
+
+        # Парсим данные из запроса
+        data = json.loads(request.body)
+
+        # Получаем все схемы муфты, отсортированные по дате создания
+        muff_schemes = MuffScheme.objects.filter(muff=muff).order_by('last_change')
+
+        # Проверяем, если количество схем превышает пять, удаляем самую старую
+        if muff_schemes.count() >= 5:
+            oldest_scheme = muff_schemes.first()
+            oldest_scheme.delete()
+
+        new_scheme = MuffScheme.objects.create(muff=muff)
+
+        for connection_data in data.get('connections', []):
+            MuffSchemeFOCL.objects.create(
+                scheme=new_scheme,
+                focl=FOCL.objects.get(cable_id=connection_data['id']),
+                coordinate_x=connection_data['left'],
+                coordinate_y=connection_data['top'],
+                direction=connection_data['direction']
+            )
+
+        return JsonResponse({'status': 'success'})
+
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

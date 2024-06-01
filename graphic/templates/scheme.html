@@ -83,21 +83,35 @@
                     {{ object.name }}
                     </a>
               </li>
-              <li class="nav-item mx-2">
-                <a class="nav-link text-light fa-lg" href="" role="button" aria-expanded="false">
-                    <i class="fa-solid fa-print"></i>
-                </a>
+              <li class="nav-item mx-2" title="Печатать">
+                <button id="print-button" class="nav-link text-light fa-lg">
+                        <i class="fa-solid fa-print"></i>
+                </button>
               </li>
-              <li class="nav-item mx-2">
-                <a class="nav-link text-light fa-lg" aria-current="page" href="">
+              <li class="nav-item mx-2" title="Сохранить как изображение">
+                <button id="screenshot-button" class="nav-link text-light fa-lg">
                     <i class="fa-solid fa-image"></i>
-                </a>
+                </button>
               </li>
+              <li class="nav-item mx-2" title="История изменений">
+                  <div class="dropdown">
+                    <button id="dropdown-scheme-selector" class="nav-link text-light fa-lg">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                    <div class="dropdown-content" id="scheme-selector-container">
+                        <select id="scheme-selector" size="6">
+                            <option value="" disabled>Выберите схему</option>
+                        </select>
+                    </div>
+                  </div>
+            </li>
+              {% if request.user.is_writer %}
               <li class="nav-item mx-2">
-                <a class="nav-link text-light fa-lg" aria-current="page" href="">
-                    <i class="fa-solid fa-rotate"></i>
-                </a>
+                <button id="save-button" class="nav-link text-light fa-lg" title="Сохранить">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>
               </li>
+              {% endif %}
             </ul>
             <ul class="navbar-nav ms-auto align-items-center">
               <li class="navbar-text text-light">
@@ -111,7 +125,7 @@
           </div>
         </div>
     </nav>
-    <div id="network-container" style="height: 100vh; width: 100%; position: relative;" class="border border-3 border-dark scheme">
+    <div id="network-container" class="border border-3 border-dark scheme">
         <!-- Объекты будут динамически добавлены сюда -->
     </div>
     <div class="container scheme">
@@ -130,5 +144,12 @@
 {{ connections|json_script:"graphic_json" }}
 {{ weldings|json_script:"welding_json" }}
 <script src="{% static 'js/scheme.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% if request.user.is_writer %}
+<script>
+    const csrftoken = '{{ csrf_token }}';
+    const muffId = '{{ muff.id }}';  // Передача ID муфты из контекста
+</script>
+{% endif %}
 </html>
 
