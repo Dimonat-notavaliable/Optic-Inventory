@@ -13,7 +13,7 @@
       </ul>
     </div>
     {% if request.user.is_writer %}
-    <a href="#" class="btn btn-outline btn-green me-1">Импорт</a>
+    <a href="{% url 'import_hardware' %}" class="btn btn-outline btn-green me-1">Импорт</a>
     <a href="{% url 'hardware_create' %}" class="btn btn-outline btn-green me-1">Добавить</a>
     {% endif %}
   </div>

@@ -67,7 +67,7 @@ class Hardware(models.Model):
     floor = models.IntegerField(_("Этаж расположения"), blank=False, default=1,
                                 validators=[MinValueValidator(1)])
     IP = models.GenericIPAddressField(_("IP-адрес"), protocol="both", blank=True, null=True)
-    MAC = models.CharField(_("MAC-адрес"), blank=True)
+    MAC = models.CharField(_("MAC-адрес"), blank=True, null=True)
     facility = models.ForeignKey(Facility, on_delete=models.SET_NULL, related_name='hardware', blank=True, null=True)
 
     class Meta:

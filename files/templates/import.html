@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+  <style>
+    .tooltip-icon {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .tooltip-icon::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 125%;
+        background-color: #212529;
+        color: #fff;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.1s, visibility 0.1s;
+        z-index: 1;
+    }
+
+    .tooltip-icon:hover::after {
+        opacity: 1;
+        visibility: visible;
+    }
+  </style>
+  <h5 class="my-3">{{title}}</h5>
+  <hr class="m-0 mb-1">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <hr>
+    <input type="submit" class="btn btn-green" value="Сохранить">
+    <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-gray">Отмена</a>
+  </form>
+  <hr class="mb-1">
+  <p class="mb-1">Файл с необходимыми для импорта заголовками<span class="tooltip-icon" data-tooltip="Несоблюдение представленного в файле порядка и состава заголовков приведет к ошибке при импорте">
+    <i class="fa-solid fa-question fa-2xs text-success"></i></span> можно скачать, нажав на кнопку:</p>
+
+  <a href="{% static headers_file %}" class="btn btn-success">Скачать файл </a>
+{% endblock %}

@@ -1,10 +1,11 @@
-from django.contrib import admin
-from import_export import resources
-from main.models import Hardware, Facility, Muff, FOCL, Cross
+from import_export import fields, resources
 from import_export.fields import Field
+from import_export.widgets import ForeignKeyWidget
+
+from main.models import Hardware, HardwareType, Facility, Muff, FOCL, Cross
 
 
-class HardwareResource(resources.ModelResource):
+class HardwareExportResource(resources.ModelResource):
     marking = Field(attribute='marking', column_name='Наименование')
     type_marking = Field(attribute='type__marking', column_name='Тип')
     facility_name = Field(attribute='facility__name', column_name='Расположение')
@@ -17,6 +18,26 @@ class HardwareResource(resources.ModelResource):
         model = Hardware
         exclude = ('id', 'facility', 'type',)
         export_order = ('facility_name', 'floor', 'marking', 'type_marking', 'IP', 'MAC', 'port_count')
+
+
+class HardwareImportResource(resources.ModelResource):
+    id = Field(attribute='id', column_name='Идентификатор')
+    facility = fields.Field(
+        column_name='Расположение',
+        attribute='facility',
+        widget=ForeignKeyWidget(Facility, field='name'))
+    floor = Field(attribute='floor', column_name='Этаж расположения')
+    marking = Field(attribute='marking', column_name='Наименование')
+    type = fields.Field(
+        column_name='Тип',
+        attribute='type',
+        widget=ForeignKeyWidget(HardwareType, field='marking'))
+    IP = Field(attribute='IP', column_name='IP-адрес')
+    MAC = Field(attribute='MAC', column_name='MAC-адрес')
+    port_count = Field(attribute='port_count', column_name='Количество портов')
+
+    class Meta:
+        model = Hardware
 
 
 class FacilityResource(resources.ModelResource):
@@ -78,3 +99,6 @@ class CrossResource(resources.ModelResource):
         model = Cross
         exclude = ('id', 'facility',)
         export_order = ('facility_name', 'floor', 'adapter_count', 'linear_type', 'station_type')
+
+
+
