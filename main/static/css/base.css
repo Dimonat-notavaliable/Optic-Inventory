@@ -196,7 +196,7 @@ body {
     white-space: nowrap!important;
 }
 
-span {
+span.square {
     content: "";
     display: inline-flex;
     width: 15px;

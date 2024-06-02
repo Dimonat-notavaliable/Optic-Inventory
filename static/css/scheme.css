@@ -1,6 +1,6 @@
 #network-container {
-    width: 80vw;
-    height: 80vh;
+    width: 100vw;
+    height: 100vh;
     border: 1px solid #ccc;
     position: relative;
 }
@@ -67,7 +67,7 @@
 
 .cable.moving {
     cursor: grabbing;
-    border: dotted white 1px;
+    border: dashed white 3px;
 }
 
 .module {
@@ -91,7 +91,11 @@
 
 .connection-group:hover .connection-line {
     stroke: red; /* Цвет линии при наведении */
-    stroke-width: 7; /* Толщина линии при наведении */
+    stroke-width: 8; /* Толщина линии при наведении */
+}
+
+.connection-group:hover .mid-circle {
+    fill: red; /* Цвет круга при наведении */
 }
 
 .connection-line {
@@ -100,4 +104,112 @@
 
 .mid-circle {
     z-index: 2; /* Круги на верхнем уровне */
+}
+
+.select-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.select-container select {
+    appearance: none; /* Убираем стандартное оформление */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 20px; /* Ширина стрелки */
+    height: 20px; /* Высота стрелки */
+    position: relative;
+    z-index: 2;
+    color: transparent; /* Прозрачный текст */
+}
+
+.select-container select:focus {
+    color: black; /* Цвет текста при открытии меню */
+    text-indent: 0; /* Сброс text-indent при открытии меню */
+    white-space: normal; /* Разрешаем перенос текста при открытии меню */
+}
+
+.select-container::after {
+    content: "▼"; /* Символ стрелки */
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* Общие стили для dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Стили для содержимого dropdown (спрятано по умолчанию) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    width: max-content;
+    overflow: hidden;
+    z-index: 3;
+    font-family: "Inter", sans-serif;
+}
+
+/* Стили для выпадающего списка */
+#scheme-selector {
+    width: 100%; /* Устанавливаем ширину селектора на 100% от родительского контейнера */
+    max-width: 300px; /* Установите max-width для ограничения ширины, если необходимо */
+    box-sizing: border-box; /* Учитываем паддинги и бордеры при расчете ширины */
+    white-space: nowrap; /* Предотвращаем перенос текста */
+    overflow: hidden; /* Предотвращаем выход текста за пределы */
+    text-overflow: ellipsis; /* Добавляем троеточие, если текст выходит за пределы */
+}
+
+/* Отображение dropdown-content при нажатии на кнопку */
+.dropdown-content.show {
+    display: block;
+}
+
+/* Убираем стрелку браузера у select */
+#scheme-selector::-ms-expand {
+    display: none;
+}
+
+@media print {
+    @page {
+        size: A4 landscape!important;
+    }
+    * {
+        box-sizing: border-box!important;
+    }
+    body, html {
+        position: static;
+        overflow: initial;
+    }
+    .scheme {
+      background-image: none;
+    }
+    body * {
+        visibility: hidden!important;
+    }
+    #network-container, #network-container * {
+        visibility: visible!important;
+    }
+    #network-container {
+        width: 110vw!important;  /* Размер страницы A4 в альбомной ориентации */
+        height: 93vh!important; /* Размер страницы A4 в альбомной ориентации */
+        transform: scale(0.90);
+        transform-origin: top left!important;
+        overflow:visible!important;
+    }
 }
