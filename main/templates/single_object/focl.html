@@ -136,8 +136,8 @@
                                     {{ fiber.connection.get_cable.focl }}
                                 </a>
                                 <p class="mb-0">
-                                    <span style="background: {{fiber.connection.module.hex}}"></span>№{{fiber.connection.module.number}} {{ fiber.connection.module.color }} /
-                                    <span style="background: {{fiber.connection.hex}}"></span>№{{fiber.connection.number}} {{ fiber.connection.color }}
+                                    <span class="square" style="background: {{fiber.connection.module.hex}}"></span>№{{fiber.connection.module.number}} {{ fiber.connection.module.color }} /
+                                    <span class="square" style="background: {{fiber.connection.hex}}"></span>№{{fiber.connection.number}} {{ fiber.connection.color }}
                                 </p>
                             </td>
                         {% elif fiber.connection_type == 'adapter' %}
