@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('export/<str:extension>/muffs', views.export_muffs, name="export_muffs"),
     path('export/<str:extension>/muffs/<int:pk>', views.export_muff, name="export_muff"),
+    path('import/muffs/', views.import_muffs, name="import_muffs"),
 
     path('export/<str:extension>/focls', views.export_focls, name="export_focls"),
     path('export/<str:extension>/focls/<int:pk>', views.export_focl, name="export_focl"),

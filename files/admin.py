@@ -63,7 +63,7 @@ class FacilityImportResource(resources.ModelResource):
         model = Facility
 
 
-class MuffResource(resources.ModelResource):
+class MuffExportResource(resources.ModelResource):
     name = Field(attribute='name', column_name='Наименование')
     latitude = Field(attribute='latitude', column_name='Широта')
     longitude = Field(attribute='longitude', column_name='Долгота')
@@ -73,6 +73,17 @@ class MuffResource(resources.ModelResource):
         model = Muff
         exclude = ('id',)
         export_order = ('name', 'capacity', 'latitude', 'longitude')
+
+
+class MuffImportResource(resources.ModelResource):
+    id = Field(attribute='id', column_name='Идентификатор')
+    name = Field(attribute='name', column_name='Наименование')
+    latitude = Field(attribute='latitude', column_name='Широта')
+    longitude = Field(attribute='longitude', column_name='Долгота')
+    capacity = Field(attribute='capacity', column_name='Вместимость')
+
+    class Meta:
+        model = Muff
 
 
 class FOCLResource(resources.ModelResource):

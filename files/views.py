@@ -119,7 +119,7 @@ def import_facilities(request):
 @login_required
 def export_muffs(request, extension):
     object_type = "Muffs"
-    dataset = admin.MuffResource().export()
+    dataset = admin.MuffExportResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -129,10 +129,29 @@ def export_muffs(request, extension):
 def export_muff(request, extension, pk):
     queryset = Muff.objects.filter(id=pk)
     object_name = f'Muff_{pk}'
-    dataset = admin.MuffResource().export(queryset)
+    dataset = admin.MuffExportResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
+
+
+@writer_only
+def import_muffs(request):
+    headers_file = 'xlsx/OpticInventory_Заголовки_Муфты.xlsx'
+    title = "Импорт муфт"
+    redirect_url = 'import_muffs'
+    if request.method == 'POST':
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            resource = admin.MuffImportResource()
+            headers = ['id', 'name', 'capacity', 'latitude', 'longitude']
+            redirect_url = import_util(request, resource, headers,
+                                       import_url='import_muffs', success_url='muffs')
+        return redirect(redirect_url)
+    else:
+        form = ImportForm()
+    return render(request, 'import.html', {'title': title, 'form': form,
+                                           'headers_file': headers_file})
 
 
 @login_required
