@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('export/<str:extension>/focls', views.export_focls, name="export_focls"),
     path('export/<str:extension>/focls/<int:pk>', views.export_focl, name="export_focl"),
+    path('import/focls/', views.import_focls, name="import_focls"),
 
     path('export/<str:extension>/crosses', views.export_crosses, name="export_crosses"),
     path('export/<str:extension>/crosses/<int:pk>', views.export_cross, name="export_cross"),

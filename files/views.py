@@ -157,7 +157,7 @@ def import_muffs(request):
 @login_required
 def export_focls(request, extension):
     object_type = "FOCLs"
-    dataset = admin.FOCLResource().export()
+    dataset = admin.FOCLExportResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -167,10 +167,30 @@ def export_focls(request, extension):
 def export_focl(request, extension, pk):
     queryset = FOCL.objects.filter(id=pk)
     object_name = f'FOCL_{pk}'
-    dataset = admin.FOCLResource().export(queryset)
+    dataset = admin.FOCLExportResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
+
+
+@writer_only
+def import_focls(request):
+    headers_file = 'xlsx/OpticInventory_Заголовки_ВОЛС.xlsx'
+    title = "Импорт линий связи"
+    redirect_url = 'import_focls'
+    if request.method == 'POST':
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            resource = admin.FOCLImportResource()
+            headers = ['id', 'start_type', 'start_name', 'end_type', 'end_name',
+                       'cable', 'cable_length', 'fiber_length', ]
+            redirect_url = import_util(request, resource, headers,
+                                       import_url='import_focls', success_url='focls')
+        return redirect(redirect_url)
+    else:
+        form = ImportForm()
+    return render(request, 'import.html', {'title': title, 'form': form,
+                                           'headers_file': headers_file})
 
 
 @login_required

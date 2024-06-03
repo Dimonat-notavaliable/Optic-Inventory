@@ -2,7 +2,7 @@ from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
-from main.models import Hardware, HardwareType, Facility, Muff, FOCL, Cross, AdapterType
+from main.models import Hardware, HardwareType, Facility, FacilityConnection, Muff, MuffConnection, FOCL, Cross, AdapterType, Cable
 
 
 class HardwareExportResource(resources.ModelResource):
@@ -86,7 +86,7 @@ class MuffImportResource(resources.ModelResource):
         model = Muff
 
 
-class FOCLResource(resources.ModelResource):
+class FOCLExportResource(resources.ModelResource):
     cable = Field(attribute='cable__marking', column_name='Кабель')
     cable_length = Field(attribute='cable_length', column_name='Длина по кабелю')
     fiber_length = Field(attribute='fiber_length', column_name='Длина по волокну')
@@ -108,6 +108,65 @@ class FOCLResource(resources.ModelResource):
         model = FOCL
         exclude = ('id',)
         export_order = ('start_point', 'end_point', 'cable', 'cable_length', 'fiber_length')
+
+
+class FOCLImportResource(resources.ModelResource):
+
+    cable = Field(
+        column_name='Кабель',
+        attribute='cable',
+        widget=ForeignKeyWidget(Cable, field='marking')
+    )
+
+    start_type = Field(column_name='Тип начальной точки')
+    start_name = Field(column_name='Начальная точка')
+    end_type = Field(column_name='Тип конечной точки')
+    end_name = Field(column_name='Конечная точка')
+
+    cable_length = Field(attribute='cable_length', column_name='Длина по кабелю')
+    fiber_length = Field(attribute='fiber_length', column_name='Длина по волокну')
+
+    def after_import_row(self, row, row_result, row_number=None, **kwargs):
+        instance = row_result.instance
+        if instance:
+            start_type = row.get('Тип начальной точки').strip().lower()
+            start_name = row.get('Начальная точка')
+            end_type = row.get('Тип конечной точки').strip().lower()
+            end_name = row.get('Конечная точка')
+
+            try:
+                if start_type == 'сооружение связи':
+                    instance = row_result.instance
+                    start_facility = Facility.objects.get(name=start_name)
+                    start_connection = FacilityConnection(focl=instance, facility=start_facility, is_start=True)
+                    start_connection.save()
+
+                elif start_type == 'муфта':
+                    start_muff = Muff.objects.get(name=start_name)
+                    start_connection = MuffConnection(focl=instance, muff=start_muff, is_start=True)
+                    start_connection.save()
+
+                if end_type == 'сооружение связи':
+                    end_facility = Facility.objects.get(name=end_name)
+                    end_connection = FacilityConnection(focl=instance, facility=end_facility, is_start=False)
+                    end_connection.save()
+
+                elif end_type == 'муфта':
+                    end_muff = Muff.objects.get(name=end_name)
+                    end_connection = MuffConnection(focl=instance, muff=end_muff, is_start=False)
+                    end_connection.save()
+
+            except Facility.DoesNotExist:
+                print(
+                    f"Сооружения связи '{start_name if start_type == 'сооружение связи' else end_name}' не существует.")
+            except Muff.DoesNotExist:
+                print(f"Муфты '{start_name if start_type == 'муфта' else end_name}' не существует.")
+
+    class Meta:
+        model = FOCL
+        store_instance = True
+        fields = ('id', 'start_type', 'start_name', 'end_type', 'end_name',
+                  'cable', 'cable_length', 'fiber_length')
 
 
 class CrossExportResource(resources.ModelResource):
