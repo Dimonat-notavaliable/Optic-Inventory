@@ -40,7 +40,7 @@ class HardwareImportResource(resources.ModelResource):
         model = Hardware
 
 
-class FacilityResource(resources.ModelResource):
+class FacilityExportResource(resources.ModelResource):
     name = Field(attribute='name', column_name='Наименование')
     latitude = Field(attribute='latitude', column_name='Широта')
     longitude = Field(attribute='longitude', column_name='Долгота')
@@ -50,6 +50,17 @@ class FacilityResource(resources.ModelResource):
         model = Facility
         exclude = ('id',)
         export_order = ('name', 'floor_count', 'latitude', 'longitude')
+
+
+class FacilityImportResource(resources.ModelResource):
+    id = Field(attribute='id', column_name='Идентификатор')
+    name = Field(attribute='name', column_name='Наименование')
+    latitude = Field(attribute='latitude', column_name='Широта')
+    longitude = Field(attribute='longitude', column_name='Долгота')
+    floor_count = Field(attribute='floor_count', column_name='Количество этажей')
+
+    class Meta:
+        model = Facility
 
 
 class MuffResource(resources.ModelResource):

@@ -1,15 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib import messages
 import datetime
 
-from .forms import ImportForm
-from .admin import HardwareExportResource, FacilityResource, MuffResource, CrossResource, FOCLResource, \
-    HardwareImportResource
-from import_export import resources
-from main.models import Hardware, Facility, Muff, FOCL, Cross
+from django.contrib import messages
+from main.decorators import login_required, writer_only
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from tablib import Dataset
+
+from main.models import Hardware, Facility, Muff, FOCL, Cross
+from . import admin
+from .forms import ImportForm
 
 
 def export_util(dataset, dataset_type, object_description):
@@ -44,7 +43,7 @@ def import_util(request, resource, headers, import_url, success_url):
 @login_required
 def export_hardware(request, extension):
     object_type = "Hardware"
-    dataset = HardwareExportResource().export()
+    dataset = admin.HardwareExportResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -54,13 +53,13 @@ def export_hardware(request, extension):
 def export_one_hardware(request, extension, pk):
     queryset = Hardware.objects.filter(id=pk)
     object_name = f'Hardware_{pk}'
-    dataset = HardwareExportResource().export(queryset)
+    dataset = admin.HardwareExportResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
 
 
-@login_required
+@writer_only
 def import_hardware(request):
     headers_file = 'xlsx/OpticInventory_Заголовки_Оборудование.xlsx'
     title = "Импорт оборудования"
@@ -68,7 +67,7 @@ def import_hardware(request):
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)
         if form.is_valid():
-            resource = HardwareImportResource()
+            resource = admin.HardwareImportResource()
             headers = ['id', 'facility', 'floor', 'marking', 'type', 'IP', 'MAC', 'port_count']
             redirect_url = import_util(request, resource, headers,
                                        import_url='import_hardware', success_url='many_hardware')
@@ -82,7 +81,7 @@ def import_hardware(request):
 @login_required
 def export_facilities(request, extension):
     object_type = "Facilities"
-    dataset = FacilityResource().export()
+    dataset = admin.FacilityExportResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -92,16 +91,35 @@ def export_facilities(request, extension):
 def export_facility(request, extension, pk):
     queryset = Facility.objects.filter(id=pk)
     object_name = f'Facility_{pk}'
-    dataset = FacilityResource().export(queryset)
+    dataset = admin.FacilityExportResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
 
 
+@writer_only
+def import_facilities(request):
+    headers_file = 'xlsx/OpticInventory_Заголовки_СооруженияСвязи.xlsx'
+    title = "Импорт сооружений связи"
+    redirect_url = 'import_facilities'
+    if request.method == 'POST':
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            resource = admin.FacilityImportResource()
+            headers = ['id', 'name', 'floor_count', 'latitude', 'longitude']
+            redirect_url = import_util(request, resource, headers,
+                                       import_url='import_facilities', success_url='facilities')
+        return redirect(redirect_url)
+    else:
+        form = ImportForm()
+    return render(request, 'import.html', {'title': title, 'form': form,
+                                           'headers_file': headers_file})
+
+
 @login_required
 def export_muffs(request, extension):
     object_type = "Muffs"
-    dataset = MuffResource().export()
+    dataset = admin.MuffResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -111,7 +129,7 @@ def export_muffs(request, extension):
 def export_muff(request, extension, pk):
     queryset = Muff.objects.filter(id=pk)
     object_name = f'Muff_{pk}'
-    dataset = MuffResource().export(queryset)
+    dataset = admin.MuffResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
@@ -120,7 +138,7 @@ def export_muff(request, extension, pk):
 @login_required
 def export_focls(request, extension):
     object_type = "FOCLs"
-    dataset = FOCLResource().export()
+    dataset = admin.FOCLResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -130,7 +148,7 @@ def export_focls(request, extension):
 def export_focl(request, extension, pk):
     queryset = FOCL.objects.filter(id=pk)
     object_name = f'FOCL_{pk}'
-    dataset = FOCLResource().export(queryset)
+    dataset = admin.FOCLResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
@@ -139,7 +157,7 @@ def export_focl(request, extension, pk):
 @login_required
 def export_crosses(request, extension):
     object_type = "Crosses"
-    dataset = CrossResource().export()
+    dataset = admin.CrossResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -149,7 +167,7 @@ def export_crosses(request, extension):
 def export_cross(request, extension, pk):
     queryset = Cross.objects.filter(id=pk)
     object_name = f'Cross_{pk}'
-    dataset = CrossResource().export(queryset)
+    dataset = admin.CrossResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
