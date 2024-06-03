@@ -176,7 +176,7 @@ def export_focl(request, extension, pk):
 @login_required
 def export_crosses(request, extension):
     object_type = "Crosses"
-    dataset = admin.CrossResource().export()
+    dataset = admin.CrossExportResource().export()
     response = export_util(dataset, extension, object_type)
 
     return response
@@ -186,7 +186,26 @@ def export_crosses(request, extension):
 def export_cross(request, extension, pk):
     queryset = Cross.objects.filter(id=pk)
     object_name = f'Cross_{pk}'
-    dataset = admin.CrossResource().export(queryset)
+    dataset = admin.CrossExportResource().export(queryset)
     response = export_util(dataset, extension, object_name)
 
     return response
+
+
+@writer_only
+def import_crosses(request):
+    headers_file = 'xlsx/OpticInventory_Заголовки_Кроссы.xlsx'
+    title = "Импорт кроссов"
+    redirect_url = 'import_crosses'
+    if request.method == 'POST':
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            resource = admin.CrossImportResource()
+            headers = ['id', 'facility', 'floor', 'adapter_count', 'linear_type', 'station_type']
+            redirect_url = import_util(request, resource, headers,
+                                       import_url='import_crosses', success_url='crosses')
+        return redirect(redirect_url)
+    else:
+        form = ImportForm()
+    return render(request, 'import.html', {'title': title, 'form': form,
+                                           'headers_file': headers_file})

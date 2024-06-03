@@ -20,4 +20,5 @@ urlpatterns = [
 
     path('export/<str:extension>/crosses', views.export_crosses, name="export_crosses"),
     path('export/<str:extension>/crosses/<int:pk>', views.export_cross, name="export_cross"),
+    path('import/crosses/', views.import_crosses, name="import_crosses"),
 ]

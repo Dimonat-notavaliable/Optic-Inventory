@@ -1,8 +1,8 @@
-from import_export import fields, resources
+from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
-from main.models import Hardware, HardwareType, Facility, Muff, FOCL, Cross
+from main.models import Hardware, HardwareType, Facility, Muff, FOCL, Cross, AdapterType
 
 
 class HardwareExportResource(resources.ModelResource):
@@ -22,13 +22,13 @@ class HardwareExportResource(resources.ModelResource):
 
 class HardwareImportResource(resources.ModelResource):
     id = Field(attribute='id', column_name='Идентификатор')
-    facility = fields.Field(
+    facility = Field(
         column_name='Расположение',
         attribute='facility',
         widget=ForeignKeyWidget(Facility, field='name'))
     floor = Field(attribute='floor', column_name='Этаж расположения')
     marking = Field(attribute='marking', column_name='Наименование')
-    type = fields.Field(
+    type = Field(
         column_name='Тип',
         attribute='type',
         widget=ForeignKeyWidget(HardwareType, field='marking'))
@@ -110,7 +110,7 @@ class FOCLResource(resources.ModelResource):
         export_order = ('start_point', 'end_point', 'cable', 'cable_length', 'fiber_length')
 
 
-class CrossResource(resources.ModelResource):
+class CrossExportResource(resources.ModelResource):
     facility_name = Field(attribute='facility__name', column_name='Расположение')
     floor = Field(attribute='floor', column_name='Этаж расположения')
     adapter_count = Field(attribute='adapter_count', column_name='Количество адаптеров')
@@ -123,4 +123,25 @@ class CrossResource(resources.ModelResource):
         export_order = ('facility_name', 'floor', 'adapter_count', 'linear_type', 'station_type')
 
 
+class CrossImportResource(resources.ModelResource):
+    id = Field(attribute='id', column_name='Идентификатор')
+    facility = Field(
+        column_name='Расположение',
+        attribute='facility',
+        widget=ForeignKeyWidget(Facility, field='name')
+    )
+    floor = Field(attribute='floor', column_name='Этаж расположения')
+    adapter_count = Field(attribute='adapter_count', column_name='Количество адаптеров')
+    linear_type = Field(
+        column_name='Тип линейных адаптеров',
+        attribute='linear_type',
+        widget=ForeignKeyWidget(AdapterType, field='marking')
+    )
+    station_type = Field(
+        column_name='Тип станционных адаптеров',
+        attribute='station_type',
+        widget=ForeignKeyWidget(AdapterType, field='marking')
+    )
 
+    class Meta:
+        model = Cross
