@@ -46,10 +46,13 @@ class User(AbstractUser):
 
     @property
     def get_full_name(self):
-        if self.patronymic:
+        if self.patronymic and self.last_name and self.first_name:
             return f'{self.last_name} {self.first_name[0]}. {self.patronymic[0]}.'
-        else:
+        elif self.last_name and self.first_name:
             return f'{self.last_name} {self.first_name[0]}.'
+        else:
+            return 'Аноним'
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

@@ -77,16 +77,16 @@ WSGI_APPLICATION = 'opticinventory.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'optic-inventory',
-#        'USER': 'postgres',
-#        'PASSWORD': '123',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres.psimccknbevafsbionep',
+        'PASSWORD': '2077Cyberpun',
+        'HOST': 'aws-0-eu-central-1.pooler.supabase.com',
+        'PORT': '6543',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
