@@ -1,0 +1,48 @@
+{% extends 'base.html'%}
+{% block title %}
+    {{title}}
+{% endblock %}
+{% block content %}
+    <h5 class="my-3">{{title}}</h5>
+    <form method="POST" id="focl_form" enctype="multipart/form-data" class="my-3" data-centers-url="{% url 'ajax_load_centers' %}" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-success" value="Сохранить">
+        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-gray">Отмена</a>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $("#id_start_type").change(function () {
+        var url = $("#focl_form").attr("data-centers-url");  // get the url of the `load_cities` view
+        var type = $(this).val();  // get the selected country ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+          url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'type': type       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_start").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+
+      });
+
+      $("#id_end_type").change(function () {
+        var url = $("#focl_form").attr("data-centers-url");  // get the url of the `load_cities` view
+        var type = $(this).val();  // get the selected country ID from the HTML input
+
+        $.ajax({                       // initialize an AJAX request
+          url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'type': type       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_end").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+
+      });
+    </script>
+{% endblock %}

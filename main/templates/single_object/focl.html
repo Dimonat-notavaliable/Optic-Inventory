@@ -1,0 +1,173 @@
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <style>
+            span {
+              content: "";
+              display: inline-flex;
+              width: 15px;
+              height: 15px;
+              border: solid 1px;
+              margin-right: 5px;
+            }
+    </style>
+    <h2 class="my-3">
+        Кабельная инфраструктура/<a href="{% url 'focls' %}" class="text-success link-underline link-underline-opacity-0">ВОЛС</a>/{{ object }}
+    </h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
+        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+        </button>
+        <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">Выберите формат</h6></li>
+            <li><a class="dropdown-item" href="{% url 'export_focl' 'xlsx' object.id %}">Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'export_focl' 'csv' object.id %}">CSV</a></li>
+        </ul>
+        <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1"
+           target="_blank" rel="noopener noreferrer">На карте</a>
+        {% if request.user.is_writer %}
+        <a href="{% url 'focl_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+        {% endif %}
+    </div>
+    {% if request.user.is_writer %}
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'focl_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container d-inline-flex mb-3">
+        <div class="me-3 px-3 bg-light">
+            <p>Начальная точка:</p>
+            <p>Конечная точка:</p>
+            <p>Кабель:</p>
+            <p>Количество ОВ:</p>
+            <p>Длина по кабелю (м.):</p>
+            <p class="mb-0">Длина по волокну (м.):</p>
+        </div>
+        <div>
+            <p>
+            {% if start.class_name == 'Facility' %}
+                <a class="text-success" href="{% url 'facility' object.get_start.id%}">
+            {% else %}
+                <a class="text-success" href="{% url 'muff' object.get_start.id%}">
+            {% endif %}
+                    {{ start.name }}
+                </a>
+            </p>
+            <p>
+                {% if end.class_name == 'Facility' %}
+                    <a class="text-success" href="{% url 'facility' object.get_end.id%}">
+                {% else %}
+                    <a class="text-success" href="{% url 'muff' object.get_end.id%}">
+                {% endif %}
+                        {{ end.name }}
+                    </a>
+            </p>
+            <p>{{ object.cable }}</p>
+            <p>{{ object.cable.get_fiber_count }}</p>
+            <p>{{ object.cable_length }}</p>
+            <p class="mb-0">{{ object.fiber_length|default_if_none:"-" }}</p>
+        </div>
+    </div>
+    <div class="d-flex">
+        {% if start.class_name == 'Facility' %}
+            <a href="{% url 'facility_scheme' start.id %}" class="text-success me-1">
+                <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'muff_scheme' start.id %}" class="text-success me-1">
+                <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </a>
+        {% endif %}
+
+        {% for center, modules in connections %}
+        <table class="table border border-dark align-middle" aria-label="Коммутация линии связи">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th scope="col">М</th>
+                    <th scope="col">ОВ</th>
+                    <th scope="col">{{ center }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                <tr>
+                    <td style="background-color:{{ module.object.hex }}; width: 1%; white-space: nowrap;"
+                        class="text-center border border-dark" rowspan="{{ module.object.get_fiber_count|add:'1' }}">
+                        {{ forloop.counter }}
+                    </td>
+                </tr>
+                {% for fiber in module.fibers %}
+                <tr>
+                    <td style="background-color:{{ fiber.hex }}; width: 1%; white-space: nowrap;" class="text-center border border-dark">
+                        {{ forloop.counter }}
+                    </td>
+                    {% if not fiber.is_commutated %}
+                        <td class="text-center"><a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                    {% else %}
+                        {% if fiber.connection_type == 'fiber' %}
+                            <td class="text-center align-middle">
+                                <a href="{% url 'focl' fiber.connection.get_cable.focl.id %}" class="text-success">
+                                    {{ fiber.connection.get_cable.focl }}
+                                </a>
+                                <p class="mb-0">
+                                    <span class="square" style="background: {{fiber.connection.module.hex}}"></span>№{{fiber.connection.module.number}} {{ fiber.connection.module.color }} /
+                                    <span class="square" style="background: {{fiber.connection.hex}}"></span>№{{fiber.connection.number}} {{ fiber.connection.color }}
+                                </p>
+                            </td>
+                        {% elif fiber.connection_type == 'adapter' %}
+                            <td class="text-center">
+                                <a href="{% url 'cross' fiber.connection.cross.id%}" class="text-success">
+                                    {{ fiber.connection }}
+                                </a>
+                            </td>
+                        {% else %}
+                            <td class="text-center">
+                                <a href="{% url 'hardware' fiber.connection.hardware.id%}" class="text-success">
+                                    {{ fiber.connection }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+        {% if end.class_name == 'Facility' %}
+            <a href="{% url 'facility_scheme' end.id %}" class="text-success ms-1">
+                <i class="fa-solid fa-arrow-right fa-xl"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'muff_scheme' end.id %}" class="text-success ms-1">
+                <i class="fa-solid fa-arrow-right fa-xl"></i>
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}

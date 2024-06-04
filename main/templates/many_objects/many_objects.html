@@ -1,0 +1,73 @@
+{% extends 'base.html'%}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+  <h2 class="my-3">{% block objects_type %}{% endblock %}</h2>
+  <hr class="m-0">
+  {% block buttons %}
+  {% endblock %}
+  <div class="input-group">
+    <form action="{% block search_action %}{% endblock %}" class="d-flex w-100 my-3" method="get">
+      <input type="hidden" name="sorting" value="{{params.sorting}}"/>
+      <div class="rounded-0 rounded-start form-control mr-2 bg-dark border-0 p-1 px-2 d-flex">
+        <div class="form-control p-0 d-flex border-0">
+        {{ search_form.search }}
+        <button type="button" class="btn btn-outline btn-red border-0"
+                onClick="document.getElementById('id_search').value = ''">X</button>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-green rounded-0 rounded-end" type="submit">Найти</button>
+    </form>
+  </div>
+  <nav class="d-flex justify-content-between" aria-label="filter">
+    <form action="{% block sorting_action %}{% endblock %}" class="mb-3 d-flex align-items-center" method="get">
+      <input type="hidden" name="search" value="{{params.search}}"/>
+      <div class="me-2 w-100">Сортировать по:</div>
+      {{ sort_form }}
+    </form>
+    <ul class="pagination mb-3">
+      {% if objects.has_previous %}
+        <li class="page-item">
+          <a class="page-link shadow-none" href="?page={{ objects.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link shadow-none">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for page in objects.paginator.page_range %}
+        <li class="page-item {% if page == objects.number %}active{% endif %}">
+          <a class="page-link shadow-none" href="?page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+      {% if objects.has_next %}
+        <li class="page-item">
+          <a class="page-link shadow-none" href="?page={{ objects.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% if objects %}
+    {% block table %}{% endblock %}
+  {%else%}
+    <p>Ничего не найдено</p>
+  {% endif %}
+{% endblock %}
+
+{% block additional_script %}
+  {% load static %}
+  <script src="{% static 'js/tables.js' %}"></script>
+{% endblock %}

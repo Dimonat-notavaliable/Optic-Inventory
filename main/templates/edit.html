@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+{% block title %}
+    Редактирование объекта
+{% endblock %}
+{% block content %}
+    <h5 class="my-3">Редактирование</h5>
+    <form method="POST" enctype="multipart/form-data" class="my-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-green" value="Сохранить">
+        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-gray">Отмена</a>
+    </form>
+{% endblock %}
+{% block additional_script %}
+  {% load static %}
+  <script src="{% static 'js/form_alerts.js' %}"></script>
+{% endblock %}

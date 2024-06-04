@@ -1,0 +1,47 @@
+{% extends 'many_objects/many_objects.html'%}
+{% block objects_type %}Узлы связи/Сооружения связи{% endblock %}
+{% block buttons %}
+  <div class="mt-3">
+    <div class="btn-group">
+      <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+      </button>
+      <ul class="dropdown-menu">
+        <li><h6 class="dropdown-header">Выберите формат</h6></li>
+        <li><a class="dropdown-item" href="{% url 'export_facilities' 'xlsx' %}">Excel</a></li>
+        <li><a class="dropdown-item" href="{% url 'export_facilities' 'csv' %}">CSV</a></li>
+      </ul>
+    </div>
+    {% if request.user.is_writer %}
+    <a href="{% url 'import_facilities' %}" class="btn btn-outline btn-green me-1">Импорт</a>
+    <a href="{% url 'facility_create' %}" class="btn btn-outline btn-green me-1">Добавить</a>
+    {% endif %}
+    <a href="{% url 'facilities_map' %}" class="btn btn-outline btn-green me-1">Карта</a>
+  </div>
+{% endblock %}
+{% block search_action %}{% url 'facilities' %}{% endblock %}
+{% block sorting_action %}{% url 'facilities' %}{% endblock %}
+{% block table %}
+  <table class="table border" aria-label="Сооружения связи">
+    <thead class="table-dark">
+      <tr class="text-center">
+        <th scope="col">№</th>
+        <th scope="col">Наименование</th>
+        <th scope="col" class="mobile-hidden">Широта</th>
+        <th scope="col" class="mobile-hidden">Долгота</th>
+        <th scope="col" class="mobile-hidden">Кол-во этажей</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in objects %}
+      <tr class="clickable-row" data-href="{% url 'facility' object.id%}">
+        <th class="text-center counter" scope="row"><a href="{% url 'facility' object.id%}" class="text-success">{{ forloop.counter }}</a></th>
+        <td>{{ object.name }}</td>
+        <td class="text-center mobile-hidden">{{ object.latitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.longitude }}</td>
+        <td class="text-center mobile-hidden">{{ object.floor_count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

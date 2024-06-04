@@ -1,17 +1,150 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %} - Optic Inventory</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/mobile.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/swatchy.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/6dfa2ab8ce.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'home' %}">
+              <img src="{% static 'img/New logo.svg' %}" width="108" height="39" alt="">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+                <i class="fa-solid fa-bars fa-lg"></i>
+          </button>
+          <div class="offcanvas bg-opacity-75 offcanvas-top text-bg-dark collapse w-auto h-auto" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+              <div class="offcanvas-header">
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                  <li class="nav-item">
+                    <p class="nav-link active mb-0" aria-expanded="false">
+                      Узлы связи
+                    </p>
+                    <ul class="navbar-nav ms-3">
+                      <li><a class="nav-link text-light" href="{% url 'facilities' %}">Сооружения связи</a></li>
+                      <li><a class="nav-link text-light" href="{% url 'muffs' %}">Муфты</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <p class="nav-link active mb-0" aria-expanded="false">
+                      Кабельная инфраструктура
+                    </p>
+                    <ul class="navbar-nav ms-3">
+                      <li><a class="nav-link text-light" href="{% url 'focls' %}">ВОЛС</a></li>
+                      <li><a class="nav-link text-light" href="{% url 'crosses' %}">Кроссы</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'many_hardware' %}" role="button" aria-expanded="false">
+                      Оборудование
+                    </a>
+                  </li>
+                  {% if request.user.is_superuser %}
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'users' %}" role="button" aria-expanded="false">
+                        Пользователи
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto align-items-center">
+                  <li class="navbar-text text-light">
+                    {{ request.user.get_full_name }}
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'logout' %}">Выйти</a>
+                  </li>
+                </ul>
+              </div>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item mx-2 dropdown">
+                  <button class="nav-link text-light" role="button" aria-expanded="false">
+                    Узлы связи
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+                    <li><a class="dropdown-item text-light" href="{% url 'facilities' %}">Сооружения связи</a></li>
+                    <li><a class="dropdown-item text-light" href="{% url 'muffs' %}">Муфты</a></li>
+                  </ul>
+              </li>
+              <li class="nav-item mx-2 dropdown">
+                <button class="nav-link text-light" role="button" aria-expanded="false">
+                    Кабельная инфраструктура
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+                    <li><a class="dropdown-item text-light" href="{% url 'focls' %}">ВОЛС</a></li>
+                    <li><a class="dropdown-item text-light" href="{% url 'crosses' %}">Кроссы</a></li>
+                </ul>
+              </li>
+              <li class="nav-item mx-2">
+                <a class="nav-link text-light" aria-current="page" href="{% url 'many_hardware' %}">Оборудование</a>
+              </li>
+              {% if request.user.is_superuser %}
+              <li class="nav-item mx-2">
+                <a class="nav-link text-light" aria-current="page" href="{% url 'users' %}">Пользователи</a>
+              </li>
+              {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center">
+              {% if request.user.is_superuser %}
+              <li class="py-0">
+                <button id="notifications" type="button" data-bs-toggle="offcanvas" data-bs-target="#collapseExample"
+                        aria-expanded="false" aria-controls="collapseExample"
+                        class="btn btn-outline-light btn-sm" onclick="updateNotifications()"><i class="fa-solid fa-bell"></i></button>
+              </li>
+              <li class="mx-2"><div class="vr"></div></li>
+              {% endif %}
+              <li class="navbar-text text-light">
+                <i class="fa-solid fa-circle-user"></i> {{ request.user.get_full_name }}
+              </li>
+              <li class="mx-2"><div class="vr"></div></li>
+              <li class="nav-item">
+                <a class="nav-link active fa-lg" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
     <div class="container">
+        {% if messages %}
+			<div class="messages">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+			</div>
+		{% endif %}
+        <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="collapseExample">
+            <div class="offcanvas-header align-items-center">
+                <div class="d-flex align-items-center">
+                    <h4 id="offcanvasRightLabel" class="my-0">Уведомления</h4>
+                    <button type="button" class="btn" id="updateNotifications" onclick="updateNotifications()" aria-label="Close"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+                    <button type="button" class="btn-close text-reset align-self-center" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div id="note_list" class="offcanvas-body"></div>
+        </div>
         {% block content %}{% endblock %}
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/notifications.js' %}"></script>
+    <script src="{% static 'js/swatchy.js' %}"></script>
+    {% block additional_script %}{% endblock %}
 </body>
 </html>

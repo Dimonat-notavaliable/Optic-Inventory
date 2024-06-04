@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }} - Optic Inventory</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/mobile.css' %}" rel="stylesheet">
+    <link href="{% static 'css/scheme.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/6dfa2ab8ce.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item mx-2">
+                  {% if object.class_name == 'Facility' %}
+                    <a class="nav-link text-light" href="{% url 'facility' object.id%}">
+                  {% else %}
+                    <a class="nav-link text-light" href="{% url 'muff' object.id%}">
+                  {% endif %}
+                    {{ object.name }}
+                    </a>
+              </li>
+              <li class="nav-item mx-2" title="Печатать">
+                <button id="print-button" class="nav-link text-light fa-lg">
+                        <i class="fa-solid fa-print"></i>
+                </button>
+              </li>
+              <li class="nav-item mx-2" title="Сохранить как изображение">
+                <button id="screenshot-button" class="nav-link text-light fa-lg">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+              </li>
+              <li class="nav-item mx-2" title="История изменений">
+                  <div class="dropdown">
+                    <button id="dropdown-scheme-selector" class="nav-link text-light fa-lg">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                    <div class="dropdown-content" id="scheme-selector-container">
+                        <select id="scheme-selector" size="6">
+                            <option value="" disabled>Выберите схему</option>
+                        </select>
+                    </div>
+                  </div>
+            </li>
+              {% if request.user.is_writer %}
+              <li class="nav-item mx-2">
+                <button id="save-button" class="nav-link text-light fa-lg" title="Сохранить">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+              </li>
+              {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center mobile-hidden">
+              <li class="navbar-text text-light">
+                <i class="fa-solid fa-circle-user"></i> {{ request.user.get_full_name }}
+              </li>
+              <li class="mx-2"><div class="vr"></div></li>
+            </ul>
+              <a class="navbar-brand mobile-hidden" href="{% url 'home' %}">
+              <img src="{% static 'img/New logo.svg' %}" width="108" height="39" alt="">
+              </a>
+          </div>
+        </div>
+    </nav>
+    <div id="network-container" class="border border-3 border-dark scheme">
+        <!-- Объекты будут динамически добавлены сюда -->
+    </div>
+    <div class="container scheme">
+        {% if messages %}
+			<div class="messages">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+			</div>
+		{% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</body>
+{{ connections|json_script:"graphic_json" }}
+{{ weldings|json_script:"welding_json" }}
+<script src="{% static 'js/scheme.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% if request.user.is_writer %}
+<script>
+    const csrftoken = '{{ csrf_token }}';
+    const muffId = '{{ muff.id }}';  // Передача ID муфты из контекста
+</script>
+{% endif %}
+</html>
+

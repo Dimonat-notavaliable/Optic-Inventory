@@ -1,0 +1,31 @@
+{% extends 'base.html'%}
+{% block title %}
+    {{title}}
+{% endblock %}
+{% block content %}
+    <h5 class="my-3">{{title}}</h5>
+    <form method="POST" id="port_commutation_form" enctype="multipart/form-data" class="my-3" data-url="{% url 'ajax_load_port_commutations' hardware_id %}" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-green" value="Сохранить">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $("#id_commutation_type").change(function () {
+        var url = $("#port_commutation_form").attr("data-url");
+        var type = $(this).val();
+
+        $.ajax({
+          url: url,
+          data: {
+            'type': type
+          },
+          success: function (data) {
+            $("#id_commutation").html(data);
+          }
+        });
+
+      });
+    </script>
+{% endblock %}

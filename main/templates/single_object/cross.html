@@ -1,0 +1,120 @@
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2 class="my-3">Кабельная инфраструктура/<a href="{% url 'crosses' %}" class="text-success link-underline link-underline-opacity-0">Кроссы</a>/{{ object }}
+    </h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
+        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+        </button>
+        <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">Выберите формат</h6></li>
+            <li><a class="dropdown-item" href="{% url 'export_cross' 'xlsx' object.id %}">Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'export_cross' 'csv' object.id %}">CSV</a></li>
+        </ul>
+        {% if request.user.is_writer %}
+        <a href="{% url 'cross_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+        {% endif %}
+    </div>
+    {% if request.user.is_writer %}
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'cross_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+                <p class="m-0">Вся связанная с объектом коммутация будет разорвана.</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container d-inline-flex mb-3">
+        <div class="me-3 px-3 bg-light">
+            <p>Сооружение связи:</p>
+            <p>Тип линейных адаптеров:</p>
+            <p>Тип станционных адаптеров:</p>
+            <p class="mb-0">Количество адаптеров:</p>
+        </div>
+        <div>
+            <p><a href="{% url 'facility' object.facility.id%}" class="text-success">
+                {{ object.facility }}<a href="{% url 'focl' object.id%}" class="text-success"></a></p>
+            <p>{{ object.linear_type }}</p>
+            <p>{{ object.station_type }}</p>
+            <p class="mb-0">{{ object.adapter_count }}</p>
+        </div>
+    </div>
+    <table class="table border align-middle" aria-label="Коммутация кросса">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th scope="col">Линейная сторона</th>
+                    <th scope="col"></th>
+                    <th scope="col">Тип</th>
+                    <th scope="col">№</th>
+                    <th scope="col">Тип</th>
+                    <th scope="col">Станционная сторона</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for linear_adapter, station_adapter in adapters %}
+                <tr>
+                    {% if not linear_adapter.is_commutated %}
+                    <td class="text-center align-middle" colspan="2">
+                        <a href="{% url 'commutate_linear_adapter' object.id linear_adapter.id%}" class="text-success">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </td>
+                    {% else %}
+                    <td class="text-center align-middle">
+                        <a href="{% url 'focl' linear_adapter.get_connection.get_start.module.cable.focl.id%}" class="text-success">
+                        {{ linear_adapter.get_connection.get_start.module.cable.focl }}
+                        </a>
+                        <p class="mb-0">
+                            <span class="square" style="background: {{linear_adapter.get_connection.get_start.module.hex}}"></span>№{{linear_adapter.get_connection.get_start.module.number}} {{ linear_adapter.get_connection.get_start.module.color }} /
+                            <span class="square" style="background: {{linear_adapter.get_connection.get_start.hex}}"></span>№{{linear_adapter.get_connection.get_start.number}} {{ linear_adapter.get_connection.get_start.color }}
+                        </p>
+                    </td>
+                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    {% endif %}
+                    <td class="text-center">{{ linear_adapter.type.marking }}</td>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-center">{{ station_adapter.type.marking }}</td>
+                    {% if not station_adapter.is_commutated %}
+                    <td class="text-center" colspan="2">
+                        <a href="{% url 'commutate_station_adapter' object.id station_adapter.id%}" class="text-success">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </td>
+                    {% else %}
+                    <td class="text-center">
+                        <a href="{% url 'hardware' station_adapter.get_connection.get_end.hardware.id%}" class="text-success">
+                            {{ station_adapter.get_connection.get_end }}
+                        </a>
+                    </td>
+                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}

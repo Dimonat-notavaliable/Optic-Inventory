@@ -1,0 +1,143 @@
+{% extends 'base.html'%}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h2 class="my-3">
+        Узлы связи/<a href="{% url 'facilities' %}" class="text-success link-underline link-underline-opacity-0">Сооружения связи</a>/{{ object.name }}
+    </h2>
+    <hr>
+    <div class="container my-3">
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
+        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+        Экспорт
+        </button>
+        <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">Выберите формат</h6></li>
+            <li><a class="dropdown-item" href="{% url 'export_facility' 'xlsx' object.id %}">Excel</a></li>
+            <li><a class="dropdown-item" href="{% url 'export_facility' 'csv' object.id %}">CSV</a></li>
+        </ul>
+        <a href="{% url 'facility_scheme' object.id %}" class="btn btn-outline btn-green me-1">Схема</a>
+        <a href="{% url 'facility_map' object.id %}" class="btn btn-outline btn-green me-1"
+           target="_blank" rel="noopener noreferrer">На карте</a>
+        {% if request.user.is_writer %}
+        <a href="{% url 'facility_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <!-- Button that opens a modal -->
+        <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
+            Удалить
+        </button>
+        {% endif %}
+    </div>
+    {% if request.user.is_writer %}
+    <!-- Modal -->
+    <div class="modal fade" id="delete_item" data-bs-backdrop="static"
+         data-bs-keyboard="false" tabindex="-1" aria-labelledby="delete_item_label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center bg-dark bg-opacity-50 rounded p-3">
+          <div class="modal-header bg-light justify-content-center">
+            <h4 class="modal-title text-danger" id="delete_item_label">{{ object }}</h4>
+          </div>
+
+          <form action="{% url 'facility_delete' object.id %}" method="post">
+              {% csrf_token %}
+              <div class="modal-body bg-light">
+                <p class="m-0">Вы действительно хотите удалить этот объект?</p>
+              </div>
+              <div class="modal-footer bg-light">
+                  <button type="submit" class="btn btn-danger" value="Confirm">Удалить</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container d-inline-flex mb-3">
+        <div class="me-3 px-3 bg-light">
+            <p>Наименование:</p>
+            <p>Широта:</p>
+            <p>Долгота:</p>
+            <p class="mb-0">Кол-во этажей:</p>
+        </div>
+        <div>
+            <p>{{ object.name }}</p>
+            <p>{{ object.latitude }}</p>
+            <p>{{ object.longitude }}</p>
+            <p class="mb-0">{{ object.floor_count }}</p>
+        </div>
+    </div>
+    <div class="container">
+        <ul class="nav nav-tabs" id="facilityTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active btn-success" data-bs-toggle="tab" data-bs-target="#hardware_table"
+                        type="button" role="tab" aria-controls="hardware_table" aria-selected="true">Оборудование</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link btn-success" data-bs-toggle="tab" data-bs-target="#focl_table"
+                        type="button" role="tab" aria-controls="focl_table" aria-selected="false">ВОЛС</button>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="hardware_table" role="tabpanel" aria-labelledby="hardware-tab">
+                <table class="table border align-middle" aria-label="Оборудование сооружения">
+                    <thead class="table-dark w-auto">
+                        <tr class="text-center">
+                            <th scope="col">№</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for hardware in many_hardware %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td ><a href="{% url 'hardware' hardware.id%}" class="text-success">{{ hardware }}</a></td>
+                            <td>Свободно портов: {{ hardware.count_free }}</td>
+                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button></td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td class="text-center" colspan="4"><a href="" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="focl_table" role="tabpanel" aria-labelledby="focl-tab">
+                <table class="table border align-middle" aria-label="Линии связи в сооружении">
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            <th scope="col">№</th>
+                            <th scope="col">Наименование</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for connection in connections %}
+                        <tr>
+                            <td class="text-center">
+                                <a href="{% url 'hardware' connection.id%}" class="text-success">{{ forloop.counter }}</a>
+                            </td>
+                            <td><a href="{% url 'hardware' connection.id%}" class="text-success">{{ connection.get_other_end }}</a></td>
+                            <td>Количество волокон: {{ connection.focl.cable.get_fiber_count }};
+                                Длина по кабелю: {{ connection.focl.cable_length }} м</td>
+                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                <i class="fa-solid fa-trash"></i>
+                            </button></td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td class="text-center" colspan="4"><a href="" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
