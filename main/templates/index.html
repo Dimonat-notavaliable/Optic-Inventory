@@ -16,7 +16,7 @@
   </div>
   <table class="table border">
       <thead class="table-dark">
-        <tr class="text-center">
+        <tr class="align-middle text-center">
           <th scope="col">№</th>
           <th scope="col">Наименование</th>
           <th scope="col">Расположение</th>
@@ -27,10 +27,12 @@
       </thead>
       <tbody>
         {% for object in last_hardware %}
-        <tr>
-          <th class="text-center" scope="row">{{ forloop.counter }}</th>
-          <td><a href="{% url 'hardware' object.id%}" class="text-success">{{ object.marking }}</a></td>
-          <td>{{ object.facility.name }}</td>
+        <tr class="align-middle clickable-row" data-href="{% url 'hardware' object.id%}">
+          <th class="text-center counter" scope="row">
+            <a href="{% url 'hardware' object.id%}" class="text-success">{{ forloop.counter }}</a>
+          </th>
+          <td>{{ object.marking }}</td>
+          <td><a href="{% url 'facility' object.facility.id%}" class="text-success">{{ object.facility.name }}</a></td>
           <td class="text-center mobile-hidden">{{ object.IP|default_if_none:"-" }}</td>
           <td class="text-center mobile-hidden">{{ object.port_count }}</td>
           <td class="text-center mobile-hidden">{{ object.port_count }}</td>
@@ -50,7 +52,7 @@
   </div>
   <table class="table border">
       <thead class="table-dark">
-        <tr class="text-center">
+        <tr class="align-middle text-center">
           <th scope="col">№</th>
           <th scope="col">Начальная точка</th>
           <th scope="col">Конечная точка</th>
@@ -61,15 +63,27 @@
       </thead>
       <tbody>
         {% for object in last_focls %}
-        <tr class="align-middle">
+        <tr class="align-middle clickable-row" data-href="{% url 'focl' object.id%}">
           <th class="text-center" scope="row">
-            <a href="#" class="text-success">{{ forloop.counter }}</a>
+            <a href="{% url 'focl' object.id%}" class="text-success counter">{{ forloop.counter }}</a>
           </th>
           <td>
-            <a href="#" class="text-success">{{ object.get_start }}</a>
+            {% if object.get_start.class_name == 'Facility' %}
+            <a class="text-success" href="{% url 'facility' object.get_start.id%}">
+            {% else %}
+              <a class="text-success" href="{% url 'muff' object.get_start.id%}">
+            {% endif %}
+              {{ object.get_start }}
+            </a>
           </td>
           <td>
-            <a href="#" class="text-success">{{ object.get_end }}</a>
+            {% if object.get_end.class_name == 'Facility' %}
+            <a class="text-success" href="{% url 'facility' object.get_end.id%}">
+            {% else %}
+              <a class="text-success" href="{% url 'muff' object.get_end.id%}">
+            {% endif %}
+              {{ object.get_end }}
+            </a>
           </td>
           <td class="text-center mobile-hidden">{{ object.cable.get_fiber_count }}</td>
           <td class="text-center mobile-hidden">{{ object.cable_length }}</td>
@@ -78,4 +92,9 @@
         {% endfor %}
       </tbody>
   </table>
+{% endblock %}
+
+{% block additional_script %}
+  {% load static %}
+  <script src="{% static 'js/tables.js' %}"></script>
 {% endblock %}
