@@ -6,8 +6,6 @@ from .decorators import writer_only
 urlpatterns = [
     path('', views.index, name="home"),
 
-    path('centers/', views.communication_centers, name="centers"),
-
     path('facilities/', views.facilities, name="facilities"),
     path('facilities/map/', views.facilities_map, name="facilities_map"),
     path('facilities/new/', views.facility_create, name="facility_create"),
@@ -52,6 +50,8 @@ urlpatterns = [
          name='ajax_load_port_commutations'),
 
     path('users/', views.users, name="users"),
+    path('update-user/', views.update_user, name='update_user'),
+
     path('ajax/load-notifications/', views.load_notifications, name='ajax_load_notifications'),
     path('notifications/read/<int:pk>/', views.read_notification, name='read_notification'),
     path('notifications/delete/<int:pk>/', views.delete_notification, name="notification_delete"),

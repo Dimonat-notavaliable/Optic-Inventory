@@ -18,17 +18,79 @@
     </thead>
     <tbody>
       {% for object in objects %}
-      <tr>
+      <tr data-user-id="{{ object.id }}">
         <th class="text-center counter" scope="row">{{ forloop.counter }}</th>
         <td class="desktop-hidden">{{ object.get_full_name }}</td>
         <td class="mobile-hidden">{{ object.last_name }}</td>
         <td class="mobile-hidden">{{ object.first_name }}</td>
         <td class="mobile-hidden">{{ object.patronymic }}</td>
-        <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_active %} checked {% endif %} /></td>
-        <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_writer %} checked {% endif %} /></td>
-        <td class="text-center"><input class="form-check-input m-0" type="checkbox" {% if object.is_superuser %} checked {% endif %} /></td>
+        <td class="text-center">
+          <input class="form-check-input m-0" type="checkbox" data-field="is_active" {% if object.is_active %} checked {% endif %} />
+        </td>
+        <td class="text-center">
+          <input class="form-check-input m-0" type="checkbox" data-field="is_writer" {% if object.is_writer %} checked {% endif %} />
+        </td>
+        <td class="text-center">
+          <input class="form-check-input m-0" type="checkbox" data-field="is_superuser" {% if object.is_superuser %} checked {% endif %} />
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  <button id="save-changes" class="btn btn-green mb-2" style="display:none;">
+      Сохранить изменения
+  </button>
+{% endblock %}
+
+{% block additional_script %}
+  <script>
+    $(document).ready(function() {
+    var changes = [];
+
+    // Обработчик кликов для checkbox
+    $('input[type="checkbox"]').on('change', function() {
+        var userId = $(this).closest('tr').data('user-id');
+        var fieldName = $(this).data('field');
+        var fieldValue = $(this).is(':checked');
+
+        // Добавление изменений в массив
+        changes.push({
+            user_id: userId,
+            field: fieldName,
+            value: fieldValue
+        });
+
+        // Показать кнопку "Сохранить изменения"
+        $('#save-changes').show();
+    });
+
+    // Обработчик клика по кнопке "Сохранить изменения"
+    $('#save-changes').on('click', function() {
+        if (changes.length > 0) {
+            console.log(changes)
+            $.ajax({
+                url: '{% url "update_user" %}',
+                type: 'POST',
+                data: {
+                    'changes': JSON.stringify(changes),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log("Данные успешно обновлены.");
+                        // Очистка массива изменений и скрытие кнопки
+                        changes = [];
+                        $('#save-changes').hide();
+                    } else {
+                        console.log("Не удалось обновить данные.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Возникла ошибка: " + error);
+                }
+            });
+        }
+    });
+});
+  </script>
 {% endblock %}

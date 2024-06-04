@@ -1,14 +1,21 @@
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, UpdateView
 
 from . import forms
-from .utils import get_modules_info
 from .decorators import superuser_only, writer_only, login_required
-from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter, Connection, MuffWelding
+from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter
+from .utils import get_modules_info
+
+import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -17,34 +24,6 @@ def index(request):
     last_focls = FOCL.objects.all().order_by('-id')[:5]
     return render(request, 'index.html', {'title': 'Главная страница',
                                           'last_hardware': last_hardware, 'last_focls': last_focls})
-
-
-@login_required
-def communication_centers(request):
-    model = Facility
-    queryset = model.objects.all().order_by('-id')
-    params = {}
-
-    search_form = forms.SearchForm({"search": request.GET.get("search", None)})
-    if search_form.is_valid():
-        search_query = search_form.cleaned_data.get("search")
-        params['search'] = search_query
-        queryset = queryset.filter(name__icontains=search_query)
-
-    sort_form = forms.CentersSortForm({"sorting": request.GET.get("sorting", None)})
-    if sort_form.is_valid():
-        sort_query = sort_form.cleaned_data.get("sorting")
-        if sort_query not in ['-id', 'name']:
-            sort_query = '-id'
-        params['sorting'] = sort_query
-        queryset = queryset.order_by(sort_query)
-
-    paginator = Paginator(queryset, 10)
-    page_number = request.GET.get('page')
-    page_objects = paginator.get_page(page_number)
-    return render(request, 'many_objects/centers.html',
-                  {'title': 'Узлы связи', 'objects': page_objects, 'params': params,
-                   'search_form': search_form, 'sort_form': sort_form})
 
 
 @login_required
@@ -539,7 +518,7 @@ def load_port_commutations(request, hardware_id):
 @superuser_only
 def users(request):
     model = get_user_model()
-    queryset = model.objects.all().order_by('-id')
+    queryset = model.objects.all().order_by('-id').exclude(id=request.user.id)
     params = {}
 
     search_form = forms.SearchForm({"search": request.GET.get("search", None)})
@@ -566,6 +545,23 @@ def users(request):
 
 
 @superuser_only
+@csrf_exempt
+@require_POST
+def update_user(request):
+    model = get_user_model()
+
+    changes = json.loads(request.POST.get('changes'))
+    for change in changes:
+        user_id = change['user_id']
+        field = change['field']
+        value = change['value']
+
+        user = model.objects.get(id=user_id)
+        setattr(user, field, value)
+        user.save()
+
+    return JsonResponse({'success': True})
+
 def load_notifications(request):
     notifications = Notification.objects.all().order_by('is_read', '-id')
     return render(request, 'notifications.html', {'notifications': notifications})
