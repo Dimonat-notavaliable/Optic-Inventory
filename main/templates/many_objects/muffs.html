@@ -16,7 +16,7 @@
     <a href="{% url 'import_muffs' %}" class="btn btn-outline btn-green me-1">Импорт</a>
     <a href="{% url 'muff_create' %}" class="btn btn-outline btn-green me-1">Добавить</a>
     {% endif %}
-    <a href="{% url 'muffs_map' %}" class="btn btn-outline btn-green me-1">Карта</a>
+    <a href="{% url 'muffs_map' %}" class="btn btn-outline btn-green me-1" target="_blank">Карта</a>
   </div>
 {% endblock %}
 {% block search_action %}{% url 'muffs' %}{% endblock %}

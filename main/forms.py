@@ -176,7 +176,7 @@ class HardwareCommutationForm(forms.ModelForm):
         elif self.cleaned_data.get("commutation_type") == 'port':
             port = Port.objects.get(pk=commutation)
             instance.facility = port.hardware.facility
-            instance.end_port = port
+            instance.start_port = port
 
         return instance
 
