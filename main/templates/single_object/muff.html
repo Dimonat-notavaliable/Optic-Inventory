@@ -65,6 +65,12 @@
             <p class="mb-0">{{ object.capacity }}</p>
         </div>
     </div>
+    <ul class="nav nav-tabs" id="facilityTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active btn-success" type="button" role="tab" aria-selected="true">ВОЛС</button>
+        </li>
+    </ul>
+
     <table class="table border align-middle" aria-label="Линии связи в муфте">
         <thead class="table-dark">
             <tr class="text-center">
@@ -83,15 +89,20 @@
                 <td><a href="{% url 'hardware' connection.id%}" class="text-success">{{ connection.get_other_end }}</a></td>
                 <td>Количество волокон: {{ connection.focl.cable.get_fiber_count }};
                     Длина по кабелю: {{ connection.focl.cable_length }} м</td>
-                <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
-                    <i class="fa-solid fa-trash"></i>
-                </button></td>
+                <td class="text-center">
+                {% if request.user.is_writer %}
+                    <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                {% endif %}
+                </td>
             </tr>
         {% endfor %}
             <tr>
-                <td class="text-center" colspan="4"><a href="" class="text-success">
-                    <i class="fa-solid fa-plus"></i>
-                </a></td>
+                <td class="text-center" colspan="4">
+                    {% if request.user.is_writer %}
+                        <a href="" class="text-success"><i class="fa-solid fa-plus"></i></a></td>
+                    {% endif %}
             </tr>
         </tbody>
     </table>
