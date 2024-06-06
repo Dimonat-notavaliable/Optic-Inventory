@@ -5,7 +5,12 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.12"
+        "runtime": "python3.12",
+        "functions": {
+          "opticinventory/**/*.py": {
+            "maxDuration": 60
+          }
+        }
       }
     },
     {
@@ -23,10 +28,5 @@
     "src": "/(.*)",
     "dest": "opticinventory/wsgi.py"
     }
-  ],
-  "functions": {
-    "opticinventory/**/*.py": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }
