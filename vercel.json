@@ -26,7 +26,7 @@
   ],
   "functions": {
       "/(.*)": {
-        "maxDuration": 60
+        "maxDuration": 50
       }
   }
 }
