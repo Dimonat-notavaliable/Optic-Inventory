@@ -584,7 +584,8 @@ document.addEventListener("DOMContentLoaded", function() {
         html2canvas(screen_content).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'network-scheme.png';
+            const download_name = document.getElementById('center-name').textContent;
+            link.download = `Схема для ${download_name}`;
             link.click();
         });
     });
