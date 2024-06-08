@@ -82,11 +82,19 @@
         </thead>
         <tbody>
         {% for connection in connections %}
-            <tr>
-                <td class="text-center">
-                    <a href="{% url 'hardware' connection.id%}" class="text-success">{{ forloop.counter }}</a>
+            <tr class="clickable-row" data-href="{% url 'focl' connection.focl.id%}">
+                <td class="text-center counter">
+                    <a href="{% url 'focl' connection.focl.id%}" class="text-success">
+                        {{ forloop.counter }}
+                    </a>
                 </td>
-                <td><a href="{% url 'hardware' connection.id%}" class="text-success">{{ connection.get_other_end }}</a></td>
+                <td>
+                {% if connection.get_other_end.class_name == 'Facility' %}
+                    <a href="{% url 'facility' connection.get_other_end.id%}" class="text-success">{{ connection.get_other_end }}</a>
+                {% else %}
+                    <a href="{% url 'muff' connection.get_other_end.id%}" class="text-success">{{ connection.get_other_end }}</a>
+                </td>
+                {% endif %}
                 <td>Количество волокон: {{ connection.focl.cable.get_fiber_count }};
                     Длина по кабелю: {{ connection.focl.cable_length }} м</td>
                 <td class="text-center">
@@ -106,4 +114,9 @@
             </tr>
         </tbody>
     </table>
+{% endblock %}
+
+{% block additional_script %}
+  {% load static %}
+  <script src="{% static 'js/tables.js' %}"></script>
 {% endblock %}

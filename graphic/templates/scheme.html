@@ -22,9 +22,9 @@
             <ul class="navbar-nav me-auto">
               <li class="nav-item mx-2">
                   {% if object.class_name == 'Facility' %}
-                    <a class="nav-link text-light" href="{% url 'facility' object.id%}">
+                    <a class="nav-link text-light" id="center-name" href="{% url 'facility' object.id%}">
                   {% else %}
-                    <a class="nav-link text-light" href="{% url 'muff' object.id%}">
+                    <a class="nav-link text-light" id="center-name" href="{% url 'muff' object.id%}">
                   {% endif %}
                     {{ object.name }}
                     </a>
@@ -51,13 +51,13 @@
                     </div>
                   </div>
             </li>
-              {% if request.user.is_writer %}
+
               <li class="nav-item mx-2">
-                <button id="save-button" class="nav-link text-light fa-lg" title="Сохранить">
+                <button id="save-button" class="nav-link text-light fa-lg" {% if not request.user.is_writer %} style="display:none;"{% endif %} title="Сохранить">
                     <i class="fa-regular fa-floppy-disk"></i>
                 </button>
               </li>
-              {% endif %}
+
             </ul>
             <ul class="navbar-nav ms-auto align-items-center mobile-hidden">
               <li class="navbar-text text-light">
@@ -91,11 +91,9 @@
 {{ weldings|json_script:"welding_json" }}
 <script src="{% static 'js/scheme.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-{% if request.user.is_writer %}
 <script>
     const csrftoken = '{{ csrf_token }}';
     const muffId = '{{ muff.id }}';  // Передача ID муфты из контекста
 </script>
-{% endif %}
 </html>
 

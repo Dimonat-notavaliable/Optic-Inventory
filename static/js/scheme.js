@@ -9,6 +9,7 @@ function loadSchemeList(schemeSelector){
     fetch(`all/`)
         .then(response => response.json())
         .then(data => {
+            schemeData = data.schemes;
             data.schemes.forEach(scheme => {
                 const option = document.createElement('option');
                 option.value = scheme.id;
@@ -581,10 +582,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const screenshot_button = document.getElementById('screenshot-button');
     screenshot_button.addEventListener('click', function() {
         const screen_content = document.getElementById('network-container');
+         const schemeSelector = document.getElementById('scheme-selector');
+        const selectedSchemeId = schemeSelector.value;
+        const selectedScheme = schemeData.find(scheme => scheme.id == selectedSchemeId);
+        const lastChangeTime = selectedScheme ? selectedScheme.last_change : 'unknown-time';
         html2canvas(screen_content).then(canvas => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'network-scheme.png';
+            const download_name = document.getElementById('center-name').textContent.trim();
+            link.download = `Схема для ${download_name} от ${lastChangeTime}.png`;
             link.click();
         });
     });
