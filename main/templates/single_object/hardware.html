@@ -86,10 +86,21 @@
                 <tr>
                   <th class="text-center" scope="row">{{ forloop.counter }}</th>
                   <td class="text-center">
-                      {% if not port.is_commutated %}<a href="{% url 'commutate_port' object.id port.id%}" class="text-success"><i class="fa-solid fa-plus"></i></a>
+                      {% if not port.is_commutated %}
+                          {% if request.user.is_writer %}
+                              <a href="{% url 'commutate_port' object.id port.id%}" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                              </a>
+                          {% endif %}
                       {% else %} {{ port.get_connection.get_start }} - {{ port.get_connection.get_end }} {% endif %}
                   </td>
-                  <td>{% if port.is_commutated %}<button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button>{% endif %}</td>
+                  <td>
+                  {% if port.is_commutated and request.user.is_writer %}
+                      <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                          <i class="fa-solid fa-trash"></i>
+                      </button>
+                  {% endif %}
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>

@@ -93,15 +93,21 @@
                             <td class="text-center">{{ forloop.counter }}</td>
                             <td ><a href="{% url 'hardware' hardware.id%}" class="text-success">{{ hardware }}</a></td>
                             <td>Свободно портов: {{ hardware.count_free }}</td>
-                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
-                                <i class="fa-solid fa-trash"></i>
-                            </button></td>
+                            <td class="text-center">
+                            {% if request.user.is_writer %}
+                                <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                         <tr>
-                            <td class="text-center" colspan="4"><a href="" class="text-success">
-                                <i class="fa-solid fa-plus"></i>
-                            </a></td>
+                            <td class="text-center" colspan="4">
+                            {% if request.user.is_writer %}
+                                <a href="" class="text-success"><i class="fa-solid fa-plus"></i></a>
+                            {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -125,15 +131,21 @@
                             <td><a href="{% url 'hardware' connection.id%}" class="text-success">{{ connection.get_other_end }}</a></td>
                             <td>Количество волокон: {{ connection.focl.cable.get_fiber_count }};
                                 Длина по кабелю: {{ connection.focl.cable_length }} м</td>
-                            <td class="text-center"><button type="submit" class="btn btn-danger btn-sm" value="Confirm">
-                                <i class="fa-solid fa-trash"></i>
-                            </button></td>
+                            <td class="text-center">
+                            {% if request.user.is_writer %}
+                                <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                         <tr>
-                            <td class="text-center" colspan="4"><a href="" class="text-success">
-                                <i class="fa-solid fa-plus"></i>
-                            </a></td>
+                            <td class="text-center" colspan="4">
+                            {% if request.user.is_writer %}
+                                <a href="" class="text-success"><i class="fa-solid fa-plus"></i></a>
+                            {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

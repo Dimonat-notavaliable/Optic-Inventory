@@ -80,9 +80,11 @@
                 <tr>
                     {% if not linear_adapter.is_commutated %}
                     <td class="text-center align-middle" colspan="2">
-                        <a href="{% url 'commutate_linear_adapter' object.id linear_adapter.id%}" class="text-success">
-                            <i class="fa-solid fa-plus"></i>
-                        </a>
+                        {% if request.user.is_writer %}
+                            <a href="{% url 'commutate_linear_adapter' object.id linear_adapter.id%}" class="text-success">
+                                <i class="fa-solid fa-plus"></i>
+                            </a>
+                        {% endif %}
                     </td>
                     {% else %}
                     <td class="text-center align-middle">
@@ -94,16 +96,24 @@
                             <span class="square" style="background: {{linear_adapter.get_connection.get_start.hex}}"></span>№{{linear_adapter.get_connection.get_start.number}} {{ linear_adapter.get_connection.get_start.color }}
                         </p>
                     </td>
-                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    <td>
+                    {% if request.user.is_writer %}
+                        <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    {% endif %}
+                    </td>
                     {% endif %}
                     <td class="text-center">{{ linear_adapter.type.marking }}</td>
                     <td class="text-center">{{ forloop.counter }}</td>
                     <td class="text-center">{{ station_adapter.type.marking }}</td>
                     {% if not station_adapter.is_commutated %}
                     <td class="text-center" colspan="2">
+                        {% if request.user.is_writer %}
                         <a href="{% url 'commutate_station_adapter' object.id station_adapter.id%}" class="text-success">
                             <i class="fa-solid fa-plus"></i>
                         </a>
+                        {% endif %}
                     </td>
                     {% else %}
                     <td class="text-center">
@@ -111,7 +121,13 @@
                             {{ station_adapter.get_connection.get_end }}
                         </a>
                     </td>
-                    <td><button type="submit" class="btn btn-danger btn-sm" value="Confirm"><i class="fa-solid fa-trash"></i></button></td>
+                    <td>
+                    {% if request.user.is_writer %}
+                        <button type="submit" class="btn btn-danger btn-sm" value="Confirm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    {% endif %}
+                    </td>
                     {% endif %}
                 </tr>
             {% endfor %}
