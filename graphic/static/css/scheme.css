@@ -31,19 +31,21 @@
   overflow: auto;
 }
 
-.cable {
+.cable, .hardware, .cross  {
     position: absolute;
     padding: 10px;
     border: 1px solid #000;
-    background-color: black;
     color: white;
     display: block;
     cursor: grab;
 }
 
- .cableName, .moduleName {
+.cable  {
+    background-color: black;
+}
+
+.cableName, .moduleName, .hardwareName {
     position: relative;
-    text-align: center;
     width: 100%;
     height: 100%;
     display: flex;
@@ -52,20 +54,20 @@
     text-align: center;
 }
 
- .cableName.vertical-right, .moduleName.vertical-right {
+.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-90deg);
 }
 
-.cableName.vertical-left, .moduleName.vertical-left {
+.cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
 }
 
-.cable.moving {
+.cable.moving, .hardware.moving {
     cursor: grabbing;
     border: dashed white 3px;
 }
@@ -81,6 +83,60 @@
 .fiber {
     padding: 5px;
     border: 1px solid #000;
+    display: inline-block;
+    position: absolute;
+}
+
+.hardware {
+    background-color: #767676;
+}
+
+.port {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #4D90CF;
+    display: inline-block;
+    position: absolute;
+}
+
+
+.cross  {
+    background-color: #C6C6C6;
+}
+
+.crossType {
+    color: black;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.linear.vertical-right, .linear.vertical-left  {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.station.vertical-right, .station.vertical-left {
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.linear-adapter  {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #4D90CF;
+    display: inline-block;
+    position: absolute;
+}
+
+.station-adapter  {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #E32636;
     display: inline-block;
     position: absolute;
 }

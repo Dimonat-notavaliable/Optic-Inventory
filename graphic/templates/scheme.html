@@ -87,13 +87,15 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
-{{ connections|json_script:"graphic_json" }}
-{{ weldings|json_script:"welding_json" }}
+{{ cables|json_script:"graphic_json" }}
+{{ hardware|json_script:"hardware_json" }}
+{{ crosses|json_script:"crosses_json" }}
+{{ connections|json_script:"connections_json" }}
+<script src="{% static 'js/scheme_utils.js' %}"></script>
 <script src="{% static 'js/scheme.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
     const csrftoken = '{{ csrf_token }}';
-    const muffId = '{{ muff.id }}';  // Передача ID муфты из контекста
 </script>
 </html>
 
