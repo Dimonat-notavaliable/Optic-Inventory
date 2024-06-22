@@ -5,6 +5,8 @@ function getQueryParameter(name) {
 
 
 function loadSchemeList(schemeSelector){
+    schemeSelector.innerHTML = '<option value="" disabled>Выберите схему</option>';
+
     // Загрузка списка схем
     fetch(`all/`)
         .then(response => response.json())
@@ -28,6 +30,33 @@ function loadSchemeList(schemeSelector){
             }
         })
         .catch(error => console.error('Ошибка при загрузке списка схем:', error));
+}
+
+// JavaScript: функции для отображения и закрытия модального окна
+function showModal(header, message) {
+    const modal = document.getElementById('statusModal');
+
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+
+    const modalHeader = document.getElementById('modalHeader');
+    modalHeader.textContent = header;
+
+    modal.style.display = 'block';
+    document.body.classList.add('no-scroll'); // Disable scroll
+
+    const closeModal = document.getElementById('closeModal');
+    closeModal.onclick = function() {
+        modal.style.display = 'none';
+        document.body.classList.remove('no-scroll'); // Enable scroll
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            document.body.classList.remove('no-scroll'); // Enable scroll
+        }
+    }
 }
 
 function saveScheme() {
@@ -79,7 +108,6 @@ function saveScheme() {
         'crosses': all_crosses
     }
 
-    console.log(JSON.stringify(connections));
     fetch(`save/`, {
         method: 'POST',
         headers: {
@@ -91,9 +119,11 @@ function saveScheme() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('Схема успешно сохранена');
+            const schemeSelector = document.getElementById('scheme-selector');
+            loadSchemeList(schemeSelector);
+            showModal('Сохранено', 'Схема успешно сохранена');
         } else {
-            alert('Ошибка при сохранении схемы: ' + data.message);
+            showModal('Ошибка', 'Ошибка при сохранении схемы: ' + data.message);
         }
     })
     .catch(error => {
@@ -201,6 +231,12 @@ function setModuleFibers(module, moduleDiv, direction){
         fiberDiv.style.backgroundColor = fiber.color;
         fiberDiv.setAttribute('data-color', fiber.color);
 
+        const fiberNumberDiv = document.createElement('div');
+        fiberNumberDiv.className = 'fiberNumber';
+        fiberNumberDiv.innerText = fIndex + 1; // Нумерация начинается с 1
+
+        fiberDiv.appendChild(fiberNumberDiv);
+
         setFiberPosition(fiberDiv, moduleDiv, fIndex, direction);
         moduleDiv.appendChild(fiberDiv);
     });
@@ -286,12 +322,16 @@ function setHardwarePorts(hardware, direction, hardwareDiv){
             DragManager.makeObjectToDrag(e, portDiv);
         };
 
+        const portNumberDiv = document.createElement('div');
+        portNumberDiv.className = 'portNumber';
+        portNumberDiv.innerText = index + 1; // Нумерация начинается с 1
+
+        portDiv.appendChild(portNumberDiv);
+
         setPortPosition(portDiv, hardwareDiv, index, direction);
         hardwareDiv.appendChild(portDiv);
     });
 }
-
-
 
 
 function setLinearAdapterPosition(adapterDiv, crossDiv, aIndex, direction) {
@@ -338,6 +378,12 @@ function setCrossAdapters(cross, direction, crossDiv) {
         adapterDiv.className = 'linear-adapter';
         adapterDiv.id = adapter.id;
 
+        const adapterNumberDiv = document.createElement('div');
+        adapterNumberDiv.className = 'adapterNumber';
+        adapterNumberDiv.innerText = index + 1; // Нумерация начинается с 1
+
+        adapterDiv.appendChild(adapterNumberDiv);
+
         adapterDiv.onmousedown = (e) => {
             e.stopPropagation();
             DragManager.makeObjectToDrag(e, adapterDiv);
@@ -351,6 +397,12 @@ function setCrossAdapters(cross, direction, crossDiv) {
         const adapterDiv = document.createElement('div');
         adapterDiv.className = 'station-adapter';
         adapterDiv.id = adapter.id;
+
+        const adapterNumberDiv = document.createElement('div');
+        adapterNumberDiv.className = 'adapterNumber';
+        adapterNumberDiv.innerText = index + 1; // Нумерация начинается с 1
+
+        adapterDiv.appendChild(adapterNumberDiv);
 
         adapterDiv.onmousedown = (e) => {
             e.stopPropagation();

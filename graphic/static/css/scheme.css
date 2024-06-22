@@ -31,6 +31,59 @@
   overflow: auto;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-header, .modal-body {
+    padding: 10px 0 !important;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 10px 20px;
+    border: 1px solid #888;
+    width: fit-content;
+    position: relative; /* For positioning the close button */
+    max-width: 600px; /* Set a max width */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+#modalMessage{
+    margin: 0;
+}
+
+.close {
+    color: #A52A2A;
+    margin-left: auto;
+    margin-right: 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #7C1F1F;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 .cable, .hardware, .cross  {
     position: absolute;
     padding: 10px;
@@ -52,6 +105,11 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.fiberNumber, .moduleName, .portNumber, .adapterNumber {
+    color: black;
+    font-size: small;
 }
 
 .cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
@@ -85,6 +143,7 @@
     border: 1px solid #000;
     display: inline-block;
     position: absolute;
+    text-align:center;
 }
 
 .hardware {
@@ -92,13 +151,13 @@
 }
 
 .port {
-    padding: 5px;
     border: 1px solid #000;
     background-color: #4D90CF;
     display: inline-block;
     position: absolute;
+    text-align:center;
+    align-content: center;
 }
-
 
 .cross  {
     background-color: #C6C6C6;
@@ -131,6 +190,8 @@
     background-color: #4D90CF;
     display: inline-block;
     position: absolute;
+    text-align:center;
+    align-content: center;
 }
 
 .station-adapter  {
@@ -139,6 +200,8 @@
     background-color: #E32636;
     display: inline-block;
     position: absolute;
+    text-align:center;
+    align-content: center;
 }
 
 .connection-group {

@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from main.decorators import login_required, writer_only
-from main.models import Facility, FacilityConnection, Muff, MuffConnection, MuffWelding, FOCL, Hardware, Cross, Connection, Adapter, Fiber, Port
-from graphic.models import MuffScheme, MuffSchemeFOCL, FacilityScheme, FacilitySchemeObject, SchemeObjectType
 import json
+from datetime import timedelta
+
 from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+
+from graphic.models import MuffScheme, MuffSchemeFOCL, FacilityScheme, FacilitySchemeObject, SchemeObjectType
+from main.decorators import login_required, writer_only
+from main.models import Facility, FacilityConnection, Muff, MuffConnection, MuffWelding, FOCL, Hardware, Cross, \
+    Connection, Adapter, Fiber, Port
 
 
 def serialize_cable(cable):
@@ -197,7 +201,7 @@ def get_facility_schemes(request, pk):
     schemes_data = [
         {
             'id': scheme.id,
-            'last_change': scheme.last_change.strftime('%d.%m.%Y %H:%M:%S')
+            'last_change': (scheme.last_change + timedelta(hours=7)).strftime('%d.%m.%Y %H:%M:%S')
         }
         for scheme in schemes
     ]

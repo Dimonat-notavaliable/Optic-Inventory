@@ -46,7 +46,6 @@
                     </button>
                     <div class="dropdown-content" id="scheme-selector-container">
                         <select id="scheme-selector" size="6">
-                            <option value="" disabled>Выберите схему</option>
                         </select>
                     </div>
                   </div>
@@ -71,19 +70,19 @@
           </div>
         </div>
     </nav>
+    <div id="statusModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalHeader"></h5>
+                <span id="closeModal" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+          </div>
+    </div>
     <div id="network-container" class="border border-3 border-dark scheme">
         <!-- Объекты будут динамически добавлены сюда -->
-    </div>
-    <div class="container scheme">
-        {% if messages %}
-			<div class="messages">
-                {% for message in messages %}
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-			</div>
-		{% endif %}
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
