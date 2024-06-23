@@ -112,7 +112,7 @@
     font-size: small;
 }
 
-.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
+.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right, .cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -120,7 +120,7 @@
     white-space: nowrap; /* Отключаем перенос текста */
 }
 
-.cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
+ {
     position: absolute;
     top: 50%;
     left: 50%;

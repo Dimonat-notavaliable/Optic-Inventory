@@ -1,7 +1,6 @@
 #network-container {
-    width: 100vw;
-    height: 100vh;
-    border: 1px solid #ccc;
+    width: 100%;
+    height: 93vh;
     position: relative;
 }
 
@@ -113,7 +112,7 @@
     font-size: small;
 }
 
-.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
+.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right, .cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -121,7 +120,7 @@
     white-space: nowrap; /* Отключаем перенос текста */
 }
 
-.cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
+ {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -129,7 +128,7 @@
     white-space: nowrap; /* Отключаем перенос текста */
 }
 
-.cable.moving, .hardware.moving {
+.cable.moving, .hardware.moving, .cross.moving {
     cursor: grabbing;
     border: dashed white 3px;
 }
@@ -332,7 +331,7 @@
     }
     #network-container {
         width: 110vw!important;  /* Размер страницы A4 в альбомной ориентации */
-        height: 93vh!important; /* Размер страницы A4 в альбомной ориентации */
+        height: 90vh!important; /* Размер страницы A4 в альбомной ориентации */
         transform: scale(0.90);
         transform-origin: top left!important;
         overflow:visible!important;
