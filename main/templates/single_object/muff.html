@@ -5,9 +5,9 @@
         Узлы связи/<a href="{% url 'muffs' %}" class="text-success link-underline link-underline-opacity-0">Муфты</a>/{{ object.name }}
     </h2>
     <hr>
-    <div class="container my-3">
-        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1">< Вернуться к списку</a>
-        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="container mt-2 mb-3">
+        <a href="javascript:history.go(-1)" class="btn btn-outline btn-green me-1 mt-2">< Вернуться к списку</a>
+        <button type="button" class="btn btn-outline btn-green dropdown-toggle me-1 mt-2" data-bs-toggle="dropdown" aria-expanded="false">
         Экспорт
         </button>
         <ul class="dropdown-menu">
@@ -15,13 +15,13 @@
             <li><a class="dropdown-item" href="{% url 'export_muff' 'xlsx' object.id %}">Excel</a></li>
             <li><a class="dropdown-item" href="{% url 'export_muff' 'csv' object.id %}">CSV</a></li>
         </ul>
-        <a href="{% url 'muff_scheme' object.id %}" class="btn btn-outline btn-green me-1">Схема</a>
-        <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1"
+        <a href="{% url 'muff_scheme' object.id %}" class="btn btn-outline btn-green me-1 mt-2">Схема</a>
+        <a href="{% url 'muff_map' object.id %}" class="btn btn-outline btn-green me-1 mt-2"
            target="_blank" rel="noopener noreferrer">На карте</a>
         {% if request.user.is_writer %}
-        <a href="{% url 'muff_update' object.id %}" class="btn btn-outline btn-green me-1">Редактировать</a>
+        <a href="{% url 'muff_update' object.id %}" class="btn btn-outline btn-green me-1 mt-2">Редактировать</a>
         <!-- Button that opens a modal -->
-        <button type="button" class="btn btn-outline btn-red" data-bs-toggle="modal" data-bs-target="#delete_item">
+        <button type="button" class="btn btn-outline btn-red mt-2" data-bs-toggle="modal" data-bs-target="#delete_item">
             Удалить
         </button>
         {% endif %}
