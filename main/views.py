@@ -48,10 +48,14 @@ def facilities(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
     return render(request, 'many_objects/facilities.html',
                   {'title': 'Сооружения связи', 'objects': page_objects, 'params': params,
-                   'search_form': search_form, 'sort_form': sort_form})
+                   'search_form': search_form, 'sort_form': sort_form, 'addition': counter_addition})
 
 
 @login_required
@@ -76,9 +80,14 @@ def muffs(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
     return render(request, 'many_objects/muffs.html', {'title': 'Муфты', 'objects': page_objects, 'params': params,
-                                                       'search_form': search_form, 'sort_form': sort_form})
+                                                       'search_form': search_form, 'sort_form': sort_form,
+                                                       'addition': counter_addition})
 
 
 @writer_only
@@ -210,10 +219,15 @@ def focls(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
 
     return render(request, 'many_objects/focls.html', {'title': 'ВОЛС', 'objects': page_objects, 'params': params,
-                                                       'search_form': search_form, 'sort_form': sort_form})
+                                                       'search_form': search_form, 'sort_form': sort_form,
+                                                       'addition': counter_addition})
 
 
 @login_required
@@ -305,10 +319,14 @@ def crosses(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
     return render(request, 'many_objects/crosses.html',
                   {'title': 'Оптические кроссы', 'objects': page_objects, 'params': params,
-                   'search_form': search_form, 'sort_form': sort_form})
+                   'search_form': search_form, 'sort_form': sort_form, 'addition': counter_addition})
 
 
 @writer_only
@@ -421,10 +439,14 @@ def many_hardware(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
     return render(request, 'many_objects/many_hardware.html',
                   {'title': 'Оборудование', 'objects': page_objects, 'params': params,
-                   'search_form': search_form, 'sort_form': sort_form})
+                   'search_form': search_form, 'sort_form': sort_form, 'addition': counter_addition})
 
 
 @login_required
@@ -537,11 +559,15 @@ def users(request):
 
     paginator = Paginator(queryset, 10)
     page_number = request.GET.get('page')
+    if page_number:
+        counter_addition = (int(page_number) - 1) * 10
+    else:
+        counter_addition = 0
     page_objects = paginator.get_page(page_number)
 
     return render(request, 'many_objects/users.html',
                   {'title': 'Пользователи', 'objects': page_objects, 'params': params,
-                   'search_form': search_form, 'sort_form': sort_form})
+                   'search_form': search_form, 'sort_form': sort_form, 'addition': counter_addition})
 
 
 @superuser_only
