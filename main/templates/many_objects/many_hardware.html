@@ -36,7 +36,7 @@
       {% for object in objects %}
       <tr class="clickable-row" data-href="{% url 'hardware' object.id%}">
         <th class="text-center counter" scope="row">
-          <a href="{% url 'hardware' object.id%}" class="text-success">{{ forloop.counter }}</a>
+          <a href="{% url 'hardware' object.id%}" class="text-success">{{ forloop.counter|add:addition }}</a>
         </th>
         <td>{{ object.marking }}</td>
         <td><a href="{% url 'facility' object.facility.id%}" class="text-success">{{ object.facility.name }}</a></td>
