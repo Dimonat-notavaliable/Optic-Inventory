@@ -299,7 +299,8 @@ class LinearAdapterCommutationForm(forms.ModelForm):
         free_fiber_ids = []
         for cable in cables:
             for module in cable.modules.all():
-                free_fiber_ids += [fiber.id for fiber in module.fibers.all() if not fiber.is_commutated()]
+                free_fiber_ids += [fiber.id for fiber in module.fibers.all()
+                                   if not (fiber.is_facility_commutated() or fiber.is_muff_commutated())]
 
         self.fields['commutation'].queryset = Fiber.objects.filter(id__in=free_fiber_ids)
 

@@ -90,7 +90,17 @@
                                 <i class="fa-solid fa-plus"></i>
                               </a>
                           {% endif %}
-                      {% else %} {{ port.get_connection.get_start }} - {{ port.get_connection.get_end }} {% endif %}
+                      {% else %}
+                        {% if port.get_connection.start_port %}
+                        <a href="{% url 'hardware' port.get_connection.get_start.hardware.id%}" class="text-success">
+                            {{ port.get_connection.get_start }}</a>
+                        {% elif port.get_connection.start_adapter %}
+                        <a href="{% url 'cross' port.get_connection.get_start.cross.id%}" class="text-success">
+                            {{ port.get_connection.get_start }}</a>
+                        {% endif %}
+                        - {{ port.get_connection.get_end }}
+
+                      {% endif %}
                   </td>
                   <td>
                   {% if port.is_commutated and request.user.is_writer %}
