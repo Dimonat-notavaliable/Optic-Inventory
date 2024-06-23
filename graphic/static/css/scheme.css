@@ -91,6 +91,7 @@
     color: white;
     display: block;
     cursor: grab;
+    min-width: 60px;
 }
 
 .cable  {
@@ -113,16 +114,19 @@
 }
 
 .cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap; /* Отключаем перенос текста */
 }
 
 .cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
-    position: relative;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
+    white-space: nowrap; /* Отключаем перенос текста */
 }
 
 .cable.moving, .hardware.moving {
@@ -144,6 +148,7 @@
     display: inline-block;
     position: absolute;
     text-align:center;
+    align-content: center;
 }
 
 .hardware {
@@ -242,6 +247,7 @@
     cursor: pointer;
     width: 20px; /* Ширина стрелки */
     height: 20px; /* Высота стрелки */
+    padding: 0 20px 0 10px; /* Добавляем отступы для текста */
     position: relative;
     z-index: 2;
     color: transparent; /* Прозрачный текст */

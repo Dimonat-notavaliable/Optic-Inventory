@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const object2Rect = object2.getBoundingClientRect();
 
         const x1 = object1Rect.left + object1.offsetWidth / 2 - containerRect.left;
-        const y1 = object1Rect.top + object2.offsetHeight / 2 - containerRect.top;
+        const y1 = object1Rect.top + object1.offsetHeight / 2 - containerRect.top;
         const x2 = object2Rect.left + object2.offsetWidth / 2 - containerRect.left;
         const y2 = object2Rect.top + object2.offsetHeight / 2 - containerRect.top;
 

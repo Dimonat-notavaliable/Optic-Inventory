@@ -357,7 +357,7 @@ function setStationAdapterPosition(adapterDiv, crossDiv, aIndex, direction) {
     switch (direction) {
         case 'right':
         case 'left':
-            adapterDiv.style.left = `${crossDiv.offsetWidth}px`;
+            adapterDiv.style.left = `${crossDiv.offsetWidth - 2}px`;
             adapterDiv.style.top = `${(aIndex * 30 - 1)}px`;
             adapterDiv.style.width = `30px`;
             adapterDiv.style.height = `20px`;
