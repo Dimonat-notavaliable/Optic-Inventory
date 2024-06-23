@@ -46,7 +46,6 @@
                     </button>
                     <div class="dropdown-content" id="scheme-selector-container">
                         <select id="scheme-selector" size="6">
-                            <option value="" disabled>Выберите схему</option>
                         </select>
                     </div>
                   </div>
@@ -71,29 +70,31 @@
           </div>
         </div>
     </nav>
+    <div id="statusModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalHeader"></h5>
+                <span id="closeModal" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+          </div>
+    </div>
     <div id="network-container" class="border border-3 border-dark scheme">
         <!-- Объекты будут динамически добавлены сюда -->
     </div>
-    <div class="container scheme">
-        {% if messages %}
-			<div class="messages">
-                {% for message in messages %}
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-			</div>
-		{% endif %}
-    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
-{{ connections|json_script:"graphic_json" }}
-{{ weldings|json_script:"welding_json" }}
+{{ cables|json_script:"graphic_json" }}
+{{ hardware|json_script:"hardware_json" }}
+{{ crosses|json_script:"crosses_json" }}
+{{ connections|json_script:"connections_json" }}
+<script src="{% static 'js/scheme_utils.js' %}"></script>
 <script src="{% static 'js/scheme.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
     const csrftoken = '{{ csrf_token }}';
-    const muffId = '{{ muff.id }}';  // Передача ID муфты из контекста
 </script>
 </html>
 

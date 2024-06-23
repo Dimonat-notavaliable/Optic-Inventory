@@ -81,8 +81,8 @@ class FacilitySchemeObject(models.Model):
     direction = models.CharField(max_length=5, choices=DIRECTION_CHOICES, default="right")
 
     class Meta:
-        verbose_name = 'Линия связи на схеме муфты'
-        verbose_name_plural = 'Линии связи на схеме муфты'
+        verbose_name = 'Объект на схеме сооружения связи'
+        verbose_name_plural = 'Объекты на схеме сооружения связи'
 
     def __str__(self):
         return f'{self.object_type.marking} #{self.object_id} на {self.scheme}'

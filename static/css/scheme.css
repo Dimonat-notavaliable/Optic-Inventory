@@ -31,19 +31,75 @@
   overflow: auto;
 }
 
-.cable {
+.no-scroll {
+    overflow: hidden;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-header, .modal-body {
+    padding: 10px 0 !important;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 10px 20px;
+    border: 1px solid #888;
+    width: fit-content;
+    position: relative; /* For positioning the close button */
+    max-width: 600px; /* Set a max width */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+#modalMessage{
+    margin: 0;
+}
+
+.close {
+    color: #A52A2A;
+    margin-left: auto;
+    margin-right: 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #7C1F1F;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.cable, .hardware, .cross  {
     position: absolute;
     padding: 10px;
     border: 1px solid #000;
-    background-color: black;
     color: white;
     display: block;
     cursor: grab;
+    min-width: 60px;
 }
 
- .cableName, .moduleName {
+.cable  {
+    background-color: black;
+}
+
+.cableName, .moduleName, .hardwareName {
     position: relative;
-    text-align: center;
     width: 100%;
     height: 100%;
     display: flex;
@@ -52,20 +108,28 @@
     text-align: center;
 }
 
- .cableName.vertical-right, .moduleName.vertical-right {
+.fiberNumber, .moduleName, .portNumber, .adapterNumber {
+    color: black;
+    font-size: small;
+}
+
+.cableName.vertical-right, .moduleName.vertical-right, .hardwareName.vertical-right {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap; /* Отключаем перенос текста */
 }
 
-.cableName.vertical-left, .moduleName.vertical-left {
-    position: relative;
+.cableName.vertical-left, .moduleName.vertical-left, .hardwareName.vertical-left {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
+    white-space: nowrap; /* Отключаем перенос текста */
 }
 
-.cable.moving {
+.cable.moving, .hardware.moving {
     cursor: grabbing;
     border: dashed white 3px;
 }
@@ -83,6 +147,66 @@
     border: 1px solid #000;
     display: inline-block;
     position: absolute;
+    text-align:center;
+    align-content: center;
+}
+
+.hardware {
+    background-color: #767676;
+}
+
+.port {
+    border: 1px solid #000;
+    background-color: #4D90CF;
+    display: inline-block;
+    position: absolute;
+    text-align:center;
+    align-content: center;
+}
+
+.cross  {
+    background-color: #C6C6C6;
+}
+
+.crossType {
+    color: black;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.linear.vertical-right, .linear.vertical-left  {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.station.vertical-right, .station.vertical-left {
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.linear-adapter  {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #4D90CF;
+    display: inline-block;
+    position: absolute;
+    text-align:center;
+    align-content: center;
+}
+
+.station-adapter  {
+    padding: 5px;
+    border: 1px solid #000;
+    background-color: #E32636;
+    display: inline-block;
+    position: absolute;
+    text-align:center;
+    align-content: center;
 }
 
 .connection-group {
@@ -123,6 +247,7 @@
     cursor: pointer;
     width: 20px; /* Ширина стрелки */
     height: 20px; /* Высота стрелки */
+    padding: 0 20px 0 10px; /* Добавляем отступы для текста */
     position: relative;
     z-index: 2;
     color: transparent; /* Прозрачный текст */
