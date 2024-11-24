@@ -121,7 +121,7 @@ class TestAdmin(TestCase, SharedTestRights):
     def setUp(self):
         self.factory = RequestFactory()
         self.user = Mock(last_name="myuserlastname", first_name="myusername", password="password",
-                         email="abc@testmail.com", is_active=True, is_writer=True, is_superuser=True)
+                         email="abc@testmail.com", is_active=True, is_writer=True, is_superuser=True, id=15)
         self.expected_codes = {'unauthorized': 302,
                                'reader': 200,
                                'redactor': 200,
