@@ -1,9 +1,11 @@
 # Create your tests here.
-from django.test import RequestFactory, TestCase
-from django.contrib.auth.models import AnonymousUser
-from authorization.views import sign_in
-from main.views import focls, hardware_create, users
 from unittest.mock import Mock
+
+from authorization.views import sign_in
+from django.contrib.auth.models import AnonymousUser
+from django.test import RequestFactory, TestCase
+
+from main.views import focls, hardware_create, users
 
 
 class SharedTestRights(object):

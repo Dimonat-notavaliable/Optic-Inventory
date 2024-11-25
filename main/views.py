@@ -1,19 +1,20 @@
+import json
+import logging
+
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, UpdateView
 
 from . import forms
-from .decorators import superuser_only, writer_only, login_required
-from .models import Hardware, Facility, FOCL, Muff, Cross, Notification, Port, Adapter
+from .decorators import login_required, superuser_only, writer_only
+from .models import (FOCL, Adapter, Cross, Facility, Hardware, Muff,
+                     Notification, Port)
 from .utils import get_modules_info
-
-import json
-import logging
 
 logger = logging.getLogger(__name__)
 

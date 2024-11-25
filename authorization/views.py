@@ -1,10 +1,11 @@
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect, render
 from django.template.loader import get_template
-from .forms import RegisterForm, LoginForm, BootstrapErrorList
+
+from .forms import BootstrapErrorList, LoginForm, RegisterForm
 
 
 def sign_up(request):

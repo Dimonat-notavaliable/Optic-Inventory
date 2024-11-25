@@ -1,4 +1,4 @@
-from .models import Fiber, Adapter, Facility, Muff, Connection, MuffWelding
+from .models import Adapter, Connection, Facility, Fiber, Muff, MuffWelding
 
 
 def get_connection_type(fiber, connections):
