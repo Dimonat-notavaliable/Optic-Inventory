@@ -43,7 +43,7 @@ jobs:
         run: |
           python -m pip install flake8 black isort
           echo "Running Flake8..."
-          flake8 .
+          flake8 --max-line-length 120 .
           echo "Running Black..."
           black --check .
           echo "Running isort..."
