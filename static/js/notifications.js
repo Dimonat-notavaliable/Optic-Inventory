@@ -1,4 +1,4 @@
-const baseUrl = "http://127.0.0.1:8000";
+const baseUrl = "https://optic-inventory.onrender.com";
 
 function updateNotifications() {
     let requestUrl = new URL("ajax/load-notifications/", baseUrl);
