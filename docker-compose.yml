@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: .
-    command: python manage.py runserver 0.0.0.0:$PORT
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "$PORT:$PORT"
     depends_on:

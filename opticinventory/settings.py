@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-b^*b+em$28fn3u))78o7e&ajc-zg(zii2=_bd77wdln3&len@$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'optic-inventory.onrender.com']
 
 # Application definition
 
