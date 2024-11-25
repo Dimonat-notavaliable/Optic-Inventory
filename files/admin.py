@@ -2,7 +2,8 @@ from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
-from main.models import Hardware, HardwareType, Facility, FacilityConnection, Muff, MuffConnection, FOCL, Cross, AdapterType, Cable
+from main.models import (Hardware, HardwareType, Facility, FacilityConnection, Muff, MuffConnection, FOCL, Cross,
+                         AdapterType, Cable)
 
 
 class HardwareExportResource(resources.ModelResource):

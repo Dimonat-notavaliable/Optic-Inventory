@@ -14,6 +14,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='muff',
             name='capacity',
-            field=models.IntegerField(default=64, validators=[django.core.validators.MinValueValidator(1)], verbose_name='Вместимость'),
+            field=models.IntegerField(
+                default=64, validators=[django.core.validators.MinValueValidator(1)],
+                verbose_name='Вместимость'
+            ),
         ),
     ]

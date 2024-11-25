@@ -15,13 +15,40 @@ class Migration(migrations.Migration):
             name='Connection',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('end_adapter', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='end_connections', to='main.adapter')),
-                ('end_fiber', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='end_connections', to='main.fiber')),
-                ('end_port', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='end_connections', to='main.port')),
-                ('facility', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connections', to='main.facility')),
-                ('start_adapter', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='start_connections', to='main.adapter')),
-                ('start_fiber', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='start_connections', to='main.fiber')),
-                ('start_port', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='start_connections', to='main.port')),
+                ('end_adapter', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='end_connections', to='main.adapter'
+                )),
+                ('end_fiber', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='end_connections', to='main.fiber'
+                )),
+                ('end_port', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='end_connections', to='main.port'
+                )),
+                ('facility', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connections', to='main.facility'
+                )),
+                ('start_adapter', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='start_connections', to='main.adapter'
+                )),
+                ('start_fiber', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='start_connections', to='main.fiber'
+                )),
+                ('start_port', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='start_connections', to='main.port'
+                )),
             ],
         ),
     ]

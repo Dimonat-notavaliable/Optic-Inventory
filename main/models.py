@@ -1,10 +1,8 @@
+from colorfield.fields import ColorField
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Q
-
-from colorfield.fields import ColorField
-from django.contrib.auth import get_user_model
 
 
 # Узел связи

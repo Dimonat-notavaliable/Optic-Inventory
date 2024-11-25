@@ -20,15 +20,29 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='cable',
             name='map_hex',
-            field=colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Цвет на карте'),
+            field=colorfield.fields.ColorField(
+                default='#FFFFFF', image_field=None,
+                max_length=25, samples=None,
+                verbose_name='Цвет на карте'
+            ),
         ),
         migrations.CreateModel(
             name='Module',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Номер')),
-                ('hex', colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Цвет')),
-                ('cable', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modules', to='main.cable')),
+                ('number', models.IntegerField(
+                    validators=[django.core.validators.MinValueValidator(1)],
+                    verbose_name='Номер'
+                )),
+                ('hex', colorfield.fields.ColorField(
+                    default='#FFFFFF', image_field=None,
+                    max_length=25, samples=None,
+                    verbose_name='Цвет'
+                )),
+                ('cable', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='modules', to='main.cable'
+                )),
             ],
             options={
                 'verbose_name': 'Модуль',

@@ -21,16 +21,30 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='module',
             name='hex',
-            field=colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Отображаемый цвет'),
+            field=colorfield.fields.ColorField(
+                default='#FFFFFF', image_field=None,
+                max_length=25, samples=None,
+                verbose_name='Отображаемый цвет'
+            ),
         ),
         migrations.CreateModel(
             name='Fiber',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Номер')),
+                ('number', models.IntegerField(
+                    validators=[django.core.validators.MinValueValidator(1)],
+                    verbose_name='Номер'
+                )),
                 ('color', models.CharField(default='Белый', verbose_name='Цвет')),
-                ('hex', colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Отображаемый цвет')),
-                ('module', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fibers', to='main.module')),
+                ('hex', colorfield.fields.ColorField(
+                    default='#FFFFFF', image_field=None,
+                    max_length=25, samples=None,
+                    verbose_name='Отображаемый цвет'
+                )),
+                ('module', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='fibers', to='main.module'
+                )),
             ],
             options={
                 'verbose_name': 'Волокно',

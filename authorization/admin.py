@@ -13,11 +13,7 @@ class UserAdmin(BaseUserAdmin):
         return self.readonly_fields
 
     fieldsets = (
-        (None,
-         {'fields':
-              ('email', 'password', 'last_name', 'first_name', 'patronymic')
-         }
-        ),
+        (None, {'fields': ('email', 'password', 'last_name', 'first_name', 'patronymic')}),
         ('Права доступа', {'fields': (
             'is_active',
             'is_superuser',

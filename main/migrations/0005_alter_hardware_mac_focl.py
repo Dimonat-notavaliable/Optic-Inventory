@@ -22,8 +22,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('cable_length', models.DecimalField(decimal_places=2, max_digits=9, verbose_name='Длина по кабелю')),
-                ('fiber_length', models.DecimalField(blank=True, decimal_places=2, max_digits=9, verbose_name='Длина по волокну')),
-                ('cable', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='focl', to='main.cable')),
+                ('fiber_length', models.DecimalField(
+                    blank=True, decimal_places=2, max_digits=9,
+                    verbose_name='Длина по волокну'
+                )),
+                ('cable', models.OneToOneField(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='focl', to='main.cable'
+                )),
             ],
         ),
     ]

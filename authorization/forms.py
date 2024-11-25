@@ -1,3 +1,5 @@
+from idlelib.iomenu import errors
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.utils import ErrorList
@@ -109,5 +111,6 @@ class BootstrapErrorList(ErrorList):
 
     def as_divs(self):
         if not self: return ''
-        errors = ''.join(['<li class="text-danger">%s</li>' % e for e in self])
-        return mark_safe('<ul class="m-0">%s</ul>' % errors)
+        errors_li = ['<li class="text-danger">%s</li>' % e for e in self]
+        errors_ul = ''.join(errors_li)
+        return mark_safe('<ul class="m-0">%s</ul>' % errors_ul)

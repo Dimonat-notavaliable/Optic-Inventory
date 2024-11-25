@@ -28,7 +28,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('last_change', models.DateTimeField(auto_now_add=True)),
-                ('facility', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='schemes', to='main.facility')),
+                ('facility', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='schemes',
+                    to='main.facility'
+                )),
             ],
             options={
                 'verbose_name': 'Схема сооружения связи',
@@ -42,9 +46,21 @@ class Migration(migrations.Migration):
                 ('object_id', models.IntegerField(verbose_name='Идентификатор объекта')),
                 ('coordinate_x', models.IntegerField(default=100, verbose_name='Координата x')),
                 ('coordinate_y', models.IntegerField(default=100, verbose_name='Координата y')),
-                ('direction', models.CharField(choices=[('up', 'UP'), ('down', 'DOWN'), ('left', 'LEFT'), ('right', 'RIGHT')], default='right', max_length=5)),
-                ('scheme', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='drawings', to='graphic.facilityscheme')),
-                ('object_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='drawings', to='graphic.schemeobjecttype')),
+                ('direction', models.CharField(
+                    choices=[('up', 'UP'), ('down', 'DOWN'), ('left', 'LEFT'), ('right', 'RIGHT')],
+                    default='right',
+                    max_length=5
+                )),
+                ('scheme', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='drawings',
+                    to='graphic.facilityscheme'
+                )),
+                ('object_type', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='drawings',
+                    to='graphic.schemeobjecttype'
+                )),
             ],
             options={
                 'verbose_name': 'Линия связи на схеме муфты',

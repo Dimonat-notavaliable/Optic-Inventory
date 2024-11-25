@@ -588,6 +588,7 @@ def update_user(request):
 
     return JsonResponse({'success': True})
 
+
 def load_notifications(request):
     notifications = Notification.objects.all().order_by('is_read', '-id')
     return render(request, 'notifications.html', {'notifications': notifications})

@@ -17,7 +17,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('producer', models.CharField(verbose_name='Производитель')),
                 ('marking', models.CharField(verbose_name='Маркировка')),
-                ('map_hex', colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None)),
+                ('map_hex', colorfield.fields.ColorField(
+                    default='#FFFFFF', image_field=None,
+                    max_length=25, samples=None
+                )),
             ],
         ),
     ]

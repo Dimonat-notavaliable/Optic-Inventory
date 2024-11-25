@@ -14,10 +14,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MuffWelding',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('end_fiber', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='end_muff_connections', to='main.fiber')),
-                ('muff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connections', to='main.muff')),
-                ('start_fiber', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='start_muff_connections', to='main.fiber')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True, serialize=False,
+                    verbose_name='ID'
+                )),
+                ('end_fiber', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='end_muff_connections', to='main.fiber'
+                )),
+                ('muff', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connections', to='main.muff'
+                )),
+                ('start_fiber', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='start_muff_connections', to='main.fiber'
+                )),
             ],
             options={
                 'verbose_name': 'Волоконная сварка',

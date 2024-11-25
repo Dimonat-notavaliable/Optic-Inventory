@@ -14,6 +14,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='email',
-            field=models.CharField(error_messages={'unique': 'Пользователь с такой почтой уже существует.'}, help_text='Обязательное поле. 255 символов или меньше.', max_length=255, unique=True, validators=[django.core.validators.EmailValidator()], verbose_name='Email'),
+            field=models.CharField(
+                error_messages={'unique': 'Пользователь с такой почтой уже существует.'},
+                help_text='Обязательное поле. 255 символов или меньше.',
+                max_length=255,
+                unique=True,
+                validators=[django.core.validators.EmailValidator()],
+                verbose_name='Email'
+            ),
         ),
     ]

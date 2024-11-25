@@ -18,7 +18,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(verbose_name='Название')),
-                ('floor_count', models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1)], verbose_name='Количество этажей')),
+                ('floor_count', models.IntegerField(
+                    default=1,
+                    validators=[django.core.validators.MinValueValidator(1)],
+                    verbose_name='Количество этажей'
+                )),
                 ('latitude', models.DecimalField(decimal_places=6, max_digits=9, verbose_name='Широта')),
                 ('longitude', models.DecimalField(decimal_places=6, max_digits=9, verbose_name='Долгота')),
             ],
@@ -34,10 +38,18 @@ class Migration(migrations.Migration):
                 ('marking', models.CharField(verbose_name='Название')),
                 ('type', models.CharField(verbose_name='Тип')),
                 ('port_count', models.IntegerField(default=0, verbose_name='Количество портов')),
-                ('floor', models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1)], verbose_name='Этаж расположения')),
+                ('floor', models.IntegerField(
+                    default=1,
+                    validators=[django.core.validators.MinValueValidator(1)],
+                    verbose_name='Этаж расположения'
+                )),
                 ('IP', models.GenericIPAddressField(blank=True, null=True, verbose_name='IP-адрес')),
                 ('MAC', models.CharField(blank=True, null=True, verbose_name='MAC-адрес')),
-                ('facility', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='hardware', to='main.facility')),
+                ('facility', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.SET_NULL,
+                    related_name='hardware', to='main.facility'
+                )),
             ],
             options={
                 'verbose_name': 'Сетевое оборудование',
@@ -48,9 +60,19 @@ class Migration(migrations.Migration):
             name='Port',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Номер')),
-                ('hardware', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ports', to='main.hardware')),
-                ('port', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='commutation', to='main.port')),
+                ('number', models.IntegerField(
+                    validators=[django.core.validators.MinValueValidator(1)],
+                    verbose_name='Номер'
+                )),
+                ('hardware', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='ports', to='main.hardware'
+                )),
+                ('port', models.ForeignKey(
+                    blank=True, null=True,
+                    on_delete=django.db.models.deletion.SET_NULL,
+                    related_name='commutation', to='main.port'
+                )),
             ],
             options={
                 'verbose_name': 'Порт оборудования',

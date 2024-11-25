@@ -18,7 +18,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('last_change', models.DateTimeField(auto_now_add=True)),
-                ('muff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='schemes', to='main.muff')),
+                ('muff', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='schemes',
+                    to='main.muff'
+                )),
             ],
             options={
                 'verbose_name': 'Схема муфты',
@@ -31,9 +35,21 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('coordinate_x', models.IntegerField(default=100, verbose_name='Координата x')),
                 ('coordinate_y', models.IntegerField(default=100, verbose_name='Координата y')),
-                ('direction', models.CharField(choices=[('up', 'UP'), ('down', 'DOWN'), ('left', 'LEFT'), ('right', 'RIGHT')], default='right', max_length=5)),
-                ('focl', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='scheme_muff', to='main.focl')),
-                ('scheme', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='focls', to='graphic.muffscheme')),
+                ('direction', models.CharField(
+                    choices=[('up', 'UP'), ('down', 'DOWN'), ('left', 'LEFT'), ('right', 'RIGHT')],
+                    default='right',
+                    max_length=5
+                )),
+                ('focl', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='scheme_muff',
+                    to='main.focl'
+                )),
+                ('scheme', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='focls',
+                    to='graphic.muffscheme'
+                )),
             ],
             options={
                 'verbose_name': 'Линия связи на схеме муфты',

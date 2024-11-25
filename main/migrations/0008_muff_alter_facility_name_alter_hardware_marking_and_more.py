@@ -39,8 +39,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_start', models.BooleanField(verbose_name='Начало')),
-                ('facility', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection', to='main.facility')),
-                ('focl', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection_facility', to='main.focl')),
+                ('facility', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connection', to='main.facility'
+                )),
+                ('focl', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connection_facility', to='main.focl'
+                )),
             ],
             options={
                 'verbose_name': 'Следование через сооружение',
@@ -52,8 +58,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_start', models.BooleanField(verbose_name='Начало')),
-                ('focl', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection_muff', to='main.focl')),
-                ('muff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection', to='main.muff')),
+                ('focl', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connection_muff', to='main.focl'
+                )),
+                ('muff', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='connection', to='main.muff'
+                )),
             ],
             options={
                 'verbose_name': 'Следование через муфту',

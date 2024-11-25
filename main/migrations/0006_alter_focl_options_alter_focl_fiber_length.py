@@ -17,6 +17,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='focl',
             name='fiber_length',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=9, null=True, verbose_name='Длина по волокну'),
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=9, null=True,
+                verbose_name='Длина по волокну'
+            ),
         ),
     ]

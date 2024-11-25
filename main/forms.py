@@ -1,10 +1,8 @@
-from colorfield.fields import ColorField
-from colorfield.widgets import ColorWidget
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType, \
-    HardwareType, Connection, Adapter, Port, Module, Fiber
+from .models import (Facility, Hardware, Cable, Muff, FOCL, MuffConnection, FacilityConnection, Cross, AdapterType,
+                     HardwareType, Connection, Adapter, Port, Module, Fiber)
 
 COLOR_PALETTE = {
     "#FFFFFF": "Белый", "#000000": "Черный", "#00FFFF": "Бирюзовый", "#0000FF": "Синий",
