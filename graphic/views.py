@@ -3,13 +3,29 @@ from datetime import timedelta
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from main.decorators import login_required, writer_only
-from main.models import (FOCL, Adapter, Connection, Cross, Facility,
-                         FacilityConnection, Fiber, Hardware, Muff,
-                         MuffConnection, MuffWelding, Port)
 
-from graphic.models import (FacilityScheme, FacilitySchemeObject, MuffScheme,
-                            MuffSchemeFOCL, SchemeObjectType)
+from graphic.models import (
+    FacilityScheme,
+    FacilitySchemeObject,
+    MuffScheme,
+    MuffSchemeFOCL,
+    SchemeObjectType,
+)
+from main.decorators import login_required, writer_only
+from main.models import (
+    FOCL,
+    Adapter,
+    Connection,
+    Cross,
+    Facility,
+    FacilityConnection,
+    Fiber,
+    Hardware,
+    Muff,
+    MuffConnection,
+    MuffWelding,
+    Port,
+)
 
 
 def serialize_cable(cable):

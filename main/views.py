@@ -12,8 +12,7 @@ from django.views.generic import DeleteView, UpdateView
 
 from . import forms
 from .decorators import login_required, superuser_only, writer_only
-from .models import (FOCL, Adapter, Cross, Facility, Hardware, Muff,
-                     Notification, Port)
+from .models import FOCL, Adapter, Cross, Facility, Hardware, Muff, Notification, Port
 from .utils import get_modules_info
 
 logger = logging.getLogger(__name__)

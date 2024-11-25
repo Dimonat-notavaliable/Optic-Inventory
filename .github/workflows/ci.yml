@@ -47,7 +47,7 @@ jobs:
           echo "Running Black..."
           black --check .
           echo "Running isort..."
-          isort . --check-only
+          isort --profile black . --check-only
 
       - name: Run migrations
         env:

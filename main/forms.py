@@ -1,9 +1,23 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import (FOCL, Adapter, AdapterType, Cable, Connection, Cross,
-                     Facility, FacilityConnection, Fiber, Hardware,
-                     HardwareType, Module, Muff, MuffConnection, Port)
+from .models import (
+    FOCL,
+    Adapter,
+    AdapterType,
+    Cable,
+    Connection,
+    Cross,
+    Facility,
+    FacilityConnection,
+    Fiber,
+    Hardware,
+    HardwareType,
+    Module,
+    Muff,
+    MuffConnection,
+    Port,
+)
 
 COLOR_PALETTE = {
     "#FFFFFF": "Белый",

@@ -1,10 +1,10 @@
 # Create your tests here.
 from unittest.mock import Mock
 
-from authorization.views import sign_in
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase
 
+from authorization.views import sign_in
 from main.views import focls, hardware_create, users
 
 
