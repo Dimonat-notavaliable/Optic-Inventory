@@ -108,9 +108,8 @@ class BootstrapErrorList(ErrorList):
         return self.as_divs()
 
     def as_divs(self):
-        if not self: return ''
-        errors_li = []
-        for error in self:
-            errors_li.append('<li class="text-danger">%s</li>' % error)
+        if not self:
+            return ''
+        errors_li = ['<li class="text-danger">%s</li>' % e for e in self]
         errors_ul = ''.join(errors_li)
         return mark_safe('<ul class="m-0">%s</ul>' % errors_ul)
