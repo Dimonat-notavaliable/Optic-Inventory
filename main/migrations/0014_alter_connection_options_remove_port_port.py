@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0013_connection'),
+        ("main", "0013_connection"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='connection',
-            options={'verbose_name': 'Соединение', 'verbose_name_plural': 'Соединения'},
+            name="connection",
+            options={"verbose_name": "Соединение", "verbose_name_plural": "Соединения"},
         ),
         migrations.RemoveField(
-            model_name='port',
-            name='port',
+            model_name="port",
+            name="port",
         ),
     ]

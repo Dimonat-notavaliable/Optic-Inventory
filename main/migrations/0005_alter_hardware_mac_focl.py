@@ -7,29 +7,51 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0004_module_color_alter_module_hex_fiber'),
+        ("main", "0004_module_color_alter_module_hex_fiber"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hardware',
-            name='MAC',
-            field=models.CharField(blank=True, verbose_name='MAC-адрес'),
+            model_name="hardware",
+            name="MAC",
+            field=models.CharField(blank=True, verbose_name="MAC-адрес"),
             preserve_default=False,
         ),
         migrations.CreateModel(
-            name='FOCL',
+            name="FOCL",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cable_length', models.DecimalField(decimal_places=2, max_digits=9, verbose_name='Длина по кабелю')),
-                ('fiber_length', models.DecimalField(
-                    blank=True, decimal_places=2, max_digits=9,
-                    verbose_name='Длина по волокну'
-                )),
-                ('cable', models.OneToOneField(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='focl', to='main.cable'
-                )),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "cable_length",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=9, verbose_name="Длина по кабелю"
+                    ),
+                ),
+                (
+                    "fiber_length",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=9,
+                        verbose_name="Длина по волокну",
+                    ),
+                ),
+                (
+                    "cable",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="focl",
+                        to="main.cable",
+                    ),
+                ),
             ],
         ),
     ]

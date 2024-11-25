@@ -8,70 +8,125 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0009_muff_capacity'),
+        ("main", "0009_muff_capacity"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AdapterType',
+            name="AdapterType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('marking', models.CharField(unique=True, verbose_name='Наименование')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("marking", models.CharField(unique=True, verbose_name="Наименование")),
             ],
             options={
-                'verbose_name': 'Тип адаптера',
-                'verbose_name_plural': 'Типы адаптеров',
+                "verbose_name": "Тип адаптера",
+                "verbose_name_plural": "Типы адаптеров",
             },
         ),
         migrations.CreateModel(
-            name='Cross',
+            name="Cross",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('floor', models.IntegerField(
-                    default=1, validators=[django.core.validators.MinValueValidator(1)],
-                    verbose_name='Этаж расположения'
-                )),
-                ('adapter_count', models.IntegerField(default=0, verbose_name='Количество адаптеров')),
-                ('facility', models.ForeignKey(
-                    blank=True, null=True,
-                    on_delete=django.db.models.deletion.SET_NULL,
-                    related_name='crosses', to='main.facility'
-                )),
-                ('linear_type', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='linear', to='main.adaptertype'
-                )),
-                ('station_type', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='station', to='main.adaptertype'
-                )),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "floor",
+                    models.IntegerField(
+                        default=1,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name="Этаж расположения",
+                    ),
+                ),
+                (
+                    "adapter_count",
+                    models.IntegerField(default=0, verbose_name="Количество адаптеров"),
+                ),
+                (
+                    "facility",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="crosses",
+                        to="main.facility",
+                    ),
+                ),
+                (
+                    "linear_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="linear",
+                        to="main.adaptertype",
+                    ),
+                ),
+                (
+                    "station_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="station",
+                        to="main.adaptertype",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Оптический кросс',
-                'verbose_name_plural': 'Оптические кроссы',
+                "verbose_name": "Оптический кросс",
+                "verbose_name_plural": "Оптические кроссы",
             },
         ),
         migrations.CreateModel(
-            name='Adapter',
+            name="Adapter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(
-                    validators=[django.core.validators.MinValueValidator(1)],
-                    verbose_name='Номер'
-                )),
-                ('is_linear', models.BooleanField(verbose_name='Линейная сторона')),
-                ('type', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='adapters', to='main.adaptertype'
-                )),
-                ('cross', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='adapters', to='main.cross'
-                )),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "number",
+                    models.IntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name="Номер",
+                    ),
+                ),
+                ("is_linear", models.BooleanField(verbose_name="Линейная сторона")),
+                (
+                    "type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="adapters",
+                        to="main.adaptertype",
+                    ),
+                ),
+                (
+                    "cross",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="adapters",
+                        to="main.cross",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Адаптер кросса',
-                'verbose_name_plural': 'Адаптеры кросса',
+                "verbose_name": "Адаптер кросса",
+                "verbose_name_plural": "Адаптеры кросса",
             },
         ),
     ]

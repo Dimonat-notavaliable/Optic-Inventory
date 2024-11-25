@@ -7,27 +7,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0006_alter_focl_options_alter_focl_fiber_length'),
+        ("main", "0006_alter_focl_options_alter_focl_fiber_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Passage',
+            name="Passage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_start', models.BooleanField(verbose_name='Начало')),
-                ('focl', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='passage', to='main.focl'
-                )),
-                ('installation', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='passage', to='main.facility'
-                )),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("is_start", models.BooleanField(verbose_name="Начало")),
+                (
+                    "focl",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="passage",
+                        to="main.focl",
+                    ),
+                ),
+                (
+                    "installation",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="passage",
+                        to="main.facility",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Следование',
-                'verbose_name_plural': 'Следования',
+                "verbose_name": "Следование",
+                "verbose_name_plural": "Следования",
             },
         ),
     ]

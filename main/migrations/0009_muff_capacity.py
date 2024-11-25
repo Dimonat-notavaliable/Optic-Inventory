@@ -7,16 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0008_muff_alter_facility_name_alter_hardware_marking_and_more'),
+        ("main", "0008_muff_alter_facility_name_alter_hardware_marking_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='muff',
-            name='capacity',
+            model_name="muff",
+            name="capacity",
             field=models.IntegerField(
-                default=64, validators=[django.core.validators.MinValueValidator(1)],
-                verbose_name='Вместимость'
+                default=64,
+                validators=[django.core.validators.MinValueValidator(1)],
+                verbose_name="Вместимость",
             ),
         ),
     ]

@@ -6,20 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0005_alter_hardware_mac_focl'),
+        ("main", "0005_alter_hardware_mac_focl"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='focl',
-            options={'verbose_name': 'Линия связи', 'verbose_name_plural': 'Линии связи'},
+            name="focl",
+            options={
+                "verbose_name": "Линия связи",
+                "verbose_name_plural": "Линии связи",
+            },
         ),
         migrations.AlterField(
-            model_name='focl',
-            name='fiber_length',
+            model_name="focl",
+            name="fiber_length",
             field=models.DecimalField(
-                blank=True, decimal_places=2, max_digits=9, null=True,
-                verbose_name='Длина по волокну'
+                blank=True,
+                decimal_places=2,
+                max_digits=9,
+                null=True,
+                verbose_name="Длина по волокну",
             ),
         ),
     ]

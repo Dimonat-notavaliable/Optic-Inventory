@@ -7,35 +7,54 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0014_alter_connection_options_remove_port_port'),
+        ("main", "0014_alter_connection_options_remove_port_port"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MuffWelding',
+            name="MuffWelding",
             fields=[
-                ('id', models.BigAutoField(
-                    auto_created=True, primary_key=True, serialize=False,
-                    verbose_name='ID'
-                )),
-                ('end_fiber', models.ForeignKey(
-                    blank=True, null=True,
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='end_muff_connections', to='main.fiber'
-                )),
-                ('muff', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='connections', to='main.muff'
-                )),
-                ('start_fiber', models.ForeignKey(
-                    blank=True, null=True,
-                    on_delete=django.db.models.deletion.CASCADE,
-                    related_name='start_muff_connections', to='main.fiber'
-                )),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "end_fiber",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="end_muff_connections",
+                        to="main.fiber",
+                    ),
+                ),
+                (
+                    "muff",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="connections",
+                        to="main.muff",
+                    ),
+                ),
+                (
+                    "start_fiber",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="start_muff_connections",
+                        to="main.fiber",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Волоконная сварка',
-                'verbose_name_plural': 'Волоконные сварки',
+                "verbose_name": "Волоконная сварка",
+                "verbose_name_plural": "Волоконные сварки",
             },
         ),
     ]

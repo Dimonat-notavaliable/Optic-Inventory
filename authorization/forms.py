@@ -8,99 +8,116 @@ from .models import User
 
 class LoginForm(forms.Form):
     email = forms.CharField(
-        max_length=255, label='',
+        max_length=255,
+        label="",
         widget=forms.EmailInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " border-dark bg-transparent mr-2",
+                " border-dark bg-transparent mr-2",
                 "placeholder": "Электронная почта",
-                "aria-label": "Email"
+                "aria-label": "Email",
             }
-        )
+        ),
     )
     password = forms.CharField(
-        max_length=255, label='',
+        max_length=255,
+        label="",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " border-dark bg-transparent mr-2",
+                " border-dark bg-transparent mr-2",
                 "placeholder": "Пароль",
-                "aria-label": "Пароль"
+                "aria-label": "Пароль",
             }
-        )
+        ),
     )
 
 
 class RegisterForm(UserCreationForm):
     email = forms.CharField(
-        max_length=255, label='',
+        max_length=255,
+        label="",
         widget=forms.EmailInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " bg-transparent border-dark mr-2",
+                " bg-transparent border-dark mr-2",
                 "placeholder": "Электронная почта*",
-                "aria-label": "Email"
+                "aria-label": "Email",
             }
-        )
+        ),
     )
     last_name = forms.CharField(
-        max_length=150, label='',
+        max_length=150,
+        label="",
         widget=forms.TextInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " bg-transparent border-dark mr-2",
+                " bg-transparent border-dark mr-2",
                 "placeholder": "Фамилия*",
-                "aria-label": "Last Name"
+                "aria-label": "Last Name",
             }
-        )
+        ),
     )
     first_name = forms.CharField(
-        max_length=150, label='',
+        max_length=150,
+        label="",
         widget=forms.TextInput(
-            attrs={"class": "form-control form-control-lg"
-                            " bg-transparent border-dark mr-2",
-                   "placeholder": "Имя*",
-                   "aria-label": "First Name"
-                   }
-        )
+            attrs={
+                "class": "form-control form-control-lg"
+                " bg-transparent border-dark mr-2",
+                "placeholder": "Имя*",
+                "aria-label": "First Name",
+            }
+        ),
     )
     patronymic = forms.CharField(
-        max_length=150, label='', required=False,
+        max_length=150,
+        label="",
+        required=False,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " bg-transparent border-dark mr-2",
+                " bg-transparent border-dark mr-2",
                 "placeholder": "Отчество",
-                "aria-label": "Patronymic"
+                "aria-label": "Patronymic",
             }
-        )
+        ),
     )
     password1 = forms.CharField(
-        max_length=255, label='',
+        max_length=255,
+        label="",
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control form-control-lg"
-                         " bg-transparent border-dark mr-2",
+                " bg-transparent border-dark mr-2",
                 "placeholder": "Пароль*",
-                "aria-label": "Password1"
+                "aria-label": "Password1",
             }
-        )
+        ),
     )
     password2 = forms.CharField(
-        max_length=255, label='',
+        max_length=255,
+        label="",
         widget=forms.PasswordInput(
-            attrs={"class": "form-control form-control-lg"
-                            " bg-transparent border-dark mr-2",
-                   "placeholder": "Повторите пароль*",
-                   "aria-label": "Password2"
-                   }
-        )
+            attrs={
+                "class": "form-control form-control-lg"
+                " bg-transparent border-dark mr-2",
+                "placeholder": "Повторите пароль*",
+                "aria-label": "Password2",
+            }
+        ),
     )
 
     class Meta:
         model = User
-        fields = ['email', 'last_name', 'first_name',
-                  'patronymic', 'password1', 'password2']
+        fields = [
+            "email",
+            "last_name",
+            "first_name",
+            "patronymic",
+            "password1",
+            "password2",
+        ]
 
 
 class BootstrapErrorList(ErrorList):
@@ -109,7 +126,7 @@ class BootstrapErrorList(ErrorList):
 
     def as_divs(self):
         if not self:
-            return ''
+            return ""
         errors_li = ['<li class="text-danger">%s</li>' % e for e in self]
-        errors_ul = ''.join(errors_li)
+        errors_ul = "".join(errors_li)
         return mark_safe('<ul class="m-0">%s</ul>' % errors_ul)
