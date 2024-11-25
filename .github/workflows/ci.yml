@@ -74,3 +74,15 @@ jobs:
         with:
           push: true
           tags: dimonat/optic-inventory:latest
+
+  deploy:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Только для ветки main
+
+    steps:
+      - name: Deploy to Render
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
