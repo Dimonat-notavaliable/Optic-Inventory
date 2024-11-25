@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # Ожидаем доступности базы данных
 until pg_isready -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$POSTGRES_USER"; do
