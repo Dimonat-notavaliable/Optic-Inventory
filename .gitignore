@@ -12,6 +12,7 @@ media
 # If you are using PyCharm #
 # User-specific stuff
 .idea/
+myvenv/
 
 # File-based project format
 *.iws
