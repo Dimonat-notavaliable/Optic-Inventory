@@ -9,30 +9,66 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0002_cable'),
+        ("main", "0002_cable"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='cable',
-            options={'verbose_name': 'Кабель', 'verbose_name_plural': 'Кабели'},
+            name="cable",
+            options={"verbose_name": "Кабель", "verbose_name_plural": "Кабели"},
         ),
         migrations.AlterField(
-            model_name='cable',
-            name='map_hex',
-            field=colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Цвет на карте'),
+            model_name="cable",
+            name="map_hex",
+            field=colorfield.fields.ColorField(
+                default="#FFFFFF",
+                image_field=None,
+                max_length=25,
+                samples=None,
+                verbose_name="Цвет на карте",
+            ),
         ),
         migrations.CreateModel(
-            name='Module',
+            name="Module",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Номер')),
-                ('hex', colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Цвет')),
-                ('cable', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modules', to='main.cable')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "number",
+                    models.IntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name="Номер",
+                    ),
+                ),
+                (
+                    "hex",
+                    colorfield.fields.ColorField(
+                        default="#FFFFFF",
+                        image_field=None,
+                        max_length=25,
+                        samples=None,
+                        verbose_name="Цвет",
+                    ),
+                ),
+                (
+                    "cable",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="modules",
+                        to="main.cable",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Модуль',
-                'verbose_name_plural': 'Модули',
+                "verbose_name": "Модуль",
+                "verbose_name_plural": "Модули",
             },
         ),
     ]

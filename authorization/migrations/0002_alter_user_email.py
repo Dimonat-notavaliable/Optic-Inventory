@@ -7,13 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authorization', '0001_initial'),
+        ("authorization", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='email',
-            field=models.CharField(error_messages={'unique': 'Пользователь с такой почтой уже существует.'}, help_text='Обязательное поле. 255 символов или меньше.', max_length=255, unique=True, validators=[django.core.validators.EmailValidator()], verbose_name='Email'),
+            model_name="user",
+            name="email",
+            field=models.CharField(
+                error_messages={
+                    "unique": "Пользователь с такой почтой уже существует."
+                },
+                help_text="Обязательное поле. 255 символов или меньше.",
+                max_length=255,
+                unique=True,
+                validators=[django.core.validators.EmailValidator()],
+                verbose_name="Email",
+            ),
         ),
     ]

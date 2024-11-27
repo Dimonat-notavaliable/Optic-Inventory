@@ -7,60 +7,122 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0007_passage'),
+        ("main", "0007_passage"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Muff',
+            name="Muff",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(verbose_name='Наименование')),
-                ('latitude', models.DecimalField(decimal_places=6, max_digits=9, verbose_name='Широта')),
-                ('longitude', models.DecimalField(decimal_places=6, max_digits=9, verbose_name='Долгота')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(verbose_name="Наименование")),
+                (
+                    "latitude",
+                    models.DecimalField(
+                        decimal_places=6, max_digits=9, verbose_name="Широта"
+                    ),
+                ),
+                (
+                    "longitude",
+                    models.DecimalField(
+                        decimal_places=6, max_digits=9, verbose_name="Долгота"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Муфта',
-                'verbose_name_plural': 'Муфты',
+                "verbose_name": "Муфта",
+                "verbose_name_plural": "Муфты",
             },
         ),
         migrations.AlterField(
-            model_name='facility',
-            name='name',
-            field=models.CharField(verbose_name='Наименование'),
+            model_name="facility",
+            name="name",
+            field=models.CharField(verbose_name="Наименование"),
         ),
         migrations.AlterField(
-            model_name='hardware',
-            name='marking',
-            field=models.CharField(verbose_name='Наименование'),
+            model_name="hardware",
+            name="marking",
+            field=models.CharField(verbose_name="Наименование"),
         ),
         migrations.CreateModel(
-            name='FacilityConnection',
+            name="FacilityConnection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_start', models.BooleanField(verbose_name='Начало')),
-                ('facility', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection', to='main.facility')),
-                ('focl', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection_facility', to='main.focl')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("is_start", models.BooleanField(verbose_name="Начало")),
+                (
+                    "facility",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="connection",
+                        to="main.facility",
+                    ),
+                ),
+                (
+                    "focl",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="connection_facility",
+                        to="main.focl",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Следование через сооружение',
-                'verbose_name_plural': 'Следования через сооружение',
+                "verbose_name": "Следование через сооружение",
+                "verbose_name_plural": "Следования через сооружение",
             },
         ),
         migrations.CreateModel(
-            name='MuffConnection',
+            name="MuffConnection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_start', models.BooleanField(verbose_name='Начало')),
-                ('focl', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection_muff', to='main.focl')),
-                ('muff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='connection', to='main.muff')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("is_start", models.BooleanField(verbose_name="Начало")),
+                (
+                    "focl",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="connection_muff",
+                        to="main.focl",
+                    ),
+                ),
+                (
+                    "muff",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="connection",
+                        to="main.muff",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Следование через муфту',
-                'verbose_name_plural': 'Следования через муфту',
+                "verbose_name": "Следование через муфту",
+                "verbose_name_plural": "Следования через муфту",
             },
         ),
         migrations.DeleteModel(
-            name='Passage',
+            name="Passage",
         ),
     ]

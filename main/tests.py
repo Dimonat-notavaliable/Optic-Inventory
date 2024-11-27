@@ -1,9 +1,11 @@
 # Create your tests here.
-from django.test import RequestFactory, TestCase
+from unittest.mock import Mock
+
 from django.contrib.auth.models import AnonymousUser
+from django.test import RequestFactory, TestCase
+
 from authorization.views import sign_in
 from main.views import focls, hardware_create, users
-from unittest.mock import Mock
 
 
 class SharedTestRights(object):
@@ -22,7 +24,7 @@ class SharedTestRights(object):
         request.user = self.user
         response = sign_in(request)
 
-        self.assertEqual(response.status_code, self.expected_codes['unauthorized'])
+        self.assertEqual(response.status_code, self.expected_codes["unauthorized"])
 
     def test_many_objects(self):
         """Проверка страницы с множеством ВОЛС"""
@@ -30,7 +32,7 @@ class SharedTestRights(object):
         request.user = self.user
         response = focls(request)
 
-        self.assertEqual(response.status_code, self.expected_codes['reader'])
+        self.assertEqual(response.status_code, self.expected_codes["reader"])
 
     def test_creation(self):
         """Проверка страницы с созданием оборудования"""
@@ -38,7 +40,7 @@ class SharedTestRights(object):
         request.user = self.user
         response = hardware_create(request)
 
-        self.assertEqual(response.status_code, self.expected_codes['redactor'])
+        self.assertEqual(response.status_code, self.expected_codes["redactor"])
 
     def test_users(self):
         """Проверка страницы со списком пользователей"""
@@ -46,7 +48,7 @@ class SharedTestRights(object):
         request.user = self.user
         response = users(request)
 
-        self.assertEqual(response.status_code, self.expected_codes['admin'])
+        self.assertEqual(response.status_code, self.expected_codes["admin"])
 
 
 class TestUnauthorized(TestCase, SharedTestRights):
@@ -62,10 +64,12 @@ class TestUnauthorized(TestCase, SharedTestRights):
     def setUp(self):
         self.factory = RequestFactory()
         self.user = AnonymousUser()
-        self.expected_codes = {'unauthorized': 200,
-                               'reader': 302,
-                               'redactor': 302,
-                               'admin': 302}
+        self.expected_codes = {
+            "unauthorized": 200,
+            "reader": 302,
+            "redactor": 302,
+            "admin": 302,
+        }
 
 
 class TestReader(TestCase, SharedTestRights):
@@ -80,12 +84,21 @@ class TestReader(TestCase, SharedTestRights):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = Mock(last_name="myuserlastname", first_name="myusername", password="password",
-                         email="abc@testmail.com", is_active=True, is_writer=False, is_superuser=False)
-        self.expected_codes = {'unauthorized': 302,
-                               'reader': 200,
-                               'redactor': 302,
-                               'admin': 302}
+        self.user = Mock(
+            last_name="myuserlastname",
+            first_name="myusername",
+            password="password",
+            email="abc@testmail.com",
+            is_active=True,
+            is_writer=False,
+            is_superuser=False,
+        )
+        self.expected_codes = {
+            "unauthorized": 302,
+            "reader": 200,
+            "redactor": 302,
+            "admin": 302,
+        }
 
 
 class TestRedactor(TestCase, SharedTestRights):
@@ -100,12 +113,21 @@ class TestRedactor(TestCase, SharedTestRights):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = Mock(last_name="myuserlastname", first_name="myusername", password="password",
-                         email="abc@testmail.com", is_active=True, is_writer=True, is_superuser=False)
-        self.expected_codes = {'unauthorized': 302,
-                               'reader': 200,
-                               'redactor': 200,
-                               'admin': 302}
+        self.user = Mock(
+            last_name="myuserlastname",
+            first_name="myusername",
+            password="password",
+            email="abc@testmail.com",
+            is_active=True,
+            is_writer=True,
+            is_superuser=False,
+        )
+        self.expected_codes = {
+            "unauthorized": 302,
+            "reader": 200,
+            "redactor": 200,
+            "admin": 302,
+        }
 
 
 class TestAdmin(TestCase, SharedTestRights):
@@ -120,9 +142,19 @@ class TestAdmin(TestCase, SharedTestRights):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = Mock(last_name="myuserlastname", first_name="myusername", password="password",
-                         email="abc@testmail.com", is_active=True, is_writer=True, is_superuser=True, id=15)
-        self.expected_codes = {'unauthorized': 302,
-                               'reader': 200,
-                               'redactor': 200,
-                               'admin': 200}
+        self.user = Mock(
+            last_name="myuserlastname",
+            first_name="myusername",
+            password="password",
+            email="abc@testmail.com",
+            is_active=True,
+            is_writer=True,
+            is_superuser=True,
+            id=15,
+        )
+        self.expected_codes = {
+            "unauthorized": 302,
+            "reader": 200,
+            "redactor": 200,
+            "admin": 200,
+        }

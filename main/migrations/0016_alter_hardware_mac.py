@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0015_muffwelding'),
+        ("main", "0015_muffwelding"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hardware',
-            name='MAC',
-            field=models.CharField(blank=True, null=True, verbose_name='MAC-адрес'),
+            model_name="hardware",
+            name="MAC",
+            field=models.CharField(blank=True, null=True, verbose_name="MAC-адрес"),
         ),
     ]

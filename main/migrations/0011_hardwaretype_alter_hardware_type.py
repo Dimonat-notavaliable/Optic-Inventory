@@ -7,24 +7,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0010_adaptertype_cross_adapter'),
+        ("main", "0010_adaptertype_cross_adapter"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HardwareType',
+            name="HardwareType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('marking', models.CharField(unique=True, verbose_name='Наименование')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("marking", models.CharField(unique=True, verbose_name="Наименование")),
             ],
             options={
-                'verbose_name': 'Тип оборудования',
-                'verbose_name_plural': 'Типы оборудования',
+                "verbose_name": "Тип оборудования",
+                "verbose_name_plural": "Типы оборудования",
             },
         ),
         migrations.AlterField(
-            model_name='hardware',
-            name='type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hardware', to='main.hardwaretype'),
+            model_name="hardware",
+            name="type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="hardware",
+                to="main.hardwaretype",
+            ),
         ),
     ]

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import validate_email
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from .managers import UserManager
 
 
@@ -17,13 +18,12 @@ class User(AbstractUser):
         _("Email"),
         max_length=255,
         unique=True,
-        help_text=_(
-            "Обязательное поле. 255 символов или меньше."
-        ),
+        help_text=_("Обязательное поле. 255 символов или меньше."),
         validators=[validate_email],
         error_messages={
             "unique": _("Пользователь с такой почтой уже существует."),
-        })
+        },
+    )
     password = models.CharField(max_length=255)
     last_name = models.CharField(_("Фамилия"), max_length=150, blank=False)
     first_name = models.CharField(_("Имя"), max_length=150, blank=False)
@@ -37,22 +37,22 @@ class User(AbstractUser):
         ),
     )
     is_writer = models.BooleanField(_("Право редактирования"), default=False)
-    is_superuser = models.BooleanField(verbose_name='Администратор', default=False)
+    is_superuser = models.BooleanField(verbose_name="Администратор", default=False)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['password']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["password"]
 
     @property
     def get_full_name(self):
         if self.patronymic and self.last_name and self.first_name:
-            return f'{self.last_name} {self.first_name[0]}. {self.patronymic[0]}.'
+            return f"{self.last_name} {self.first_name[0]}. {self.patronymic[0]}."
         elif self.last_name and self.first_name:
-            return f'{self.last_name} {self.first_name[0]}.'
+            return f"{self.last_name} {self.first_name[0]}."
         else:
-            return 'Аноним'
+            return "Аноним"
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"

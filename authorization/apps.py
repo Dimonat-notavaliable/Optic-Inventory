@@ -4,8 +4,8 @@ from django.contrib.admin.apps import AdminConfig
 
 
 class AuthorizationConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'authorization'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "authorization"
 
 
 class MyAdminSite(admin.AdminSite):
@@ -14,4 +14,4 @@ class MyAdminSite(admin.AdminSite):
 
 
 class MyAdminConfig(AdminConfig):
-    default_site = 'authorization.apps.MyAdminSite'
+    default_site = "authorization.apps.MyAdminSite"

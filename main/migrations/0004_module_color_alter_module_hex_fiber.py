@@ -9,32 +9,68 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0003_alter_cable_options_alter_cable_map_hex_module'),
+        ("main", "0003_alter_cable_options_alter_cable_map_hex_module"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='module',
-            name='color',
-            field=models.CharField(default='Белый', verbose_name='Цвет'),
+            model_name="module",
+            name="color",
+            field=models.CharField(default="Белый", verbose_name="Цвет"),
         ),
         migrations.AlterField(
-            model_name='module',
-            name='hex',
-            field=colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Отображаемый цвет'),
+            model_name="module",
+            name="hex",
+            field=colorfield.fields.ColorField(
+                default="#FFFFFF",
+                image_field=None,
+                max_length=25,
+                samples=None,
+                verbose_name="Отображаемый цвет",
+            ),
         ),
         migrations.CreateModel(
-            name='Fiber',
+            name="Fiber",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='Номер')),
-                ('color', models.CharField(default='Белый', verbose_name='Цвет')),
-                ('hex', colorfield.fields.ColorField(default='#FFFFFF', image_field=None, max_length=25, samples=None, verbose_name='Отображаемый цвет')),
-                ('module', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='fibers', to='main.module')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "number",
+                    models.IntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name="Номер",
+                    ),
+                ),
+                ("color", models.CharField(default="Белый", verbose_name="Цвет")),
+                (
+                    "hex",
+                    colorfield.fields.ColorField(
+                        default="#FFFFFF",
+                        image_field=None,
+                        max_length=25,
+                        samples=None,
+                        verbose_name="Отображаемый цвет",
+                    ),
+                ),
+                (
+                    "module",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="fibers",
+                        to="main.module",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Волокно',
-                'verbose_name_plural': 'Волокна',
+                "verbose_name": "Волокно",
+                "verbose_name_plural": "Волокна",
             },
         ),
     ]
